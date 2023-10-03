@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "407985190690",
+    "project_id": "thesis-8d239",
+    "storage_bucket": "thesis-8d239.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407985190690:android:7bc8fc449bc74a0781977b",
+        "android_client_info": {
+          "package_name": "camp.thesis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiTZA63tPYTCl6zEM8Rp14HxZ7lU7sou0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

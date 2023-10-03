@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum EntityType {
+  CAMPGROUND
+  USER
+  EQUIPMENT
+}
+
+enum NotificationType {
+  TYPE1
+  TYPE2
+}
+
+model User {
+  firebaseId String @id @default(uuid())
+  name       String
+  lastName   String
+  userName   String
+  email      String @unique
+
+  role     UserRole @default(USER) 
+  address  String
+  trips    Trip[]
+  cart     Cart[]
+  wishlist Wishlist[]
+  profile  Profile?
+}
+
+model Trip {
+  id       Int        @id @default(autoincrement())
+  location String
+  duration String
+  rating   Float
+  text     String
+  date     DateTime
+  userId   String
+  user     User       @relation(fields: [userId], references: [firebaseId])
+  images   Image[]
+  wishlist Wishlist[]
+  carts    Cart[]
+}
+
+model Image {
+  id         Int        @id @default(autoincrement())
+  imageId    String
+  entityType EntityType
+  entityId   String
+  tripId     Int?
+  trip       Trip?      @relation(fields: [tripId], references: [id])
+}
+
+model Wishlist {
+  id     Int    @id @default(autoincrement())
+  userId String
+  tripId Int
+  user   User   @relation(fields: [userId], references: [firebaseId])
+  trip   Trip   @relation(fields: [tripId], references: [id])
+}
+
+model Cart {
+  id     Int    @id @default(autoincrement())
+  userId String
+  tripId Int
+  user   User   @relation(fields: [userId], references: [firebaseId])
+  trip   Trip   @relation(fields: [tripId], references: [id])
+}
+
+model Notification {
+  id   Int              @id @default(autoincrement())
+  type NotificationType
+  time DateTime
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [firebaseId])
+}
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  message   String
+  senderId  String 
+  receiverId String  
+  timestamp DateTime @default(now())  
+}
