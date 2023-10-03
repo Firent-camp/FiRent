@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Signin from "./Screens/Signin";
 import Splash from "./Screens/Splash";
 import Login from "./Screens/login";
+import checkEmail from "./Screens/checkEmail"
 import details from "./Screens/details";
 import list from "./Screens/list";
 import { User, onAuthStateChanged } from "firebase/auth";
@@ -23,7 +24,7 @@ function insideLayout() {
     </InsideStack.Navigator>
   );
 }
-User;
+
 export default function App() {
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -34,15 +35,21 @@ export default function App() {
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="checkEmail">
         {user ? (
           <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
         ) : (
           <>
-          <Stack.Screen name="login" component={Login} options={{headerShown:false}} />
-            <Stack.Screen name="Splash" component={Splash} />
+                      <Stack.Screen name="checkEmail" component={checkEmail}/> 
+
+            {/* <Stack.Screen name="Splash" component={Splash} /> */}
             <Stack.Screen name="Signin" component={Signin} />
-            
+
+
+
+            <Stack.Screen name="login" component={Login} options={{headerShown:false}} /> 
+
+
           </>
         )}
       </Stack.Navigator>
