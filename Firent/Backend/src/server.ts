@@ -11,7 +11,6 @@ const server = http.createServer(app);
 
 const io = new Server(server);
 
-import { initializeSocket } from './controllers/socketController';
 
 import userRoutes from "./routes/userRoutes";
 import TripRoutes from "./routes/tripRoutes";
@@ -26,7 +25,6 @@ app.use('/chat', chatRoutes);
 
 const prisma = new PrismaClient();
 
-initializeSocket(io, prisma);
 
 io.on('connection', (socket) => {
   console.log('A user connected');
