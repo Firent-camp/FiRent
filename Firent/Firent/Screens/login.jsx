@@ -23,14 +23,7 @@ const Login = () => {
   const [userName,setUserName]=useState("")
   const [address,setAddress]=useState("")
 
-  // const [credentials, setCredentials] = useState({
-  //   name: '',
-  //   email: '',
-  //   password: '',
-  //   userName: '',
-  //   lastName: '', 
-  //   address:""
-  // });
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = useCallback((name, value) => {
@@ -126,7 +119,7 @@ const Login = () => {
         style={styles.input}
         placeholder="Last Name"
         value={lastName}
-        onChangeText={(lastName) => setLastName(name)}
+        onChangeText={(lastName) => setLastName(lastName)}
       />
       <TextInput
         style={styles.input}
