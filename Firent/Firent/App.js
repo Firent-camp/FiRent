@@ -5,18 +5,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import Signin from "./Screens/Signin";
 import Splash from "./Screens/Splash";
 import Login from "./Screens/login";
-import checkEmail from "./Screens/checkEmail"
+import checkEmail from "./Screens/checkEmail";
 import details from "./Screens/details";
+import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FireBase";
 const Stack = createStackNavigator();
 const InsideStack = createStackNavigator();
+// import Signin from "./Screens/Signin";
+import Signup from "./Screens/Signup"
 
-
-
-
-function insideLayout() {
+function InsideLayout() {
   return (
     <InsideStack.Navigator>
       <InsideStack.Screen name="todos" component={list} />
@@ -30,12 +30,12 @@ export default function App() {
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log("user", user);
-      setUser(user)
+      setUser(user);
     });
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="checkEmail">
+      <Stack.Navigator initialRouteName="LocationDetails">
         {user ? (
           <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
         ) : (
