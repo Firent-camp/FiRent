@@ -26,7 +26,7 @@ enum NotificationType {
 model User {
   firebaseId String   @id @default(uuid())
   name       String
-  lastName   String
+  lastName   String @default("")
   userName   String
   email      String   @unique
   role       UserRole @default(USER) 
@@ -37,6 +37,8 @@ model User {
   profile    Profile?
   chats      chat[]
 }
+
+
 
 model Trip {
   id       Int        @id @default(autoincrement())

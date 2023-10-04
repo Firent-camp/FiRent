@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     pleasecheckyouremail: {
         position: "absolute",
         flexShrink: 0,
-        left: 33,
+        left: 23,
         width: 200,
         height: 25,
         textAlign: "left",
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     description: {
         position: "absolute",
         flexShrink: 0,
+        left:3,
         top: 38,
         width: 235,
         height: 76,
