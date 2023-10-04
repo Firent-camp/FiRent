@@ -40,7 +40,8 @@ export default function App() {
           <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
         ) : (
           <>
-                      <Stack.Screen name="checkEmail" component={checkEmail}/> 
+                      <Stack.Screen name="checkEmail" component={checkEmail} options={{headerShown:false}}/> 
+                      <Stack.Screen name="LocationDetails" component={LocationDetails} options={{headerShown:false}}/> 
 
             {/* <Stack.Screen name="Splash" component={Splash} /> */}
             <Stack.Screen name="Signin" component={Signin} />
