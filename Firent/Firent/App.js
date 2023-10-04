@@ -7,6 +7,7 @@ import Splash from "./Screens/Splash";
 import Login from "./Screens/login";
 import checkEmail from "./Screens/checkEmail"
 import details from "./Screens/details";
+import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FireBase";
@@ -35,19 +36,21 @@ export default function App() {
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="checkEmail">
+      <Stack.Navigator initialRouteName="LocationDetails">
         {user ? (
-          <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
+          <Stack.Screen name="Inside" component={insideLayout} options={{ headerShown: false }} />
         ) : (
           <>
-                      <Stack.Screen name="checkEmail" component={checkEmail}/> 
+            <Stack.Screen name="LocationDetails" component={LocationDetails}  options={{ headerShown: false }} />
+
+            <Stack.Screen name="checkEmail" component={checkEmail} options={{ headerShown: false }}  />
 
             {/* <Stack.Screen name="Splash" component={Splash} /> */}
-            <Stack.Screen name="Signin" component={Signin} />
+            <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }}  />
 
 
 
-            <Stack.Screen name="login" component={Login} options={{headerShown:false}} /> 
+            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
 
 
           </>
