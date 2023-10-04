@@ -1,12 +1,44 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
+import { FIREBASE_AUTH } from '../FireBase';
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword
+} from 'firebase/auth';
 
-export default function Signin() {
+
+export default function Signin({navigation}) {
+
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+
+    const resetPassword = () => {
+        sendPasswordResetEmail(FIREBASE_AUTH, email)
+          .then((res) => {
+            console.log(email, "email")
+            alert('password reset email has been sent successfully')
+          })
+          .catch((error) => {
+            alert('Please enter a valid email', error);
+          });
+      }
+
+      const signIn = async () => {
+
+        try {
+          const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+          console.log(response);
+        } catch (error) {
+          alert(`Sign-in failed: ${error.message}`);
+        } 
+      };
+
+
     return (
         <View style={styles.signin}>
             <TouchableOpacity>
-                <View style={styles.buttonSignin}>
+                <View style={styles.buttonSignin} onTouchEnd={signIn} >
                     <View style={styles.rectangle8} />
                     <Text style={styles._signin}>Sign in</Text>
                 </View>
@@ -14,7 +46,7 @@ export default function Signin() {
 
 
 
-            <Text style={styles.forgotPassword}>
+            <Text style={styles.forgotPassword} onPress={() => { resetPassword() }}>
                 {`Forgot Password?`}
             </Text>
 
@@ -26,6 +58,7 @@ export default function Signin() {
                     style={styles.passwordInput}
                     placeholder="Name@email.com "
                     placeholderTextColor="white"
+                    onChangeText={setEmail}
                 />
             </View>
 
@@ -38,6 +71,7 @@ export default function Signin() {
                     style={styles.passwordInput}
                     placeholder="Password "
                     placeholderTextColor="white"
+                    onChangeText={setPassword}
                 />
             </View>
             <Text style={styles.welcomeBack}>
