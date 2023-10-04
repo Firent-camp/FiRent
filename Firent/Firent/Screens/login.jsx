@@ -15,7 +15,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [name,setName]=useState("")
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
@@ -63,6 +63,7 @@ const Login = () => {
     try {
       const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       console.log(response);
+      navigation.navigate("Splash")
     } catch (error) {
       alert(`Sign-in failed: ${error.message}`);
     } finally {
@@ -74,7 +75,7 @@ const Login = () => {
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-      await axios.post("http://192.168.103.12:5000/users/add",{
+      await axios.post("http://192.168.11.233:5000/users/add",{
         firebaseId:FIREBASE_AUTH.uid,
         name:name,
         email:email,

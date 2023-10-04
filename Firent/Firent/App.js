@@ -18,30 +18,29 @@ const InsideStack = createStackNavigator();
 function insideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="todos" component={list} />
+      <InsideStack.Screen name="todos" component={Splash} />
       <InsideStack.Screen name="details" component={details} />
     </InsideStack.Navigator>
   );
 }
-User;
 export default function App() {
   const [user, setUser] = useState(null);
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log("user", user);
+       console.log("user", user);
       setUser(user)
     });
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="login">
         {user ? (
           <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
         ) : (
           <>
+          <Stack.Screen name="Signin" component={Signin} />
           <Stack.Screen name="login" component={Login} options={{headerShown:false}} />
-            <Stack.Screen name="Splash" component={Splash} />
-            <Stack.Screen name="Signin" component={Signin} />
+          <Stack.Screen name="Splash" component={Splash} />
             
           </>
         )}

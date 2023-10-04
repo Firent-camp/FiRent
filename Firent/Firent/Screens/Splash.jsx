@@ -1,27 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
+import ADDRESS_IP from '../API';
+import { FIREBASE_AUTH } from '../FireBase';
 
-const ChatScreen = () => {
+const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
-  const socket = io('http://localhost:5000'); 
-  useEffect(() => {
-    socket.connect();
+  const [socket, setSocket] = useState(null);
 
-    socket.on('messageReceived', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+  useEffect(() => {
+    const user = FIREBASE_AUTH.currentUser.uid;
+    const newSocket = io(`http://192.168.104.19:8081`);
+
+    newSocket.on('connect_error', (error) => {
+      console.error('WebSocket connection error:', error);
     });
+
+    newSocket.on('receive', (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    newSocket.on('connect', () => {
+      console.log('WebSocket connected');
+      newSocket.emit('join', user);
+    });
+
+    setSocket(newSocket);
+
     return () => {
-      socket.disconnect();
+      if (newSocket) {
+        newSocket.disconnect();
+      }
     };
-  }, []);
+  }, [route.params]);
 
   const sendMessage = () => {
-    if (messageInput.trim() !== '') {
-      socket.emit('sendMessage', messageInput);
-      setMessageInput('');
+    if (messageInput.trim() === '') {
+      return;
     }
+
+    const message = {
+      content: messageInput,
+      sender: FIREBASE_AUTH.currentUser.uid,
+    };
+
+    socket.emit('send', message, (response) => {
+      if (response.error) {
+        console.error('Error sending message:', response.error);
+      } else {
+        console.log('Message sent successfully:', response);
+        setMessageInput('');
+      }
+    });
   };
 
   return (
@@ -31,7 +62,7 @@ const ChatScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View>
-            <Text>{item.text}</Text>
+            <Text>{item.content}</Text>
           </View>
         )}
       />
@@ -50,14 +81,3 @@ const ChatScreen = () => {
 };
 
 export default ChatScreen;
-// import {  Image, View,Text} from 'react-native';
-// import { TouchableOpacity } from 'react-native';
-// import react from 'react';
-
-// export default function Splash({ navigation }) {
-//   return (
-//     <View className="flex-1 items-center justify-center bg-red-500">
-//       <Text>fcgvh</Text>
-//       </View>
-//   )
-// }
