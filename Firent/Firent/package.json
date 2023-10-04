@@ -18,6 +18,7 @@
     "@types/react": "~18.2.14",
     "axios": "^1.5.1",
     "expo": "^49.0.13",
+    "expo-image": "^1.5.1",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.4.0",
     "metro": "^0.79.1",
