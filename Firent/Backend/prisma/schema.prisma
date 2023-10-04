@@ -24,18 +24,18 @@ enum NotificationType {
 }
 
 model User {
-  firebaseId String @id @default(uuid())
+  firebaseId String   @id @default(uuid())
   name       String
   lastName   String
   userName   String
-  email      String @unique
-
-  role     UserRole @default(USER) 
-  address  String
-  trips    Trip[]
-  cart     Cart[]
-  wishlist Wishlist[]
-  profile  Profile?
+  email      String   @unique
+  role       UserRole @default(USER) 
+  address    String
+  trips      Trip[]
+  cart       Cart[]
+  wishlist   Wishlist[]
+  profile    Profile?
+  chats      chat[]
 }
 
 model Trip {
@@ -88,10 +88,18 @@ model Profile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [firebaseId])
 }
-model ChatMessage {
-  id        Int      @id @default(autoincrement())
-  message   String
-  senderId  String 
-  receiverId String  
-  timestamp DateTime @default(now())  
+
+model chat {
+  id            String   @id @default(uuid())
+  users         User[] 
+  latestMessage String?
 }
+
+model Message {
+  id      String  @id @default(uuid())
+  sender  String?
+  content String?
+  createdAt      DateTime?     @default(now())
+  chat    String?
+}
+

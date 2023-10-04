@@ -1,49 +1,90 @@
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import { ChatMessage } from '../types/rentfire'; 
-
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-export const sendMessage = async (req: Request, res: Response) => {
+exports.createConversation = async (req:Request, res:Response) => {
   try {
-    const { senderId, receiverId, message }: ChatMessage = req.body;
-    const chatMessage = await prisma.chatMessage.create({
-      data: {
-        senderId,
-        receiverId,
-        message,
-      },
-    });
+    const { user1Id, user2Id } = req.body;
 
-    res.json(chatMessage);
-  } catch (error) {
-    console.error('Failed to send message:', error);
-    res.status(500).json({ error: 'Failed to send message' });
-  }
-};
-
-export const getMessages = async (req: Request, res: Response) => {
-  try {
-    const { senderId, receiverId } = req.query as { senderId: string; receiverId: string };
-    console.log('senderId:', senderId);
-    console.log('receiverId:', receiverId);
-
-    const messages = await prisma.chatMessage.findMany({
+    const existingConversation = await prisma.chat.findFirst({
       where: {
-        OR: [
-          { senderId, receiverId },
-          { senderId: receiverId, receiverId: senderId },
-        ],
+        users: {
+          some: {
+            firebaseId: user1Id,
+          },
+        },
+        AND: {
+          users: {
+            some: {
+              firebaseId: user2Id,
+            },
+          },
+        },
       },
-      orderBy: { timestamp: 'asc' },
     });
 
-    res.json(messages);
+    if (existingConversation) {
+      res.status(200).json(existingConversation);
+      return;
+    }
+
+    const newConversation = await prisma.chat.create({
+      data: {
+        users: {
+          connect: [
+            { firebaseId: user1Id },
+            { firebaseId: user2Id },
+          ],
+        },
+      },
+      include: {
+        users: true,
+      },
+    });
+
+    res.status(201).json(newConversation);
   } catch (error) {
-    console.error('Failed to retrieve messages:', error);
-    res.status(500).json({ error: 'Failed to retrieve messages' });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
+exports.sendMessage = async (req:Request, res:Response) => {
+  try {
+    const { chat, sender, content } = req.body;
 
+    const newMessage = await prisma.Message.create({
+      data: {
+        content,
+        sender,
+        chat,
+      },
+    });
+
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.getConversationMessages = async (req:Request, res:Response) => {
+  try {
+    const chatId = req.params.chatId;
+
+    const messages = await prisma.Message.findMany({
+      where: {
+        chatId,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
