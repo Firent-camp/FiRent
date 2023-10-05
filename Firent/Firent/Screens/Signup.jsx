@@ -11,12 +11,14 @@ import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
+import ADRESS_API from "../API";
 
 const Signup = ({navigation}) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
 
@@ -29,12 +31,16 @@ const Signup = ({navigation}) => {
       return;
     }
     try {
-      await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+     const credentials =  await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+     const user = credentials.user
+     const uid = user.uid
+     console.log(uid,"uid");
       await axios
-        .post("http://192.168.103.12:5000/users/add", {
-          firebaseId: FIREBASE_AUTH.uid,
+        .post(`http://${ADRESS_API}:5000/users/add`, {
+          firebaseId: uid,
           userName: userName,
           email: email,
+          address:'Tunisia'
         })
         .then((res) => {
           console.log(res.data);
@@ -90,6 +96,16 @@ const Signup = ({navigation}) => {
                 secureTextEntry={true}
                 value={retypePassword}
                 onChangeText={setRetypePassword}
+                placeholderTextColor="white"
+            />
+        </View>
+        <View style={styles.___form}>
+            <View  />
+            <TextInput 
+                style={styles.address}
+                placeholder="Address"
+                value={address}
+                onChangeText={setAddress}
                 placeholderTextColor="white"
             />
         </View>
@@ -289,6 +305,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(19, 19, 22, 1)",
     borderRadius: 5,
   },
+
   email: {
     position: "absolute",
     flexShrink: 0,
@@ -303,6 +320,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     letterSpacing: 0,
   },
+
   letsstartyourJourneytogether: {
     position: "absolute",
     flexShrink: 0,

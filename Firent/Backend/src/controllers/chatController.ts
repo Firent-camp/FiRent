@@ -5,12 +5,14 @@ const prisma = new PrismaClient();
 exports.createConversation = async (req:Request, res:Response) => {
   try {
     const { user1Id, user2Id } = req.body;
+    console.log(user1Id,"user1",user2Id,"user2");
+    
 
     const existingConversation = await prisma.chat.findFirst({
       where: {
         users: {
           some: {
-            firebaseId: user1Id,
+            firebaseId: user1Id, 
           },
         },
         AND: {
