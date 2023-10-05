@@ -50,6 +50,17 @@ console.log(user,"id user");
           />
         ) : (
           <>
+                      <Stack.Screen name="checkEmail" component={checkEmail} options={{headerShown:false}}/> 
+                      <Stack.Screen name="LocationDetails" component={LocationDetails} options={{headerShown:false}}/> 
+
+            {/* <Stack.Screen name="Splash" component={Splash} /> */}
+            <Stack.Screen name="Signin" component={Signin} />
+
+
+
+            <Stack.Screen name="login" component={Login} options={{headerShown:false}} /> 
+
+
             {/* <Stack.Screen name="checkEmail" component={checkEmail} /> */}
 
             <Stack.Screen name="Signup" component={Signup} />
