@@ -10,25 +10,23 @@ function Chat({ route }) {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const socket = useRef(null);
-  console.log(messages, "messages");
+
   useEffect(() => {
     socket.current = io(`http://${ADRESS_API}:4001`);
     socket.current.emit("joinRoom", chatRoom.id);
 
+    socket.current.on("message", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
     axios
-      .get(
-        `http://${ADRESS_API}:5000/chats/conversations/${chatRoom.id}/messages`
-      )
+      .get(`http://${ADRESS_API}:5000/chats/conversations/${chatRoom.id}/messages`)
       .then((res) => {
         setMessages(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-
-    socket.current.on("message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
-    });
 
     return () => {
       socket.current.disconnect();
@@ -41,14 +39,6 @@ function Chat({ route }) {
       senderId: currentid,
       content: msg,
     });
-
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        sender: currentid,
-        content: msg,
-      },
-    ]);
     setMsg("");
   };
 
