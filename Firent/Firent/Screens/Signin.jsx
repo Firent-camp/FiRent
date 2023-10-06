@@ -6,25 +6,37 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword
 } from 'firebase/auth';
+import { onAuthStateChanged } from "firebase/auth";
 
+export default function Signin({navigation,route}) {
 
-export default function Signin({navigation}) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+const {userGetter} = route.params
+console.log(userGetter,"userGtter");
     const resetPassword = () => {
         sendPasswordResetEmail(FIREBASE_AUTH, email)
-            .then(() => {
-                alert('Password reset email has been sent successfully')
-            })
-            .catch((error) => {
-                alert(`Please enter a valid email. Error: ${error.message}`);
-            });
-    }
+          .then((res) => {
+            console.log(email, "email")
+            alert('password reset email has been sent successfully') 
+          })
+          .catch((error) => {
+            alert('Please enter a valid email', error);
+          });
+      }
+   
 
     const signIn = async () => {
         try {
             await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+
+            onAuthStateChanged(FIREBASE_AUTH, (user) => {
+                console.log("userFromAuth", user);
+              })
+          const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+          console.log(response);
+          userGetter(response.user.uid)
+    
         } catch (error) {
             alert(`Sign-in failed: ${error.message}`);
         } 

@@ -4,12 +4,14 @@ import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
+import ADRESS_API from "../API";
 
 const Signup = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
   const signUp = async () => {
@@ -20,12 +22,24 @@ const Signup = ({ navigation }) => {
       return;
     }
     try {
-      await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-      await axios.post("http://192.168.103.12:5000/users/add", {
-        firebaseId: FIREBASE_AUTH.uid,
-        userName: userName,
-        email: email,
-      });
+
+     const credentials =  await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+     const user = credentials.user
+     const uid = user.uid
+     console.log(uid,"uid");
+      await axios
+        .post(`http://${ADRESS_API}:5000/users/add`, {
+          firebaseId: uid,
+          userName: userName,
+          email: email,
+          address:'Tunisia'
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (error) {
       alert(`Sign-up failed: ${error.message}`);
     } finally {
