@@ -11,10 +11,14 @@ import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FireBase";
+import Signup from "./Screens/Signup";
+import Payment1 from "./Screens/Payment1";
+import Payment2 from "./Screens/Payment2";
 const Stack = createStackNavigator();
 const InsideStack = createStackNavigator();
-// import Signin from "./Screens/Signin";
-import Signup from "./Screens/Signup"
+
+
+
 
 function InsideLayout() {
   return (
@@ -35,21 +39,28 @@ export default function App() {
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LocationDetails">
+      <Stack.Navigator initialRouteName="Payment2">
         {user ? (
-          <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
+          <Stack.Screen
+            name="Inside"
+            component={InsideLayout}
+            options={{ headerShown: false }}
+          />
         ) : (
           <>
-                      <Stack.Screen name="checkEmail" component={checkEmail}/> 
+            <Stack.Screen name="checkEmail" component={checkEmail} />
 
             {/* <Stack.Screen name="Splash" component={Splash} /> */}
             <Stack.Screen name="Signin" component={Signin} />
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Payment1" component={Payment1} options={{headerShown:false}} />
+            <Stack.Screen name="Payment2" component={Payment2} options={{headerShown:false}} />
 
-
-
-            <Stack.Screen name="login" component={Login} options={{headerShown:false}} /> 
-
-
+            <Stack.Screen
+              name="login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
           </>
         )}
       </Stack.Navigator>
