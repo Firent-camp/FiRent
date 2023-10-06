@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Signin from "./Screens/Signin";
 import Splash from "./Screens/Splash";
 import Login from "./Screens/login";
+import homePage from "./Screens/homePage"
 import checkEmail from "./Screens/checkEmail";
 import details from "./Screens/details";
 import LocationDetails from "./Screens/locationDetails";
@@ -35,21 +36,15 @@ export default function App() {
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LocationDetails">
+      <Stack.Navigator initialRouteName="homePage">
         {user ? (
-          <Stack.Screen name="Inside" component={insideLayout} options={{headerShown: false}} />
+          <Stack.Screen name="Inside" component={insideLayout} options={{ headerShown: false }} />
         ) : (
-          <>
-                      <Stack.Screen name="checkEmail" component={checkEmail} options={{headerShown:false}}/> 
-                      <Stack.Screen name="LocationDetails" component={LocationDetails} options={{headerShown:false}}/> 
-
-            {/* <Stack.Screen name="Splash" component={Splash} /> */}
-            <Stack.Screen name="Signin" component={Signin} />
-
-
-
-            <Stack.Screen name="login" component={Login} options={{headerShown:false}} /> 
-
+          <><Stack.Screen name="homePage" component={homePage} options={{ headerShown: false }} />
+            <Stack.Screen name="checkEmail" component={checkEmail} options={{ headerShown: false }} />
+            <Stack.Screen name="LocationDetails" component={LocationDetails} options={{ headerShown: false }} StatusBar />
+            <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }}/>
+            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
 
           </>
         )}
