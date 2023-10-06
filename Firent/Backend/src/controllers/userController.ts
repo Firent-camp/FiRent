@@ -9,10 +9,10 @@ export const createUserController = async (req: Request, res: Response) => {
     try {
     const response = await prisma.user.create({
       data:{
+        firebaseId : req.body.firebaseId,
         lastName: req.body.lastName,
         userName: req.body.userName,
         email:req.body.email,
-        name: req.body.name,
         address:req.body.address
       }
     })
