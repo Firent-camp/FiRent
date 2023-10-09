@@ -1,11 +1,10 @@
-import { Router } from 'express';
+import { Router } from "express";
+import chatController from "../controllers/chatController";
+
 const router = Router();
-const conversationController = require('../controllers/chatController');
 
-router.post('/conversations', conversationController.createConversation);
-
-router.post('/conversations/:conversationId/messages', conversationController.sendMessage);
-
-router.get('/conversations/:conversationId/messages', conversationController.getConversationMessages);
+router.post("/", chatController.createConversation);
+router.post("/:chatId/message", chatController.sendMessage);
+router.get("/:chatId/messages",chatController.getConversationMessages);
 
 export default router;

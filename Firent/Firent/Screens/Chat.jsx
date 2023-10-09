@@ -9,57 +9,80 @@ function Chat({ route }) {
 
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
-  const socket = useRef(null);
+  const socketRef = useRef(null);
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    socket.current = io(`http://${ADRESS_API}:4001`);
-    socket.current.emit("joinRoom", chatRoom.id);
+    socketRef.current = io(`http://${ADRESS_API}:5000`);
+    socketRef.current.emit("join", chatRoom.id);
 
-    socket.current.on("message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
+    socketRef.current.on("message", (newMessage) => {
+      console.log("Received new message:", newMessage);
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     axios
-      .get(`http://${ADRESS_API}:5000/chats/conversations/${chatRoom.id}/messages`)
+      .get(`http://${ADRESS_API}:5000/chats/${chatRoom.id}/messages`)
       .then((res) => {
         setMessages(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error fetching messages:", err);
       });
 
     return () => {
-      socket.current.disconnect();
+      socketRef.current.disconnect();
     };
-  }, []);
+  }, [chatRoom.id]);
 
   const sendMessage = () => {
-    socket.current.emit("send", {
-      chatRoomId: chatRoom.id,
-      senderId: currentid,
+    if (!msg || !chatRoom) {
+      return;
+    }
+
+    const messageInput = {
       content: msg,
-    });
-    setMsg("");
+      chatId: chatRoom.id,
+    };
+
+    axios
+      .post(`http://${ADRESS_API}:5000/chats/${chatRoom.id}/message`, messageInput)
+      .then((newMessage) => {
+        socketRef.current.emit("send", newMessage.data);
+        setMessages((prevMessages) => [...prevMessages, newMessage.data]);
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+        setMsg("");
+      })
+      .catch((err) => {
+        console.log("Error sending message:", err);
+      });
   };
 
   return (
-    <View>
-      <Text>Chat with {chatRoom.name}</Text>
-      <ScrollView>
-        {messages.map((message, index) => (
-          <View key={index}>
+    <View style={{ flex: 1 }}>
+      <Text>Chat with {chatRoom.name || foreignid}</Text>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingVertical: 10 }}
+        ref={scrollViewRef}
+      >
+        {messages.map((message) => (
+          <View key={message.id}>
             <Text>
-              {message.sender}: {message.content}
+              {message.senderId}: {message.content}
             </Text>
           </View>
         ))}
       </ScrollView>
-      <TextInput
-        value={msg}
-        onChangeText={(message) => setMsg(message)}
-        placeholder="Type your message..."
-      />
-      <Button onPress={sendMessage} title="Send" />
+      <View>
+        <TextInput
+          value={msg}
+          onChangeText={(text) => setMsg(text)}
+          placeholder="Type your message here"
+        />
+        <Button onPress={sendMessage} title="Send" />
+      </View>
     </View>
   );
 }

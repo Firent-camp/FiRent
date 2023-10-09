@@ -11,20 +11,27 @@ import details from "./Screens/details";
 import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
 import { FIREBASE_AUTH } from "./FireBase";
-import Conversation from "./Screens/Conversation";
-
+import Conversation1 from "./Screens/Conversation1";
+import EditProfile from './Screens/EditProfile'
 const Stack = createStackNavigator();
 const InsideStack = createStackNavigator();
+
+
+
 
 function InsideLayout({ route }) {
   const { user } = route.params;
 
   return (
     <InsideStack.Navigator>
+            {/* <InsideStack.Screen name="EditProfile" component={EditProfile} /> */}
+
       <InsideStack.Screen
         name="todos"
-        component={Conversation}
+        component={Conversation1}
         initialParams={{ user }}
+        options={{ headerShown: false }}
+
       />
       <InsideStack.Screen name="details" component={details} />
       <InsideStack.Screen name="Chat" component={Chat} />
@@ -65,11 +72,17 @@ export default function App() {
               component={Signin}
               initialParams={{ userGetter }}
             />
+            {/* <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+            /> */}
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen
-              name="Conversation"
-              component={Conversation}
+              name="Conversation1"
+              component={Conversation1}
               initialParams={{ user }}
+              options={{ headerShown: false }}
+
             />
             <Stack.Screen
               name="Signup"
