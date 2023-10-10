@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LocationDetails() {
 
     const [url, setUrl] = useState("https://idinterdesign.ca/wp-content/uploads/2016/07/paysage-ID-02.jpg")
 
-
-
+    StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
+    useEffect(() => {
+        // Set status bar style to light-content (for light elements on a dark background)
+        StatusBar.setBarStyle('light-content');
+      }, []);
 
 
     return (
+        <SafeAreaView>
         <View style={styles.locationDetails}>
             <View style={styles.frame61}>
                 <TouchableOpacity onPress={() => setUrl('https://img.lamontagne.fr/aSVPzmqa8Koj6s-xoV-ATuQqCcOPMxht3yaXKZgwI0g/fit/657/438/sm/0/bG9jYWw6Ly8vMDAvMDAvMDYvNTIvODgvMjAwMDAwNjUyODg3NA.jpg')}>
@@ -176,19 +181,19 @@ export default function LocationDetails() {
                 </TouchableOpacity>
             </View>
         </View>
+        </SafeAreaView>
+
     )
 }
 
 const styles = StyleSheet.create({
     locationDetails: {
-
         flexShrink: 0,
-        height: 890,
+        height: "100%",
         width: "100%",
         backgroundColor: "rgba(31, 31, 41, 1)",
         alignItems: "flex-start",
         rowGap: 0,
-        borderRadius: 20
     },
     scrollView: {
         backgroundColor: 'black',
