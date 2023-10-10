@@ -24,30 +24,6 @@ import Payment2 from "./Screens/Payment2";
 
 
 
-function InsideLayout({ route }) {
-  const { user } = route.params;
-
-  return (
-    <InsideStack.Navigator>
-            {/* <InsideStack.Screen name="EditProfile" component={EditProfile} /> */}
-
-      <InsideStack.Screen
-        name="todos"
-        component={Conversation1}
-        initialParams={{ user }}
-        options={{ headerShown: false }}
-
-      />
-
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="todos" component={Conversation} initialParams={{ user }} />
-
-      <InsideStack.Screen name="details" component={details} />
-      <InsideStack.Screen name="Chat" component={Chat} />
-    </InsideStack.Navigator>
-  );
-}
-
 export default function App() {
   const [user, setUser] = useState(null);
 
@@ -55,36 +31,32 @@ export default function App() {
 
   const userGetter = (data) => {
     setUser(data);
-    console.log(user, "user");
+    console.log(data, "user");
   };
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="homePage">
+      <Stack.Navigator initialRouteName={user ? "Inside" : "Signin"}>
         {user ? (
-          <Stack.Screen name="Inside" component={InsideLayout} options={{ headerShown: false }} />
+          <>
+          </>
         ) : (
           <>
-            <Stack.Screen name="homePage" component={homePage} options={{ headerShown: false }} />
-            <Stack.Screen name="checkEmail" component={checkEmail} options={{ headerShown: false }} />
-            <Stack.Screen name="LocationDetails" component={LocationDetails} options={{ headerShown: false }} StatusBar />
+            {/* screen for home page when user not logged  */}
             <Stack.Screen name="Signin" component={Signin} initialParams={{ userGetter }} options={{ headerShown: false }} />
-            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen name="conver" component={Conversation} />
             <Stack.Screen name="Signup" component={Signup} />
-            <Stack.Screen name="Payment1" component={Payment1} options={{ headerShown: false }} />
-            <Stack.Screen name="Payment2" component={Payment2} options={{ headerShown: false }} />
-            <Stack.Screen
-              name="Conversation1"
-              component={Conversation1}
-              initialParams={{ user }}
-              options={{ headerShown: false }}
-
-            />
+            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
           </>
         )}
+        <Stack.Screen name="Conversation1" component={Conversation1} initialParams={{ user }} options={{ headerShown: false }} />
+        <Stack.Screen name="Payment1" component={Payment1} options={{ headerShown: false }} />
+        <Stack.Screen name="Payment2" component={Payment2} options={{ headerShown: false }} />
+        <Stack.Screen name="checkEmail" component={checkEmail} options={{ headerShown: false }} />
+        <Stack.Screen name="homePage" component={homePage} options={{ headerShown: false }} />
+        <Stack.Screen name="LocationDetails" component={LocationDetails} options={{ headerShown: false }} StatusBar />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
