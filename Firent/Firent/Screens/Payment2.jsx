@@ -1,9 +1,46 @@
 import * as React from "react";
-import { Image } from "expo-image";
-import { TextInput, StyleSheet, Text, View } from "react-native";
+import { Image, TextInput, StyleSheet, Text, View, Button } from "react-native";
+import { CardField, useStripe } from "@stripe/stripe-react-native";
 import { Padding, FontFamily, FontSize, Color, Border } from "../globalcss";
 
 const Payment2 = () => {
+  const { confirmPayment } = useStripe();
+  const [clientSecret, setClientSecret] = React.useState(null);
+  const [totalAmount, setTotalAmount] = React.useState("");  // New state
+
+  const fetchPaymentIntent = async () => {
+    try {
+      const response = await fetch("http://your_server_url/create-payment-intent", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount: Number(totalAmount) }),  // Convert string to number
+      });
+      const data = await response.json();
+      setClientSecret(data.clientSecret);
+    } catch (error) {
+      console.error("Error fetching clientSecret:", error);
+    }
+  }
+
+  const handlePay = async () => {
+    if (!clientSecret) {
+      console.error("Client secret is missing");
+      return;
+    }
+
+    const { error } = await confirmPayment(clientSecret, {
+      type: 'Card',
+    });
+
+    if (error) {
+      console.error("Payment failed: ", error);
+    } else {
+      console.log("Payment succeeded!");
+    }
+  };
+
   return (
     <View style={styles.payment2}>
       <View style={[styles.topAppBar, styles.topAppBarLayout]}>
@@ -21,6 +58,7 @@ const Payment2 = () => {
           source={require("../assets/more-vertical.png")}
         />
       </View>
+
       <View style={styles.progressBar}>
         <Image
           style={styles.progressIndicatorIcon}
@@ -33,53 +71,74 @@ const Payment2 = () => {
           <Text style={[styles.payment, styles.detailsTypo]}>Confirm</Text>
         </View>
       </View>
+
       <Image
         style={styles.imageIcon}
         contentFit="cover"
         source={require("../assets/cardimg.png")}
       />
+
       <View style={[styles.continueWrapper, styles.headerIconFlexBox]}>
-        <Text style={[styles.continue, styles.detailsTypo]}>Pay Now</Text>
+        <Button title="Pay Now" onPress={handlePay} />
       </View>
+
+      <CardField
+        style={{ height: 50, margin: 10 }}
+      />
+
       <View style={[styles.form, styles.formPosition]}>
-        <View style={[styles.formChild, styles.formPosition]} />
         <TextInput
-          style={[styles.formChild, styles.nameTypo]}
-          placeholder="Name of Card"
-          placeholderTextColor={"white"}
-        ></TextInput>
+          style={[styles.formChild, styles.formPosition]}
+          placeholder="Name of card"
+          placeholderTextColor={Color.colorWhite}
+        />
       </View>
+
       <View style={[styles.form1, styles.formPosition]}>
         <TextInput
           style={[styles.formChild, styles.formPosition]}
           placeholder="CVV / CVC"
-          placeholderTextColor={"white"}
-          secureTextEntry={true}
+          placeholderTextColor={Color.colorWhite}
         />
       </View>
 
       <View style={styles.form2}>
-        <View style={[styles.formChild, styles.formPosition]} />
         <TextInput
-          style={[styles.nameOfCard, styles.nameTypo]}
-          placeholder="Card Number"
-          placeholderTextColor={"white"}
-        ></TextInput>
+          style={[styles.formChild, styles.formPosition]}
+          placeholder="Name"
+          placeholderTextColor={Color.colorWhite}
+        />
         <View style={[styles.form3, styles.formPosition]}>
-          <View style={[styles.formChild, styles.formPosition]} />
-          <TextInput style={[styles.expringDate, styles.nameTypo]}
-          placeholder="Expiring Date"
-          placeholderTextColor={"white"}>
-            
-          </TextInput>
+          <TextInput
+            style={[styles.formChild, styles.formPosition]}
+            placeholder="Name"
+            placeholderTextColor={Color.colorWhite}
+          />
+        </View>
+      </View>
+
+      <View style={styles.form2}>
+        <TextInput
+          style={[styles.formChild, styles.formPosition]}
+          placeholder="Card number"
+          placeholderTextColor={Color.colorWhite}
+        />
+        <View style={[styles.form3, styles.formPosition]}>
+          <TextInput
+            style={[styles.formChild, styles.formPosition]}
+            placeholder="Expiring date"
+            placeholderTextColor={Color.colorWhite}
+          />
         </View>
       </View>
     </View>
   );
 };
 
+
 const styles = StyleSheet.create({
   topAppBarLayout: {
+    top: 45,
     height: 48,
     left: 0,
     width: "100%",
@@ -169,17 +228,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   progressBar: {
-    top: 96,
+    top: 110,
     left: 99,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
   },
   imageIcon: {
-    top: 175,
+    top: 195,
     left: 42,
     borderRadius: 8,
-    height: 183,
+    height: 205,
     width: 328,
     position: "absolute",
   },
@@ -187,8 +246,8 @@ const styles = StyleSheet.create({
     color: Color.light,
   },
   continueWrapper: {
-    top: 586,
-    left: 236,
+    top: 750,
+    left: 270,
     borderRadius: Border.br_81xl,
     paddingHorizontal: Padding.p_5xl,
     backgroundColor: Color.colorMediumpurple,
@@ -203,7 +262,7 @@ const styles = StyleSheet.create({
     borderColor: Color.colorGray_200,
     borderWidth: 1,
     borderStyle: "solid",
-    top: 0,
+    top: 105,
     height: 50,
   },
   nameOfCard: {
