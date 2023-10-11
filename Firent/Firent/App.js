@@ -46,7 +46,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Signin">
+      <Stack.Navigator initialRouteName="Signup">
         {user ? (
           <>
             <Stack.Screen

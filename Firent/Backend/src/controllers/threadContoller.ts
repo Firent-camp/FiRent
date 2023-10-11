@@ -7,11 +7,19 @@ const prisma = new PrismaClient();
 export const createThread = async (req: Request, res:Response) => {
     try {
         const { title, content, authorId } = req.body;
+        let imagePath = null;
+
+        // If an image file is uploaded, store its path.
+        if (req.file) {
+            imagePath = req.file.path;
+        }
+
         const thread = await prisma.thread.create({
             data: {
                 title,
                 content,
-                authorId
+                authorId,
+                imagePath  // Note: You'll need to update your Prisma schema to handle this field.
             },
         });
         res.status(201).json(thread);
