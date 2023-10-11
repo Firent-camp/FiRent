@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import userRoutes from "./routes/userRoutes";
 import TripRoutes from "./routes/tripRoutes";
-import WishlistRoutes from "./routes/wishlistRoutes";
+// import WishlistRoutes from "./routes/wishlistRoutes";
 import chatRoutes from "./routes/chatRoutes";
 import threadRoutes from './routes/threadRoute';
 import commentRoutes from './routes/commentRoute';
@@ -58,7 +58,7 @@ app.post("/create-payment-intent", async (req, res) => {
 // Routes
 app.use("/users", userRoutes);
 app.use("/trips", TripRoutes);
-app.use("/wishlist", WishlistRoutes);
+// app.use("/wishlist", WishlistRoutes);
 app.use("/chats", chatRoutes);
 app.post("/create-payment-intent", createPaymentIntent);
 app.use('/threads', threadRoutes);
