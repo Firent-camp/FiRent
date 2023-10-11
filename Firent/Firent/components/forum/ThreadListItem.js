@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Axios from 'axios';
 import ADRESS_API from '../../API';
-;
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
-  
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [selectedThreadComments, setSelectedThreadComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,7 +23,18 @@ export default function ThreadListScreen() {
         setError('Failed to fetch threads. Please try again.');
         setLoading(false);
       });
-  }, [threads]);
+  }, []);
+
+  const fetchCommentsForThread = async (threadId) => {
+    try {
+      const response = await Axios.get(`http://${ADRESS_API}:5000/threads/${threadId}/comments`);
+      setSelectedThreadId(threadId);
+      setSelectedThreadComments(response.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      // You may also handle this error visibly to the user if desired
+    }
+  };
 
   if (loading) {
     return (
@@ -44,40 +55,30 @@ export default function ThreadListScreen() {
   return (
     <View style={styles.container}>
       <Text>Thread List</Text>
-      <View>
-        {threads.map((thread) => (
-          <View key={thread.id} style={styles.threadContainer}>
-            <Text>{thread.title}</Text>
-            <Text>{thread.content}</Text>
-            <View style={styles.commentsContainer}>
-              {thread.comments && thread.comments.map((comment) => (
-                <View key={comment.id} style={styles.commentContainer}>
-                  <Text>{comment.author}: {comment.text}</Text>
-                </View>
-              ))}
-              console.log("🚀 ~ file: threadlistitem.js:58 ~ ThreadListScreen ~ comments:", comments)
+      {threads.map((thread) => (
+        <TouchableOpacity key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+          <Text>{thread.title}</Text>
+          <Text>{thread.content}</Text>
+          {selectedThreadId === thread.id && selectedThreadComments.map((comment) => (
+            <View key={comment.id} style={styles.commentContainer}>
+              <Text>{comment.author.userName}: {comment.content}</Text>
             </View>
-          </View>
-        ))}
-      </View>
+          ))}
+        </TouchableOpacity>
+      ))}
     </View>
-  );}
+  );
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-    },
-    threadContainer: {
-      marginBottom: 16,
-    },
-    commentsContainer: {
-      marginTop: 8,
-    },
-    commentContainer: {
-      backgroundColor: '#f5f5f5',
-      padding: 8,
-      borderRadius: 4,
-      marginBottom: 4,
-    },
-  })
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  commentContainer: {
+    backgroundColor: '#f5f5f5',
+    padding: 8,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+});
