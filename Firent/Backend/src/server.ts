@@ -12,23 +12,27 @@ import commentRoutes from './routes/commentRoute';
 import Stripe from "stripe";
 import { createPaymentIntent } from "./controllers/stripeController";
 import { Message } from "./types/rentfire";
+import { createServer } from "http";
 
 const cors = require("cors");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const app = express();
-const server = http.createServer(app);
-
+const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
   },
 });
 
-// Initialize Prisma
 const prisma = new PrismaClient();
 
-// Middleware
+type MessageInput = {
+  chatId: number;
+  senderId: string;
+  content: string;
+};
+
 app.use(cors());
 app.use(express.json());
 
@@ -63,6 +67,7 @@ app.use('/threads/:threadId/comments', commentRoutes);
 
 
 // Socket.IO logic
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
@@ -71,25 +76,23 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log(`User with ID: ${socket.id} joined room: ${room}`);
   });
-  socket.on("send", (data) => {
-    // Change event name to 'send'
-    console.log(data);
-    // Save the message to the database here
-    // Example: You can use Prisma to save messages to your database
-    prisma.message
-      .create({
+
+
+  socket.on("send", async (data: MessageInput) => {
+    try {
+      const { chatId, content, senderId } = data;
+
+      const newMessage = await prisma.message.create({
         data: {
-          chat: data.chatRoomId,
-          sender: data.senderId,
-          content: data.content,
+          chat: { connect: { id: chatId } },
+          content,
         },
-      })
-      .then((message) => {
-        io.to(data.chatRoomId).emit("message", message); // Emit the message back to the chat room
-      })
-      .catch((err) => {
-        console.error(err);
       });
+
+      io.to(chatId.toString()).emit("message", newMessage);
+    } catch (err) {
+      console.error(err);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -102,9 +105,4 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-io.listen(4001);
-const main = () => {
-  console.log("socket.io");
-};
 
-main();

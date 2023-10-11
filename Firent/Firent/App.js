@@ -13,23 +13,34 @@ import checkEmail from "./Screens/checkEmail";
 import details from "./Screens/details";
 import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
+import { FIREBASE_AUTH } from "./FireBase";
+import Conversation1 from "./Screens/Conversation1";
+import EditProfile from './Screens/EditProfile'
+const Stack = createStackNavigator();
+const InsideStack = createStackNavigator();
 import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
-// Firebase
-import { FIREBASE_AUTH } from "./FireBase";
-
-
-const Stack = createStackNavigator();
-const InsideStack = createStackNavigator();
 
 function InsideLayout({ route }) {
   const { user } = route.params;
-  console.log(user, "uuuuuuserrr");
+
   return (
     <InsideStack.Navigator>
+            {/* <InsideStack.Screen name="EditProfile" component={EditProfile} /> */}
+
+      <InsideStack.Screen
+        name="todos"
+        component={Conversation1}
+        initialParams={{ user }}
+        options={{ headerShown: false }}
+
+      />
+
+    <InsideStack.Navigator>
       <InsideStack.Screen name="todos" component={Conversation} initialParams={{ user }} />
+
       <InsideStack.Screen name="details" component={details} />
       <InsideStack.Screen name="Chat" component={Chat} />
     </InsideStack.Navigator>
@@ -38,6 +49,7 @@ function InsideLayout({ route }) {
 
 export default function App() {
   const [user, setUser] = useState(null);
+
   console.log(user, "id user");
 
   const userGetter = (data) => {
@@ -63,6 +75,13 @@ export default function App() {
             <Stack.Screen name="Payment1" component={Payment1} options={{ headerShown: false }} />
             <Stack.Screen name="Payment2" component={Payment2} options={{ headerShown: false }} />
             <Stack.Screen name="Payment3" component={Payment3} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Conversation1"
+              component={Conversation1}
+              initialParams={{ user }}
+              options={{ headerShown: false }}
+
+            />
           </>
         )}
       </Stack.Navigator>
