@@ -16,9 +16,10 @@ import list from "./Screens/list";
 import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
-
+import Payment3 from "./Screens/payment3";
 // Firebase
 import { FIREBASE_AUTH } from "./FireBase";
+
 
 const Stack = createStackNavigator();
 const InsideStack = createStackNavigator();
@@ -46,7 +47,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="homePage">
+      <Stack.Navigator initialRouteName="Signup">
         {user ? (
           <Stack.Screen name="Inside" component={InsideLayout} options={{ headerShown: false }} />
         ) : (
@@ -61,6 +62,7 @@ export default function App() {
             <Stack.Screen name="Signup" component={Signup} />
             <Stack.Screen name="Payment1" component={Payment1} options={{ headerShown: false }} />
             <Stack.Screen name="Payment2" component={Payment2} options={{ headerShown: false }} />
+            <Stack.Screen name="Payment3" component={Payment3} options={{ headerShown: false }} />
           </>
         )}
       </Stack.Navigator>
