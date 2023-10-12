@@ -155,6 +155,11 @@ const styles = StyleSheet.create({
     width: 24,
     overflow: "hidden",
   },
+  moreVerticalIcon: {
+    top: 12,
+    left: 370,
+    position: "absolute",
+  },
   detailsTypo: {
     fontFamily: FontFamily.subtitle14pxmedium,
     fontWeight: "500",
@@ -194,11 +199,11 @@ const styles = StyleSheet.create({
     height: 48,
     left: 0,
   },
-  moreVerticalIcon: {
-    top: 12,
-    left: 370,
-    position: "absolute",
-  },
+iconLayout: {
+        height: 24,
+        width: 24,
+        overflow: "hidden",
+      },
   topAppBar: {
     top: 32,
     width: "100%",
