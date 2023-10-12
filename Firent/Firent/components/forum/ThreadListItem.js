@@ -6,107 +6,107 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import Axios from "axios";
 import ADRESS_API from "../../API";
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
-  console.log(
-    "🚀 ~ file: threadlistitem.js:8 ~ ThreadListScreen ~ threads:",
-    threads
-  );
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedThreadComments, setSelectedThreadComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [commentText, setCommentText] = useState('');
 
-  useEffect(() => {
+  useEffect(() => fetchThreads(), []);
+
+  const fetchThreads = async () => {
     const apiUrl = `http://${ADRESS_API}:5000/threads`;
 
-    Axios.get(apiUrl)
-      .then((response) => {
-        setThreads(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching threads:", err);
-        setError("Failed to fetch threads. Please try again.");
-        setLoading(false);
-      });
-  }, []);
+    try {
+      const response = await Axios.get(apiUrl);
+      setThreads(response.data);
+    } catch (err) {
+      console.error("Error fetching threads:", err);
+      setError("Failed to fetch threads. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchCommentsForThread = async (threadId) => {
+    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/comments`;
+
     try {
-      const response = await Axios.get(
-        `http://${ADRESS_API}:5000/threads/${threadId}/comments`
-      );
+      const response = await Axios.get(apiUrl);
       setSelectedThreadId(threadId);
       setSelectedThreadComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
-      // You may also handle this error visibly to the user if desired
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  const postComment = async () => {
+    if (!selectedThreadId || !commentText) return;
 
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
+    const apiUrl = `http://${ADRESS_API}:5000/threads/${selectedThreadId}/comments`;
 
-  
+    try {
+      await Axios.post(apiUrl, { content: commentText });
+      setCommentText('');
+      fetchCommentsForThread(selectedThreadId);
+    } catch (error) {
+      console.error("Error posting comment:", error);
+    }
+  };
 
+  const renderThread = (thread) => (
+    <TouchableOpacity key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+      {thread.imagePath && <Image source={{ uri: getImageUri(thread.imagePath) }} style={styles.threadImage} />}
+      <Text>{thread.title}</Text>
+      <Text>{thread.content}</Text>
+      {selectedThreadId === thread.id && renderComments()}
+    </TouchableOpacity>
+  );
+
+  const getImageUri = (path) => `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
+
+  const renderComments = () => (
+    <>
+      {selectedThreadComments.map((comment) => (
+        <View key={comment.id} style={styles.commentContainer}>
+          <Text>{comment.author.userName}: {comment.content}</Text>
+        </View>
+      ))}
+      <TextInput style={styles.commentInput} placeholder="Add a comment..." value={commentText} onChangeText={setCommentText} />
+      <TouchableOpacity onPress={postComment} style={styles.postButton}>
+        <Text>Post Comment</Text>
+      </TouchableOpacity>
+    </>
+  );
+
+  if (loading) return <LoadingView />;
+  if (error) return <ErrorView error={error} />;
   return (
     <View style={styles.container}>
       <Text>Thread List</Text>
-      {threads.map((thread) => (
-        
-        <TouchableOpacity
-          key={thread.id}
-          onPress={() => fetchCommentsForThread(thread.id)}
-        >
-          
-          
-          {/* Display the image for the thread */}
-
-          {thread.imagePath && (
-            console.log(`Image URL: http://${ADRESS_API}:5000/${thread.imagePath.replace(/\\/g, "/")}`),
-            <Image
-              source={{
-                uri: `http://${ADRESS_API}:5000/${thread.imagePath.replace(
-                  /\\/g,
-                  "/"
-                )}`,
-              }}
-              style={{ ...styles.threadImage, backgroundColor: "red" }}
-            />
-          )}
-          <Text>{thread.title}</Text>
-          <Text>{thread.content}</Text>
-          {selectedThreadId === thread.id &&
-            selectedThreadComments.map((comment) => (
-              <View key={comment.id} style={styles.commentContainer}>
-                <Text>
-                  {comment.author.userName}: {comment.content}
-                </Text>
-              </View>
-            ))}
-        </TouchableOpacity>
-      ))}
+      {threads.map(renderThread)}
     </View>
   );
 }
+
+const LoadingView = () => (
+  <View style={styles.container}>
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+);
+
+const ErrorView = ({ error }) => (
+  <View style={styles.container}>
+    <Text>{error}</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -124,6 +124,21 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     borderRadius: 8,
+    marginBottom: 8,
+  },
+  commentInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 8,
+  },
+  postButton: {
+    backgroundColor: '#007BFF',
+    padding: 8,
+    borderRadius: 4,
+    alignItems: 'center',
     marginBottom: 8,
   },
 });
