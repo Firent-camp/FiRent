@@ -1,83 +1,151 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import Axios from 'axios';
-import ADRESS_API from '../../API';
-;
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import Axios from "axios";
+import ADRESS_API from "../../API";
+import {FIREBASE_AUTH } from "../../FireBase";
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
-  
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [selectedThreadComments, setSelectedThreadComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [commentText, setCommentText] = useState('');
+  const user=FIREBASE_AUTH.currentUser.uid;
+  console.log(user);
 
-  useEffect(() => {
+  useEffect(() => fetchThreads(), []);
+
+  const fetchThreads = async () => {
     const apiUrl = `http://${ADRESS_API}:5000/threads`;
 
-    Axios.get(apiUrl)
-      .then((response) => {
-        setThreads(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching threads:', err);
-        setError('Failed to fetch threads. Please try again.');
-        setLoading(false);
-      });
-  }, [threads]);
+    try {
+      const response = await Axios.get(apiUrl);
+      setThreads(response.data);
+    } catch (err) {
+      console.error("Error fetching threads:", err);
+      setError("Failed to fetch threads. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  const fetchCommentsForThread = async (threadId) => {
+    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/comments`;
 
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
+    try {
+      const response = await Axios.get(apiUrl);
+      setSelectedThreadId(threadId);
+      setSelectedThreadComments(response.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
 
+  const postComment = async () => {
+    if (!selectedThreadId || !commentText) return;
+
+    const apiUrl = `http://${ADRESS_API}:5000/threads/${selectedThreadId}/comments`;
+    console.log(commentText,"content", user, "user",selectedThreadId,"thread");
+    try {
+      await Axios.post(apiUrl, { 
+      content: commentText,
+      authorId:user,
+      threadId:selectedThreadId 
+    });
+      setCommentText('');
+      fetchCommentsForThread(selectedThreadId);
+    } catch (error) {
+      console.error("Error posting comment:", error);
+    }
+  };
+
+  const renderThread = (thread) => (
+    <TouchableOpacity key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+      {thread.imagePath && <Image source={{ uri: getImageUri(thread.imagePath) }} style={styles.threadImage} />}
+      <Text>{thread.title}</Text>
+      <Text>{thread.content}</Text>
+      {selectedThreadId === thread.id && renderComments()}
+    </TouchableOpacity>
+  );
+
+  const getImageUri = (path) => `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
+
+  const renderComments = () => (
+    <>
+      {selectedThreadComments.map((comment) => (
+        <View key={comment.id} style={styles.commentContainer}>
+          <Text>{comment.author.userName}: {comment.content}</Text>
+        </View>
+      ))}
+      <TextInput style={styles.commentInput} placeholder="Add a comment..." value={commentText} onChangeText={setCommentText} />
+      <TouchableOpacity onPress={postComment} style={styles.postButton}>
+        <Text>Post Comment</Text>
+      </TouchableOpacity>
+    </>
+  );
+
+  if (loading) return <LoadingView />;
+  if (error) return <ErrorView error={error} />;
   return (
     <View style={styles.container}>
       <Text>Thread List</Text>
-      <View>
-        {threads.map((thread) => (
-          <View key={thread.id} style={styles.threadContainer}>
-            <Text>{thread.title}</Text>
-            <Text>{thread.content}</Text>
-            <View style={styles.commentsContainer}>
-              {thread.comments && thread.comments.map((comment) => (
-                <View key={comment.id} style={styles.commentContainer}>
-                  <Text>{comment.author}: {comment.text}</Text>
-                </View>
-              ))}
-              console.log("🚀 ~ file: threadlistitem.js:58 ~ ThreadListScreen ~ comments:", comments)
-            </View>
-          </View>
-        ))}
-      </View>
+      {threads.map(renderThread)}
     </View>
-  );}
+  );
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-    },
-    threadContainer: {
-      marginBottom: 16,
-    },
-    commentsContainer: {
-      marginTop: 8,
-    },
-    commentContainer: {
-      backgroundColor: '#f5f5f5',
-      padding: 8,
-      borderRadius: 4,
-      marginBottom: 4,
-    },
-  })
+const LoadingView = () => (
+  <View style={styles.container}>
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+);
+
+const ErrorView = ({ error }) => (
+  <View style={styles.container}>
+    <Text>{error}</Text>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  commentContainer: {
+    backgroundColor: "#f5f5f5",
+    padding: 8,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+  threadImage: {
+    width: "50%",
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  commentInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 8,
+  },
+  postButton: {
+    backgroundColor: '#007BFF',
+    padding: 8,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+});

@@ -47,7 +47,11 @@ export default function App() {
   return (
     <NavigationContainer>
 
+
       <Stack.Navigator initialRouteName="Userprofilimages">
+
+      <Stack.Navigator initialRouteName="Signup">
+
         {user ? (
           <>
             <Stack.Screen
