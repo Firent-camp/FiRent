@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StatusBar, Image, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
 import Signin from "./Screens/Signin";
@@ -10,30 +11,29 @@ import Chat from "./Screens/Chat";
 import Login from "./Screens/login";
 import homePage from "./Screens/homePage";
 import checkEmail from "./Screens/checkEmail";
-import details from "./Screens/details";
 import LocationDetails from "./Screens/locationDetails";
 import list from "./Screens/list";
 import { FIREBASE_AUTH } from "./FireBase";
 import Conversation1 from "./Screens/Conversation1";
 import EditProfile from "./Screens/EditProfile";
 import ThreadList from "../Firent/components/forum/ThreadListItem";
+import Cart from "./Screens/Cart";
 import CommentListItem from "../Firent/components/forum/CommonListItem";
-
+import HpUserNotConnected from "./Screens/HpUserNotConnected";
 const Stack = createStackNavigator();
 const InsideStack = createStackNavigator();
 import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
-
+import Userprofilimages from "./Screens/UserProfilImages";
+import ImageGrid from "./Screens/ImageGrid";
 export default function App() {
   const [user, setUser] = useState(null);
 
-  console.log(user, "id user");
 
   const userGetter = (data) => {
     setUser(data);
-    console.log(user, "user");
   };
 
   useEffect(() => {
@@ -46,7 +46,12 @@ export default function App() {
 
   return (
     <NavigationContainer>
+
+
+      <Stack.Navigator initialRouteName="Userprofilimages">
+
       <Stack.Navigator initialRouteName="Signup">
+
         {user ? (
           <>
             <Stack.Screen
@@ -62,9 +67,29 @@ export default function App() {
           </>
         ) : (
           <>
+          <Stack.Screen
+              name="ImageGrid"
+              component={ImageGrid}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="homePage"
               component={homePage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Userprofilimages"
+              component={Userprofilimages}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="HpUserNotConnected"
+              component={HpUserNotConnected}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -99,6 +124,11 @@ export default function App() {
             <Stack.Screen
               name="Payment2"
               component={Payment2}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Cart"
+              component={Cart}
               options={{ headerShown: false }}
             />
             <Stack.Screen
