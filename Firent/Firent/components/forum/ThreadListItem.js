@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Axios from "axios";
 import ADRESS_API from "../../API";
+import {FIREBASE_AUTH } from "../../FireBase";
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
@@ -18,6 +19,8 @@ export default function ThreadListScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [commentText, setCommentText] = useState('');
+  const user=FIREBASE_AUTH.currentUser.uid;
+  console.log(user);
 
   useEffect(() => fetchThreads(), []);
 
@@ -51,9 +54,13 @@ export default function ThreadListScreen() {
     if (!selectedThreadId || !commentText) return;
 
     const apiUrl = `http://${ADRESS_API}:5000/threads/${selectedThreadId}/comments`;
-
+    console.log(commentText,"content", user, "user",selectedThreadId,"thread");
     try {
-      await Axios.post(apiUrl, { content: commentText });
+      await Axios.post(apiUrl, { 
+      content: commentText,
+      authorId:user,
+      threadId:selectedThreadId 
+    });
       setCommentText('');
       fetchCommentsForThread(selectedThreadId);
     } catch (error) {
