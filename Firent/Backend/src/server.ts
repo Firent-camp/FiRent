@@ -1,10 +1,17 @@
 import express from "express";
 import http from "http";
+import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import userRoutes from "./routes/userRoutes";
 import TripRoutes from "./routes/tripRoutes";
+// import WishlistRoutes from "./routes/wishlistRoutes";
 import chatRoutes from "./routes/chatRoutes";
-import { Server, Socket } from "socket.io";
+import threadRoutes from './routes/threadRoute';
+import commentRoutes from './routes/commentRoute';
+import Stripe from "stripe";
+import { Socket } from "socket.io";
+import { createPaymentIntent } from "./controllers/stripeController";
+import { Message } from "./types/rentfire";
 
 const app = express();
 const server = http.createServer(app);
