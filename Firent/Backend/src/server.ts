@@ -16,10 +16,38 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
+// Initialize Stripe with your secret key
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-08-16",
+});
+
+// Add Stripe Route to Handle Payments
+app.post("/create-payment-intent", async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // in the smallest currency unit, e.g., cents for USD
+      currency: "usd",
+    });
+    res.send({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).send({ error: "Payment Intent creation failed" });
+  }
+});
+
+// Routes
 app.use("/users", userRoutes);
 app.use("/trips", TripRoutes);
 app.use("/chats", chatRoutes);
+app.post("/create-payment-intent", createPaymentIntent);
+app.use('/threads', threadRoutes);
+app.use('/threads/:threadId/comments', commentRoutes);
+
+
+
+// Socket.IO logic
 
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);

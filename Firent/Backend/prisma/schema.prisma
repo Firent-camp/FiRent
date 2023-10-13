@@ -16,6 +16,7 @@ enum EntityTypes {
   CAMPGROUND
   USER
   EQUIPMENT
+  THREAD 
 }
 
 enum NotificationTypes {
@@ -37,6 +38,8 @@ model User {
   chat     Chat?     @relation(fields: [chatId], references: [id])
   chatId   Int?
   sentMessages Message[] @relation("SentMessages") 
+  threads  Thread[]
+   comments Comment[]
 }
 
 model Trip {
@@ -60,6 +63,8 @@ model Image {
   entityId   String
   tripId     Int?
   trip       Trip?      @relation(fields: [tripId], references: [id])
+  threadId   Int?       // Added this line
+  thread     Thread?    @relation(fields: [threadId], references: [id])  // And this line
 }
 
 model Wishlist {
@@ -106,3 +111,28 @@ model Message {
   sender   User     @relation("SentMessages", fields: [senderId], references: [firebaseId]) 
 }
 
+model Thread {
+  id         Int       @id @default(autoincrement())
+  title      String
+  content    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  authorId   String
+  author     User      @relation(fields: [authorId], references: [firebaseId])
+  comments   Comment[]
+  images     Image[]   
+  imagePath String?
+}
+
+
+
+model Comment {
+  id         Int       @id @default(autoincrement())
+  content    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  threadId   Int
+  thread     Thread    @relation(fields: [threadId], references: [id])
+  authorId   String
+  author     User      @relation(fields: [authorId], references: [firebaseId])
+}

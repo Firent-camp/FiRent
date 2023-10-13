@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.subtitle14pxmedium_size,
   },
   continueWrapper: {
-    bottom: 105,
+    bottom: 65,
     left: 255,
     borderRadius: Border.br_81xl,
     paddingHorizontal: Padding.p_5xl,
@@ -352,6 +352,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',     
     backgroundColor: Color.colorGray_100,
+    width:"100%",
+    height:"100%"
+    
   }
 });
 
