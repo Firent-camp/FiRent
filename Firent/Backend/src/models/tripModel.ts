@@ -1,5 +1,5 @@
 import { PrismaClient} from '@prisma/client';
-import { Trip, Image, EntityType,  } from '../types/rentfire';
+import { Trip, Image, EntityType  } from '../types/rentfire';
 
 const prisma = new PrismaClient();
 

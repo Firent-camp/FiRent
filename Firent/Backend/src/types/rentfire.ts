@@ -1,17 +1,17 @@
+// rentfire.ts
 export interface User {
   firebaseId: string;
-  name: string;
   lastName: string;
   userName: string;
   email: string;
-  password: string;
-  role: UserRole;
+  role: UserRoles;
   address: string;
   trips: Trip[];
   cart: Cart[];
   wishlist: Wishlist[];
-  profile?: Profile;
-  images: Image[];
+  profile: Profile | null;
+  chat: Chat | null;
+  chatId: number | null;
 }
 
 export interface Trip {
@@ -33,12 +33,11 @@ export interface Image {
   imageId: string;
   entityType: EntityType;
   entityId: string;
-  tripId?: number;
-  trip?: Trip;
+  tripId: number | null;
+  trip: Trip | null;
 }
 
 export interface Wishlist {
-  id: number;
   userId: string;
   tripId: number;
   user: User;
@@ -46,7 +45,6 @@ export interface Wishlist {
 }
 
 export interface Cart {
-  id: number;
   userId: string;
   tripId: number;
   user: User;
@@ -55,44 +53,41 @@ export interface Cart {
 
 export interface Notification {
   id: number;
-  type: NotificationType;
+  type: NotificationTypes;
   time: Date;
 }
 
 export interface Profile {
-  id: number;
   userId: string;
   user: User;
 }
 
 export interface Chat {
-  id: string;
-  firebaseId: string;
-  latestMessage: string | null;
+  id: number;
+  participants: User[];
   messages: Message[];
 }
 
 export interface Message {
-  id: string;
-  sender: string | null;
-  content: string | null;
-  createdAt: Date | null;
-  chat: Chat | null;
-  chatId: string;
+  id: number;
+  content: string;
+  senderId: string;
+  chat: Chat;
+  chatId: number;
 }
 
-export enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
+export enum UserRoles {
+  USER = "USER",
+  ADMIN = "ADMIN",
 }
 
 export enum EntityType {
-  CAMPGROUND = 'CAMPGROUND',
-  USER = 'USER',
-  EQUIPMENT = 'EQUIPMENT',
+  CAMPGROUND = "CAMPGROUND",
+  USER = "USER",
+  EQUIPMENT = "EQUIPMENT",
 }
 
-export enum NotificationType {
-  TYPE1 = 'TYPE1',
-  TYPE2 = 'TYPE2',
+export enum NotificationTypes {
+  TYPE1 = "TYPE1",
+  TYPE2 = "TYPE2",
 }
