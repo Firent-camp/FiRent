@@ -13,8 +13,8 @@ function Chat({ route }) {
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io(`http://${ADRESS_API}:5000`);
-    socketRef.current.emit("join", chatRoom.id);
+    socketRef.current = io(`http://${ADRESS_API}:5000`); // Corrected the URL
+    socketRef.current.emit("joinChat", chatRoom.id);
 
     socketRef.current.on("message", (newMessage) => {
       console.log("Received new message:", newMessage);
@@ -49,7 +49,7 @@ function Chat({ route }) {
     axios
       .post(`http://${ADRESS_API}:5000/chats/${chatRoom.id}/message`, messageInput)
       .then((newMessage) => {
-        socketRef.current.emit("send", newMessage.data);
+        socketRef.current.emit("sendMessage", newMessage.data);
         setMessages((prevMessages) => [...prevMessages, newMessage.data]);
         scrollViewRef.current?.scrollToEnd({ animated: true });
         setMsg("");
@@ -70,7 +70,7 @@ function Chat({ route }) {
         {messages.map((message) => (
           <View key={message.id}>
             <Text>
-              {message.senderId}: {message.content}
+              {message.sender.firebaseId}: {message.content}
             </Text>
           </View>
         ))}

@@ -26,6 +26,8 @@ import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
+
+
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 export default function App() {
@@ -34,6 +36,8 @@ export default function App() {
 
   const userGetter = (data) => {
     setUser(data);
+    console.log(data, "user");
+
   };
 
   useEffect(() => {
@@ -46,12 +50,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-
-
+      <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
       <Stack.Navigator initialRouteName="Userprofilimages">
-
       <Stack.Navigator initialRouteName="Signup">
-
         {user ? (
           <>
             <Stack.Screen
@@ -64,6 +65,9 @@ export default function App() {
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
             />
+             <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Signin" component={Signin} initialParams={{ userGetter }} options={{ headerShown: false }} />
+            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
           </>
         ) : (
           <>
@@ -144,7 +148,9 @@ export default function App() {
             />
           </>
         )}
+       
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
