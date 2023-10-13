@@ -36,15 +36,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? "Inside" : "Signin"}>
+      <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
           </>
         ) : (
           <>
             {/* screen for home page when user not logged  */}
-            <Stack.Screen name="Signin" component={Signin} initialParams={{ userGetter }} options={{ headerShown: false }} />
             <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Signin" component={Signin} initialParams={{ userGetter }} options={{ headerShown: false }} />
             <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
           </>
         )}
