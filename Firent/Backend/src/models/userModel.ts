@@ -45,18 +45,20 @@ export const getAllUsers = async () => {
 };
 
 export const updateUser = async (id: string, userData: Partial<User>) => {
-  
-  const updatedUser = await prisma.user.update({
-    where: {
-      firebaseId: id,
-    },
-    data: userData,
-    include: {
-      images: true,
-    },
-  });
-  return updatedUser;
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        firebaseId: id,
+      },
+      data: userData,
+    });
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
 };
+
 
 
 
