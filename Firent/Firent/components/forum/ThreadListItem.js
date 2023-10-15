@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  ScrollView,
   Image,
   View,
   Text,
@@ -7,10 +8,11 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   TextInput,
+  FlatList
 } from "react-native";
 import Axios from "axios";
 import ADRESS_API from "../../API";
-import {FIREBASE_AUTH } from "../../FireBase";
+import { FIREBASE_AUTH } from "../../FireBase";
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
@@ -70,14 +72,27 @@ export default function ThreadListScreen() {
 
   const renderThread = (thread) => (
     <TouchableOpacity key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+      <Text style={styles.usernameText}>{thread.author.userName}</Text>
+      <Text style={styles.timestampText}>5 minutes ago</Text>
+      <Text style={styles.threadContent}>{thread.title}</Text>
       {thread.imagePath && <Image source={{ uri: getImageUri(thread.imagePath) }} style={styles.threadImage} />}
-      <Text>{thread.title}</Text>
-      <Text>{thread.content}</Text>
+      
+      <Text style={styles.threadContent}>{thread.content}</Text>
       {selectedThreadId === thread.id && renderComments()}
     </TouchableOpacity>
   );
+  
 
-  const getImageUri = (path) => `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
+  
+
+const getImageUri = (path) => {
+  if (!path) {
+      console.warn("Path is undefined.");
+      return "";  // or return a default image path if you have one
+  }
+  return `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
+};
+
 
   const renderComments = () => (
     <>
@@ -97,11 +112,18 @@ export default function ThreadListScreen() {
   if (error) return <ErrorView error={error} />;
   return (
     <View style={styles.container}>
-      <Text>Thread List</Text>
-      {threads.map(renderThread)}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Forum</Text>
+      </View>
+      <FlatList
+        data={threads}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => renderThread(item)}
+      />
     </View>
   );
 }
+
 
 const LoadingView = () => (
   <View style={styles.container}>
@@ -115,37 +137,139 @@ const ErrorView = ({ error }) => (
   </View>
 );
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: '#f0f0f0',
   },
-  commentContainer: {
-    backgroundColor: "#f5f5f5",
-    padding: 8,
-    borderRadius: 4,
-    marginBottom: 4,
+  header: {
+    backgroundColor: '#444',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  headerText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  threadItem: {
+    backgroundColor: 'white',
+    marginHorizontal: 15,
+    marginTop: 10,
+    marginBottom: 5,
+    padding: 15,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  usernameText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  timestampText: {
+    fontSize: 12,
+    color: 'gray',
+    marginBottom: 10,
   },
   threadImage: {
-    width: "50%",
+    width: '100%',
     height: 200,
-    resizeMode: "cover",
+    marginTop: 10,
+    marginBottom: 10,
     borderRadius: 8,
-    marginBottom: 8,
+  },
+  threadContent: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  hashtags: {
+    fontSize: 12,
+    color: 'blue',
+    marginBottom: 10,
+  },
+  commentContainer: {
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    marginTop: 10,
+    paddingTop: 10,
+  },
+  commentText: {
+    fontSize: 14,
   },
   commentInput: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
-    marginBottom: 8,
+    marginTop: 10,
+    borderRadius: 5,
+    paddingHorizontal: 10,
   },
   postButton: {
+    marginTop: 10,
+    padding: 10,
     backgroundColor: '#007BFF',
-    padding: 8,
-    borderRadius: 4,
+    borderRadius: 5,
     alignItems: 'center',
-    marginBottom: 8,
   },
+  postButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  authorInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5
+  },
+  authorImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10
+  },
+  authorTextContainer: {
+    flex: 1
+  },
+  authorName: {
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+  threadContentTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 5
+  },
+  hashtags: {
+    fontSize: 14,
+    color: 'blue',
+    marginBottom: 10
+  },
+  commentContainer: {
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    marginTop: 10,
+    paddingTop: 10,
+    flexDirection: 'row'
+  },
+  commenterImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 10
+  },
+  commentTextContainer: {
+    flex: 1
+  },
+  commenterName: {
+    fontWeight: 'bold'
+  }
 });

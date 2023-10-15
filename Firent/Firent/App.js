@@ -52,7 +52,8 @@ export default function App() {
             <Stack.Screen
               name="Threads"
               component={ThreadList}
-              options={{ title: "Forum Threads" }}
+              // options={{ title: "Forum Threads" }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Comments"
