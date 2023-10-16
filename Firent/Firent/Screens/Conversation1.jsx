@@ -8,7 +8,6 @@ function Conversation1({ route, navigation }) {
   const { user } = route.params;
   const [users, setUsers] = useState([]);
   const [chatId, setChatId] = useState(null);
-  console.log("🚀 ~ file: Conversation1.jsx:11 ~ Conversation1 ~ chatId:", chatId)
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const socket = useRef();
