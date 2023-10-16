@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { View, Text, ImageBackground, StyleSheet, StatusBar, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Svg, Circle, Path, Defs, Pattern, Use, Image } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
 

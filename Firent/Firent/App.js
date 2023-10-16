@@ -31,7 +31,6 @@ const InsideStack = createStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
-console.log(user,"userr");
   const userGetter = (data) => {
     setUser(data);
   };
@@ -42,16 +41,16 @@ console.log(user,"userr");
         {user ? (
           <>
             <Stack.Screen
+                  name="EditProfile"
+                  component={EditProfile}
+                  initialParams={{ userGetter, firebaseId: user.id }}
+                  options={{ headerShown: false }}
+           />
+            <Stack.Screen
                   name="homePage"
                   component={homePage}
                   options={{ headerShown: false }}
             />
-             <Stack.Screen
-                  name="EditProfile"
-                  component={EditProfile}
-                  initialParams={{ userGetter }}
-                  options={{ headerShown: false }}
-                />
             <Stack.Screen
               name="Conversation1"
               component={Conversation1}
