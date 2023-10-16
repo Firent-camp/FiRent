@@ -1,13 +1,27 @@
 import React, { useEffect } from 'react';
 import { View, Text, ImageBackground, StyleSheet, StatusBar, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Svg, Circle, Path, Defs, Pattern, Use, Image } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import { signOut } from "firebase/auth";
+import { FIREBASE_AUTH } from "../FireBase";
 
 export default function HomeUserconnected() {
-    StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
+    StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
+    const navigation = useNavigation();
+
     useEffect(() => {
-        // Set status bar style to light-content (for light elements on a dark background)
         StatusBar.setBarStyle('light-content');
     }, []);
+
+    const logout = async () => {
+        try {
+          await signOut(FIREBASE_AUTH);
+          navigation.navigate("HpUserNotConnected");
+        } catch (error) {
+          console.error("Error logging out:", error);   }
+      };
+      
     return (
         <View style={styles.homeUserconnected}>
             <View style={styles.frame7}>
@@ -383,7 +397,7 @@ export default function HomeUserconnected() {
 
             <View style={styles._frame6}>
                 <View style={styles.group3470}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={logout}>
 
                         <View style={styles.logout}>
                             <Svg style={styles._vector} width="14" height="9" viewBox="0 0 14 9" fill="none" >

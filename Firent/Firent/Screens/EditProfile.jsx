@@ -2,7 +2,23 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 
-export default function EditProfile() {
+export default function EditProfile(route) {
+  // const { user } = route.params;
+  // const [formData, setFormData] = useState({
+  //   firstName: user.firstName,
+  //   lastName: user.lastName,
+  //   password: user.password,
+  //   adress :user.adress
+  // });
+ 
+  // const handleInputChange = (fieldName, text) => {
+  //   setFormData({ ...formData, [fieldName]: text });
+  // };
+
+  // Handle form submission
+  const handleSubmit = () => {
+    // Implement the logic to send the updated user data to the server
+  };
   return (
 
     <View style={styles.group3567}>
@@ -57,6 +73,7 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Name"
                     placeholderTextColor="white"
+            
                   />
                 </View>
               </View>
@@ -77,6 +94,7 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Last name"
                     placeholderTextColor="white"
+                   
                   />
 
                 </View>
@@ -109,7 +127,7 @@ export default function EditProfile() {
           <View style={styles.group3555}>
             <View style={styles.___group3545}>
               <Text style={styles.dateofbirth}>
-                {`Date of birth`}
+                {`Adresse`}
               </Text>
               <View style={styles.___group3551}>
                 <Svg style={styles.___group3546} width="342" height="44" viewBox="0 0 342 44" fill="none" >
@@ -119,7 +137,7 @@ export default function EditProfile() {
 
                 <TextInput
                   style={styles._melissa}
-                  placeholder="JJ/MM/YYYY"
+                  placeholder="Tunisie"
                   placeholderTextColor="white"
                 />
               </View>
@@ -141,6 +159,7 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Email@email.com"
                     placeholderTextColor="white"
+  
                   />
                 </View>
               </View>
