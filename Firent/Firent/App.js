@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StatusBar, Image, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 // Screens
 import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
@@ -27,38 +27,37 @@ import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
 
-
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
+
+
 export default function App() {
   const [user, setUser] = useState(null);
-
 
   const userGetter = (data) => {
     setUser(data);
     console.log(data, "user");
-
   };
-
-  useEffect(() => {
-    // Check if user is logged in and navigate accordingly
-    if (user) {
-      // Navigate to "Threads" screen
-      // You can also add more navigation logic here if needed
-    }
-  }, [user]);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
-      <Stack.Navigator initialRouteName="Userprofilimages">
-      <Stack.Navigator initialRouteName="Signup">
+      <Stack.Navigator initialRouteName={user ? "Threads" : "Signup"}>
+        <Stack.Screen
+          name="Signin"
+          component={Signin}
+          initialParams={{ userGetter }}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
         {user ? (
           <>
             <Stack.Screen
               name="Threads"
               component={ThreadList}
-              // options={{ title: "Forum Threads" }}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -66,13 +65,10 @@ export default function App() {
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
             />
-             <Stack.Screen name="Signup" component={Signup} />
-            <Stack.Screen name="Signin" component={Signin} initialParams={{ userGetter }} options={{ headerShown: false }} />
-            <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
           </>
         ) : (
           <>
-          <Stack.Screen
+            <Stack.Screen
               name="ImageGrid"
               component={ImageGrid}
               options={{ headerShown: false }}
@@ -106,18 +102,6 @@ export default function App() {
               name="LocationDetails"
               component={LocationDetails}
               options={{ headerShown: false }}
-              StatusBar
-            />
-            <Stack.Screen
-              name="Signin"
-              component={Signin}
-              initialParams={{ userGetter }}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="login"
-              component={Login}
-              options={{ headerShown: false }}
             />
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="Signup" component={Signup} />
@@ -149,9 +133,7 @@ export default function App() {
             />
           </>
         )}
-       
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-

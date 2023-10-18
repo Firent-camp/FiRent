@@ -26,21 +26,25 @@ console.log(userGetter,"userGtter");
       }
    
 
-    const signIn = async () => {
+      const signIn = async () => {
         try {
-            await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-
+            const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+            console.log(response);
+    
             onAuthStateChanged(FIREBASE_AUTH, (user) => {
                 console.log("userFromAuth", user);
-              })
-          const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-          console.log(response);
-          userGetter(response.user.uid)
+            });
+    
+            userGetter(response.user.uid);
+    
+            // Navigate to Threads screen after successful sign-in
+            navigation.navigate('Threads');
     
         } catch (error) {
             alert(`Sign-in failed: ${error.message}`);
-        } 
+        }
     };
+    
 
     return (
         <View style={styles.container}>
