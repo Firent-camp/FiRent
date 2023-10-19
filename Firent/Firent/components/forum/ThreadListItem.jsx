@@ -14,6 +14,9 @@ import Axios from "axios";
 import ADRESS_API from "../../API";
 import { FIREBASE_AUTH } from "../../FireBase";
 import * as ImagePicker from 'expo-image-picker';
+const CLOUD_NAME = 'duwjio4uk'; // Replace 'your_cloud_name' with your Cloudinary cloud name
+const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+const UPLOAD_PRESET = 'rqhyhetx'; // Replace 'your_upload_preset' with your Cloudinary unsigned upload preset
 
 
 export default function ThreadListScreen() {
@@ -26,6 +29,7 @@ export default function ThreadListScreen() {
   const [newThreadTitle, setNewThreadTitle] = useState("");
   const [newThreadContent, setNewThreadContent] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [image,setImage] = useState("")
   const user = FIREBASE_AUTH.currentUser.uid;
   const REACTIONS = ["like", "dislike"];
 
@@ -46,7 +50,6 @@ export default function ThreadListScreen() {
 
 
   const pickImage = async () => {
-    
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -54,12 +57,12 @@ export default function ThreadListScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    if (!result.cancelled && result.assets && result.assets.length > 0) {
+      uploadImageToCloudinary(result.assets[0].uri);
     }
-  };
+  }
+
+ 
 
   const fetchCommentsForThread = async (threadId) => {
     const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/comments`;
@@ -71,6 +74,46 @@ export default function ThreadListScreen() {
       console.error("Error fetching comments:", error);
     }
   };
+
+  const uploadImageToCloudinary = async (imageUri) => {
+    const data = new FormData();
+    let filename = imageUri.split('/').pop();
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+
+    if (type === 'image/jpg') type = 'image/jpeg';
+    if (type === 'image/png') type = 'image/png';
+
+    data.append('file', { uri: imageUri, name: filename, type });
+    data.append('upload_preset', 'rqhyhetx');
+
+    try {
+      let response = await Axios.post(
+        'https://api.cloudinary.com/v1_1/duwjio4uk/image/upload',
+        data,
+        {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data.secure_url !== '') {
+        const image = response.data.secure_url;
+        const images = response.data 
+        console.log(images,"imaaaagessssssssssssssssssssssssssssssssssssss");
+        console.log(image,"imaaaaaaaaaaaaaaaaaaaaaaaaaaaage");
+        setImage(image);
+      } else {
+        Alert.alert('Error', 'Image upload failed');
+      }
+    } catch (err) {
+      Alert.alert('Error', 'Image upload failed');
+      console.log('Upload Image Error', err, err.request, err.response);
+    }
+  };
+
 
   const postComment = async () => {
     if (!selectedThreadId || !commentText) return;
@@ -87,7 +130,7 @@ export default function ThreadListScreen() {
       console.error("Error posting comment:", error);
     }
   };
-
+  console.log(image,"imageurl");
   const handleReaction = async (threadId, reactionType) => {
     const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
     try {
@@ -100,20 +143,25 @@ export default function ThreadListScreen() {
 
   const postNewThread = async () => {
     const apiUrl = `http://${ADRESS_API}:5000/threads`;
+  
     if (!newThreadTitle || !newThreadContent) return;
+  
+    // Start by picking an image
+  
+  
     try {
-      await Axios.post(apiUrl, { 
-        title: newThreadTitle,
-        content: newThreadContent,
-        authorId: user
-      });
-      setNewThreadTitle('');
-      setNewThreadContent('');
-      fetchThreads(); 
+   console.log(typeof image,"salem");
+      const res = await Axios.post(apiUrl, {title:newThreadTitle,content:newThreadContent,imagePath:image,authorId:user});
+      console.log(res.data,"response");
+      // setNewThreadTitle('');
+      // setNewThreadContent('');  
+      // fetchThreads();
     } catch (error) {
       console.error("Error posting new thread:", error);
     }
   };
+  
+  
 
   const renderReactions = (thread) => (
     <View style={{ flexDirection: "row", marginVertical: 5 }}>
@@ -131,14 +179,15 @@ export default function ThreadListScreen() {
   const renderThread = (thread) => (
     <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
       <View style={styles.authorInfoContainer}>
-        <Image source={{ uri: getImageUri(thread.author.profileImage) }} style={styles.authorImage} />
+        <Image source={{ uri: getImageUri(thread.author.profileImage) || null }} style={styles.authorImage} />
         <View style={styles.authorTextContainer}>
           <Text style={styles.authorName}>{thread.author.userName}</Text>
           <Text style={styles.timestampText}>5 minutes ago</Text>
         </View>
       </View>
       <Text style={styles.threadContentTitle}>{thread.title}</Text>
-      {thread.imagePath && <Image source={{ uri: getImageUri(thread.imagePath) }} style={styles.threadImage} />}
+      <Image source={{ uri: thread.imagePath }} style={{ width: 200, height: 200 }} />
+
       <Text style={styles.threadContent}>{thread.content}</Text>
       {renderReactions(thread)} 
       {selectedThreadId === thread.id && renderComments()}
@@ -147,7 +196,7 @@ export default function ThreadListScreen() {
 
   const getImageUri = (path) => {
     if (!path) {
-      console.warn("Path is undefined.");
+      // console.warn("Path is undefined.");
       return "";  
     }
     return `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
@@ -199,7 +248,7 @@ export default function ThreadListScreen() {
       <TouchableOpacity onPress={pickImage}>
       <Text>Select Image</Text>
     </TouchableOpacity>
-    {selectedImage && <Image source={selectedImage} style={{ width: 100, height: 100 }} />}
+    {/* {selectedImage && <Image source={selectedImage} style={{ width: 300, height: 300 }} />} */}
       <FlatList
         data={threads}
         keyExtractor={(item) => item.id.toString()}
@@ -222,76 +271,75 @@ const ErrorView = ({ error }) => (
 );
 
 const styles = StyleSheet.create({
-  // ... Define your styles here
   centeredContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "white"
   },
   threadItem: {
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee"
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#e1e8ed"
   },
   authorInfoContainer: {
     flexDirection: "row",
     alignItems: "center"
   },
   authorImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25
+    width: 40,
+    height: 40,
+    borderRadius: 20
   },
   authorTextContainer: {
     marginLeft: 10
   },
   authorName: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#14171A"
   },
   timestampText: {
-    color: "#888"
+    color: "#657786"
   },
   threadContentTitle: {
     fontWeight: "bold",
-    marginTop: 10
-  },
-  threadImage: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-    marginTop: 10
+    marginTop: 10,
+    color: "#14171A"
   },
   threadContent: {
-    marginTop: 10
+    marginTop: 10,
+    color: "#14171A"
   },
   commentContainer: {
     flexDirection: "row",
     marginTop: 10
   },
   commenterImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20
+    width: 30,
+    height: 30,
+    borderRadius: 15
   },
   commentTextContainer: {
     marginLeft: 10,
     flex: 1
   },
   commenterName: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#14171A"
   },
   commentInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#e1e8ed",
     padding: 10,
     margin: 10,
-    borderRadius: 5
+    borderRadius: 20,
+    backgroundColor: "#f5f8fa"
   },
   postButton: {
     backgroundColor: "#1DA1F2",
     padding: 10,
     margin: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     alignItems: "center"
   },
   postButtonText: {
@@ -299,28 +347,32 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   header: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#1DA1F2",
     padding: 10,
-    alignItems: "center"
+    alignItems: "center",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#e1e8ed"
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "white"
   },
   newThreadInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#e1e8ed',
     borderWidth: 1,
     marginTop: 10,
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 10,
+    backgroundColor: "#f5f8fa"
   },
   postThreadButton: {
     marginTop: 10,
     padding: 10,
     backgroundColor: '#1DA1F2',
-    borderRadius: 5,
+    borderRadius: 20,
     alignItems: 'center',
   }
 });

@@ -130,7 +130,7 @@ model Thread {
   author     User      @relation(fields: [authorId], references: [firebaseId])
   comments   Comment[]
   images     Image[]   
-  imagePath String?
+  imagePath String?   @db.LongText
   reactions Reaction[]
 }
 
