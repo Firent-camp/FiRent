@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, View, StyleSheet } from "react-native";
+// import { StatusBar, Image, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import ADRESS_API from "./API";
 // Screens
@@ -14,9 +13,6 @@ import checkEmail from "./Screens/checkEmail";
 import LocationDetails from "./Screens/locationDetails";
 // import list from "./Screens/list";
 // import { FIREBASE_AUTH } from "./FireBase";
-
-// Import your screens here
-import BottomNavigation from "./component/BottomNavigation";
 import Conversation1 from "./Screens/Conversation1";
 import EditProfile from "./Screens/EditProfile";
 import ThreadList from "../Firent/components/forum/ThreadListItem";
@@ -26,11 +22,9 @@ import HpUserNotConnected from "./Screens/HpUserNotConnected";
 // import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
-import Payment3 from "./Screens/payment3";import Userprofilimages from "./Screens/UserProfilImages";
+import Payment3 from "./Screens/payment3";
+import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
-import Test from "./Screens/Test";
-
-
 
 export default function App() {
   const [user, setUser] = useState(null);
