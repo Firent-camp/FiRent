@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
+import BottomNavigation from "./component/BottomNavigation";
 import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
@@ -28,6 +29,7 @@ import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
+import Test from "./Screens/test";
 export default function App() {
   const [user, setUser] = useState(null);
 
@@ -47,7 +49,7 @@ export default function App() {
   return (
     <NavigationContainer>
 
-      <Stack.Navigator initialRouteName="Userprofilimages">
+      <Stack.Navigator initialRouteName="homePage">
         {user ? (
           <>
             <Stack.Screen
@@ -68,6 +70,11 @@ export default function App() {
               component={ImageGrid}
               options={{ headerShown: false }}
             />
+             <Stack.Screen
+              name="Test"
+              component={Test}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="homePage"
               component={homePage}
@@ -76,6 +83,11 @@ export default function App() {
             <Stack.Screen
               name="Userprofilimages"
               component={Userprofilimages}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="BottomNavigation"
+              component={BottomNavigation}
               options={{ headerShown: false }}
             />
             <Stack.Screen
