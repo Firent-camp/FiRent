@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ImageBackground, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomNavigation from '../component/BottomNavigation';
 
 export default function LocationDetails() {
 
@@ -52,24 +53,20 @@ export default function LocationDetails() {
             <View style={styles.frame54}>
                 <ImageBackground style={styles._unsplashDD1fSz2HF1s} source={{ uri: url }} />
                 <View style={styles.unsplashoR0uERTVyD0} />
-                <View style={styles.frame50}>
-                    <TouchableOpacity>
+                <TouchableOpacity style={styles.frame50}>
                         <View style={styles.vuesaxOutlineArrowleft}>
                             <Svg style={styles._vuesaxOutlineArrowleft} width="24" height="24" viewBox="0 0 24 24" fill="none" >
                                 <Path d="M15 20.67C14.81 20.67 14.62 20.6 14.47 20.45L7.95003 13.93C6.89003 12.87 6.89003 11.13 7.95003 10.07L14.47 3.55C14.76 3.26 15.24 3.26 15.53 3.55C15.82 3.84 15.82 4.32 15.53 4.61L9.01003 11.13C8.53003 11.61 8.53003 12.39 9.01003 12.87L15.53 19.39C15.82 19.68 15.82 20.16 15.53 20.45C15.38 20.59 15.19 20.67 15 20.67Z" fill="white" />
                             </Svg>
                         </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.frame51}>
-                    <TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.frame51}>
                         <View style={styles.vuesaxOutlineArchiveadd}>
                             <Svg style={styles._vuesaxOutlineArchiveadd} width="24" height="24" viewBox="0 0 24 24" fill="none" >
                                 <Path d="M19.0699 22.75C18.5599 22.75 17.9999 22.6 17.4599 22.29L12.5799 19.58C12.2899 19.42 11.7199 19.42 11.4299 19.58L6.54995 22.29C5.55995 22.84 4.54995 22.9 3.77995 22.44C3.00995 21.99 2.56995 21.08 2.56995 19.95V5.86C2.56995 3.32 4.63995 1.25 7.17995 1.25H16.8299C19.3699 1.25 21.4399 3.32 21.4399 5.86V19.95C21.4399 21.08 20.9999 21.99 20.2299 22.44C19.8799 22.65 19.4799 22.75 19.0699 22.75ZM11.9999 17.96C12.4699 17.96 12.9299 18.06 13.2999 18.27L18.1799 20.98C18.6899 21.27 19.1599 21.33 19.4599 21.15C19.7599 20.97 19.9299 20.54 19.9299 19.95V5.86C19.9299 4.15 18.5299 2.75 16.8199 2.75H7.17995C5.46995 2.75 4.06995 4.15 4.06995 5.86V19.95C4.06995 20.54 4.23995 20.98 4.53995 21.15C4.83995 21.32 5.30995 21.27 5.81995 20.98L10.6999 18.27C11.0699 18.06 11.5299 17.96 11.9999 17.96Z" fill="white" />
                             </Svg>
                         </View>
-                    </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.frame53}>
                     <Text style={styles.nusaPedina}>
                         {`Nusa Pedina`}
@@ -180,6 +177,7 @@ export default function LocationDetails() {
                     </View>
                 </TouchableOpacity>
             </View>
+
         </View>
         </SafeAreaView>
 
