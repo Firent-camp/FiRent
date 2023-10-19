@@ -1,64 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
+import axios from 'axios';
 
 export default function EditProfile({ route }) {
-  const { userGetter, firebaseId } = route.params;
+  const { user } = route.params;
+  const firebaseId = user;
 
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    password: '',
-    address: '',
-    email: '',
-  });
-
+  const [userDetails, setUserDetails] = useState({});
   const [formData, setFormData] = useState({
-    firstName: '',
+    userName: '',
     lastName: '',
     password: '',
     address: '',
     email: '',
   });
-
-  const handleInputChange = (field, text) => {
-    setFormData({ ...formData, [field]: text });
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch(`${ADRESS_API}/users/${firebaseId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setUser(formData);
-        console.log('User data updated successfully');
-      } else {
-        console.error('Failed to update user data');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(
-          `http://${ADRESS_API}/users/firebase/${firebaseId}`
-        );
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
+        const response = await axios.get(`http://${ADRESS_API}:5000/users/firebase/${firebaseId}`);
+        if (response.status === 200) {
+          const userData = response.data;
+          setUserDetails(userData);
+          setFormData(userData);
         } else {
-          console.error('Failed to fetch user data');
+          console.error('Failed to fetch user data. Status:', response.status);
         }
       } catch (error) {
         console.error('Error:', error);
@@ -68,9 +36,30 @@ export default function EditProfile({ route }) {
     fetchUserData();
   }, [firebaseId]);
 
+  const handleInputChange = (field, text) => {
+    setFormData({ ...formData, [field]: text });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.put(`http://${ADRESS_API}:5000/users/${firebaseId}`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200) {
+        setUserDetails(formData);
+        console.log('User data updated successfully');
+      } else {
+        console.error('Failed to update user data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
-
     <View style={styles.group3567}>
       <View style={styles.userprofil} />
       <View style={styles.group3561}>
@@ -93,7 +82,6 @@ export default function EditProfile({ route }) {
               <Svg style={styles.vector} width="28" height="25" viewBox="0 0 28 25" fill="none" >
                 <Path fillRule="evenodd" clipRule="evenodd" d="M8.86273 1.57715C8.86273 0.845354 9.41025 0.251434 10.0864 0.251434H18.2448C18.9209 0.251434 19.4684 0.845354 19.4684 1.57715C19.4684 2.30894 18.9209 2.90286 18.2448 2.90286H10.0864C9.41025 2.90286 8.86273 2.30894 8.86273 1.57715ZM11.2199 24.1143H17.1113C21.2489 24.1143 23.3183 24.1143 24.8044 23.1571C25.4438 22.746 25.9961 22.2131 26.4298 21.5888C27.4227 20.157 27.4227 18.1618 27.4227 14.1714C27.4227 10.181 27.4227 8.18716 26.4284 6.75406C25.9953 6.12981 25.4434 5.59691 24.8044 5.18574C23.3183 4.22858 21.2489 4.22858 17.1113 4.22858H11.2199C7.0823 4.22858 5.01286 4.22858 3.52673 5.18574C2.88777 5.59693 2.33596 6.12983 1.90273 6.75406C0.908447 8.18584 0.908447 10.181 0.908447 14.1688V14.1714C0.908447 18.1618 0.908447 20.1557 1.90141 21.5888C2.33094 22.2092 2.88244 22.7422 3.52673 23.1571C5.01286 24.1143 7.0823 24.1143 11.2199 24.1143ZM8.64134 14.1714C8.64134 11.2283 11.1151 8.84472 14.1656 8.84472C17.2161 8.84472 19.6898 11.2297 19.6898 14.1714C19.6898 17.1132 17.2147 19.4982 14.1656 19.4982C11.1151 19.4982 8.64134 17.1119 8.64134 14.1714ZM10.8513 14.1714C10.8513 12.4056 12.3361 10.9765 14.1656 10.9765C15.9951 10.9765 17.4799 12.4069 17.4799 14.1714C17.4799 15.936 15.9951 17.3664 14.1656 17.3664C12.3361 17.3664 10.8513 15.936 10.8513 14.1714ZM22.267 8.84472C21.6572 8.84472 21.1627 9.32197 21.1627 9.91059C21.1627 10.4979 21.6572 10.9751 22.267 10.9751H23.0041C23.614 10.9751 24.1084 10.4979 24.1084 9.91059C24.1084 9.32197 23.614 8.84472 23.0041 8.84472H22.267Z" fill="white" />
               </Svg>
-
             </TouchableOpacity>
           </View>
         </View>
@@ -101,10 +89,10 @@ export default function EditProfile({ route }) {
           {`Edit Profile`}
         </Text>
         <TouchableOpacity>
-        <Svg style={styles.group3530} width="39" height="38" viewBox="0 0 39 38" fill="none" >
-          <Rect width="38.1013" height="38" rx="6" fill="#131316" />
-          <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 11.5042C24.4795 11.8271 24.6667 12.2651 24.6667 12.7217C24.6667 13.1784 24.4795 13.6163 24.1462 13.9392L18.2915 19.6101L24.1462 25.2809C24.47 25.6057 24.6492 26.0407 24.6452 26.4923C24.6411 26.9438 24.4542 27.3757 24.1245 27.695C23.7949 28.0143 23.349 28.1954 22.8828 28.1993C22.4166 28.2033 21.9675 28.0297 21.6322 27.716L14.5205 20.8276C14.1872 20.5047 14 20.0667 14 19.6101C14 19.1535 14.1872 18.7155 14.5205 18.3926L21.6322 11.5042C21.9656 11.1814 22.4178 11 22.8892 11C23.3606 11 23.8128 11.1814 24.1462 11.5042Z" fill="#686DCD" />
-        </Svg>
+          <Svg style={styles.group3530} width="39" height="38" viewBox="0 0 39 38" fill="none" >
+            <Rect width="38.1013" height="38" rx="6" fill="#131316" />
+            <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 11.5042C24.4795 11.8271 24.6667 12.2651 24.6667 12.7217C24.6667 13.1784 24.4795 13.6163 24.1462 13.9392L18.2915 19.6101L24.1462 25.2809C24.47 25.6057 24.6492 26.0407 24.6452 26.4923C24.6411 26.9438 24.4542 27.3757 24.1245 27.695C23.7949 28.0143 23.349 28.1954 22.8828 28.1993C22.4166 28.2033 21.9675 28.0297 21.6322 27.716L14.5205 20.8276C14.1872 20.5047 14 20.0667 14 19.6101C14 19.1535 14.1872 18.7155 14.5205 18.3926L21.6322 11.5042C21.9656 11.1814 22.4178 11 22.8892 11C23.3606 11 23.8128 11.1814 24.1462 11.5042Z" fill="#686DCD" />
+          </Svg>
         </TouchableOpacity>
         <View style={styles.group3563}>
           <View style={styles.group3558}>
@@ -118,13 +106,12 @@ export default function EditProfile({ route }) {
                     <Rect width="342" height="44" rx="6" fill="#131316" />
                     <Rect x="0.5" y="0.5" width="341" height="43" rx="5.5" stroke="#544C4C" strokeOpacity="0.14" />
                   </Svg>
-
                   <TextInput
                     style={styles._melissa}
                     placeholder="Name"
                     placeholderTextColor="white"
-                    value={formData.firstName} // Bind the value to the form data
-                    onChangeText={(text) => handleInputChange('firstName', text)} // Handle changes
+                    value={formData.userName} // Use formData here
+                    onChangeText={(text) => handleInputChange('userName', text)} // Pass 'firstName' as the field
                   />
                 </View>
               </View>
@@ -145,10 +132,9 @@ export default function EditProfile({ route }) {
                     style={styles._melissa}
                     placeholder="Last name"
                     placeholderTextColor="white"
-                    value={formData.lastName}
-                    onChangeText={(text) => handleInputChange('lastName', text)}
+                    value={formData.lastName} // Use formData here
+                    onChangeText={(text) => handleInputChange('lastName', text)} // Pass 'lastName' as the field
                   />
-
                 </View>
               </View>
             </View>
@@ -169,10 +155,9 @@ export default function EditProfile({ route }) {
                     placeholder="*************"
                     placeholderTextColor="white"
                     secureTextEntry={true}
-                    value={formData.password}
-                    onChangeText={(text) => handleInputChange('password', text)}
+                    value={formData.password} // Use formData here
+                    onChangeText={(text) => handleInputChange('password', text)} // Pass 'password' as the field
                   />
-
                 </View>
               </View>
             </View>
@@ -187,13 +172,12 @@ export default function EditProfile({ route }) {
                   <Rect width="342" height="44" rx="6" fill="#131316" />
                   <Rect x="0.5" y="0.5" width="341" height="43" rx="5.5" stroke="#544C4C" strokeOpacity="0.14" />
                 </Svg>
-
                 <TextInput
                   style={styles._melissa}
                   placeholder="Tunisie"
                   placeholderTextColor="white"
-                  value={formData.address}
-                  onChangeText={(text) => handleInputChange('address', text)}
+                  value={formData.address} // Use formData here
+                  onChangeText={(text) => handleInputChange('address', text)} // Pass 'address' as the field
                 />
               </View>
             </View>
@@ -209,13 +193,12 @@ export default function EditProfile({ route }) {
                     <Rect width="342" height="44" rx="6" fill="#131316" />
                     <Rect x="0.5" y="0.5" width="341" height="43" rx="5.5" stroke="#544C4C" strokeOpacity="0.14" />
                   </Svg>
-
                   <TextInput
                     style={styles._melissa}
                     placeholder="Email@email.com"
                     placeholderTextColor="white"
-                    value={formData.email}
-                    onChangeText={(text) => handleInputChange('email', text)}
+                    value={formData.email} // Use formData here
+                    onChangeText={(text) => handleInputChange('email', text)} // Pass 'email' as the field
                   />
                 </View>
               </View>
@@ -236,9 +219,9 @@ export default function EditProfile({ route }) {
         </View>
       </View>
     </View>
-
   )
 }
+
 
 const styles = StyleSheet.create({
   group3567: {
