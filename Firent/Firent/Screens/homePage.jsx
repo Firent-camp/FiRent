@@ -318,8 +318,8 @@ export default function HomeUserconnected() {
 
                     </View>
 
-                </View>
             </TouchableOpacity>
+                </View>
 
             <View style={styles.frame20}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -489,6 +489,7 @@ export default function HomeUserconnected() {
 
             </View>
             <BottomNavigation/>
+        </View>
         </View>
 
     )

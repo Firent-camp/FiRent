@@ -10,10 +10,9 @@ import BottomNavigation from "./component/BottomNavigation";
 import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
-import Login from "./Screens/Login";
 import homePage from "./Screens/homePage";
 import checkEmail from "./Screens/checkEmail";
-import LocationDetails from "./Screens/LocationDetails";
+// import LocationDetails from "./Screens/LocationDetails";
 import list from "./Screens/list";
 import Conversation1 from "./Screens/Conversation1";
 import EditProfile from "./Screens/EditProfile";
@@ -24,10 +23,12 @@ import HpUserNotConnected from "./Screens/HpUserNotConnected";
 import Conversation from "./Screens/Conversation";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
-import Payment3 from "./Screens/payment3";import Userprofilimages from "./Screens/UserProfilImages";
+import Payment3 from "./Screens/payment3";
+import LocationDetails from "./Screens/locationDetails";
+// import Test from "./Screens/Test";
+import Test from "./Screens/test";
+import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
-import Test from "./Screens/Test";
-
 
 
 export default function App() {
@@ -38,11 +39,41 @@ const InsideStack = createStackNavigator();
   const userGetter = (data) => {
     setUser(data);
   };
-
+  
+  
+  // export default function App() {
+  //   const [user, setUser] = useState(null);
+  
+  //   const userGetter = (data) => {
+  //     setUser(data);
+  //     console.log(data, "user");
+  //   };
+  
+    // return (
+    //   <NavigationContainer>
+    //     <Stack.Navigator initialRouteName={user ? "Threads" : "Signup"}>
+    //       <Stack.Screen
+    //         name="Signin"
+    //         component={Signin}
+    //         initialParams={{ userGetter }}
+    //         options={{ headerShown: false }}
+    //       />
+    //       <Stack.Screen
+    //         name="login"
+    //         component={Login}
+    //         options={{ headerShown: false }}
+    //       />
+    //       {user ? (
+    //         <>
+    //           <Stack.Screen
+    //             name="Threads"
+    //             component={ThreadList}
+    //             options={{ headerShown: false }}
+    //           />
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
+      <Stack.Navigator initialRouteName={user ? "homePage" : "Signup"}>
         {user ? (
           <>
             <Stack.Screen
@@ -137,3 +168,4 @@ const InsideStack = createStackNavigator();
     </NavigationContainer>
   );
 }
+

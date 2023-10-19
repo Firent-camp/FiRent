@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 import { Svg, Circle, Path } from 'react-native-svg';
 
-export default function HomeUserconnected() {
+export default function Test() {
     return (
         <View style={styles.homeUserconnected}>
             <View style={styles.frame7}>
