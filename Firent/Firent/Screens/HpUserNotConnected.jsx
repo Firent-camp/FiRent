@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
-import { Svg, Path, Rect, Line } from 'react-native-svg';
+import React from "react";
+import { View, Text, ImageBackground, StyleSheet } from "react-native";
+import { Svg, Path, Rect, Line } from "react-native-svg";
 
 export default function HpUserNotConnected() {
   return (
@@ -165,6 +165,7 @@ export default function HpUserNotConnected() {
           <Text style={styles._search}>
             {`Search`}
           </Text>
+
         </View>
         <View style={styles.group3511}>
           <Text style={styles.letsexploretogether}>
@@ -174,11 +175,13 @@ export default function HpUserNotConnected() {
             <Text style={styles.welcometoFirent}>
               {`Welcome to Firent`}
             </Text>
+
           </View>
         </View>
       </View>
     </View>
-  )
+
+  );
 }
 
 const styles = StyleSheet.create({
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(31, 31, 41, 1)",
     alignItems: "flex-start",
     rowGap: 0
-  },
+
   group3508: {
     position: "absolute",
     flexShrink: 0,
@@ -197,6 +200,7 @@ const styles = StyleSheet.create({
     height: 14,
     left: 193,
     width: 54
+
   },
   group3500: {
     position: "absolute",
@@ -204,6 +208,7 @@ const styles = StyleSheet.create({
     height: 14,
     left: -0.1730194091796875,
     width: 54
+
   },
   group32: {
     position: "absolute",
@@ -211,6 +216,7 @@ const styles = StyleSheet.create({
     height: 14,
     left: -0.1730194091796875,
     width: 54
+
   },
   norway: {
     position: "absolute",
@@ -223,6 +229,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   vector: {
     position: "absolute",
@@ -231,6 +238,7 @@ const styles = StyleSheet.create({
     width: 9,
     height: 11,
     overflow: "visible"
+
   },
   group3492: {
     position: "absolute",
@@ -238,6 +246,7 @@ const styles = StyleSheet.create({
     height: 14,
     left: -0.1730194091796875,
     width: 54
+
   },
   _norway: {
     position: "absolute",
@@ -250,6 +259,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   _vector: {
     position: "absolute",
@@ -258,6 +268,7 @@ const styles = StyleSheet.create({
     width: 9,
     height: 11,
     overflow: "visible"
+
   },
   group3518: {
     position: "absolute",
@@ -266,6 +277,7 @@ const styles = StyleSheet.create({
     height: 682,
     left: 34,
     width: 347
+
   },
   seeAll: {
     position: "absolute",
@@ -279,6 +291,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   _seeAll: {
     position: "absolute",
@@ -292,6 +305,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   categories: {
     position: "absolute",
@@ -304,6 +318,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0
+
   },
   topTrips: {
     position: "absolute",
@@ -316,6 +331,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0
+
   },
   groupTrips: {
     position: "absolute",
@@ -329,6 +345,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0
+
   },
   group3503: {
     position: "absolute",
@@ -336,18 +353,21 @@ const styles = StyleSheet.create({
     top: 171,
     height: 37,
     width: 347
+
   },
   group3488: {
     position: "absolute",
     flexShrink: 0,
     height: 37,
     width: 81
+
   },
   group22: {
     position: "absolute",
     flexShrink: 0,
     height: 37,
     width: 81
+
   },
   rectangle4: {
     position: "absolute",
@@ -358,6 +378,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8888888955116272,
     borderColor: "rgba(104, 109, 205, 1)",
     borderRadius: 26.66666603088379
+
   },
   lakes: {
     position: "absolute",
@@ -371,6 +392,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3489: {
     position: "absolute",
@@ -378,13 +400,15 @@ const styles = StyleSheet.create({
     height: 37,
     left: 89,
     width: 81
+
   },
   _group22: {
     position: "absolute",
     flexShrink: 0,
     height: 37,
     left: 0.167999267578125,
-    width: 81
+
+    width: 81,
   },
   _rectangle4: {
     position: "absolute",
@@ -396,6 +420,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8888888955116272,
     borderColor: "rgba(104, 109, 205, 1)",
     borderRadius: 26.66666603088379
+
   },
   sea: {
     position: "absolute",
@@ -409,6 +434,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3490: {
     position: "absolute",
@@ -416,6 +442,7 @@ const styles = StyleSheet.create({
     height: 37,
     left: 178,
     width: 81
+
   },
   __group22: {
     position: "absolute",
@@ -423,6 +450,7 @@ const styles = StyleSheet.create({
     height: 37,
     left: 0.33599853515625,
     width: 81
+
   },
   __rectangle4: {
     position: "absolute",
@@ -434,6 +462,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8888888955116272,
     borderColor: "rgba(104, 109, 205, 1)",
     borderRadius: 26.66666603088379
+
   },
   mountain: {
     position: "absolute",
@@ -447,6 +476,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3491: {
     position: "absolute",
@@ -454,6 +484,7 @@ const styles = StyleSheet.create({
     height: 37,
     left: 266,
     width: 81
+
   },
   ___group22: {
     position: "absolute",
@@ -461,6 +492,7 @@ const styles = StyleSheet.create({
     height: 37,
     left: -0.496002197265625,
     width: 81
+
   },
   ___rectangle4: {
     position: "absolute",
@@ -472,6 +504,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8888888955116272,
     borderColor: "rgba(104, 109, 205, 1)",
     borderRadius: 26.66666603088379
+
   },
   forest: {
     position: "absolute",
@@ -485,6 +518,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3510: {
     position: "absolute",
@@ -493,6 +527,7 @@ const styles = StyleSheet.create({
     height: 22,
     left: 318,
     width: 21
+
   },
   iconlyLightFilter: {
     position: "absolute",
@@ -503,6 +538,7 @@ const styles = StyleSheet.create({
     width: 24,
     alignItems: "flex-start",
     rowGap: 0
+
   },
   rectangle9: {
     position: "absolute",
@@ -513,6 +549,7 @@ const styles = StyleSheet.create({
     height: 133,
     backgroundColor: "rgba(19, 19, 22, 1)",
     borderRadius: 20
+
   },
   seelisburg: {
     position: "absolute",
@@ -526,6 +563,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   rectangle8: {
     position: "absolute",
@@ -536,6 +574,7 @@ const styles = StyleSheet.create({
     height: 126,
     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.15)",
     borderRadius: 15
+
   },
   mountainTrip: {
     position: "absolute",
@@ -548,7 +587,9 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 1)",
     fontSize: 14,
     fontWeight: "600",
+
     letterSpacing: 0
+
   },
   _seelisburg: {
     position: "absolute",
@@ -562,6 +603,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   _rectangle8: {
     position: "absolute",
@@ -572,6 +614,7 @@ const styles = StyleSheet.create({
     height: 126,
     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.15)",
     borderRadius: 15
+
   },
   _mountainTrip: {
     position: "absolute",
@@ -585,6 +628,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     letterSpacing: 0
+
   },
   group3509: {
     position: "absolute",
@@ -593,30 +637,35 @@ const styles = StyleSheet.create({
     height: 212,
     left: 10,
     width: 327
+
   },
   group3505: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 327
+
   },
   group3487: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 150
+
   },
   group27: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 150
+
   },
   group25: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 150
+
   },
   rectangle7: {
     position: "absolute",
@@ -627,6 +676,7 @@ const styles = StyleSheet.create({
     height: 111,
     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.15)",
     borderRadius: 20
+
   },
   redFishLake: {
     position: "absolute",
@@ -639,7 +689,9 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 1)",
     fontSize: 13,
     fontWeight: "600",
+
     letterSpacing: 0
+
   },
   $40Visit: {
     position: "absolute",
@@ -653,6 +705,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   idaho: {
     position: "absolute",
@@ -666,6 +719,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   __vector: {
     position: "absolute",
@@ -674,7 +728,8 @@ const styles = StyleSheet.create({
     left: 9,
     width: 9,
     height: 12,
-    overflow: "visible"
+
+    overflow: "visible",
   },
   ___vector: {
     position: "absolute",
@@ -684,6 +739,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 17,
     overflow: "visible"
+
   },
   group3504: {
     position: "absolute",
@@ -691,18 +747,21 @@ const styles = StyleSheet.create({
     height: 212,
     left: 177,
     width: 150
+
   },
   _group27: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 150
+
   },
   _group25: {
     position: "absolute",
     flexShrink: 0,
     height: 212,
     width: 150
+
   },
   _rectangle7: {
     position: "absolute",
@@ -713,6 +772,7 @@ const styles = StyleSheet.create({
     height: 111,
     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.15)",
     borderRadius: 20
+
   },
   _redFishLake: {
     position: "absolute",
@@ -726,6 +786,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     letterSpacing: 0
+
   },
   _$40Visit: {
     position: "absolute",
@@ -739,6 +800,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   _idaho: {
     position: "absolute",
@@ -752,6 +814,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   ____vector: {
     position: "absolute",
@@ -761,6 +824,7 @@ const styles = StyleSheet.create({
     width: 9,
     height: 12,
     overflow: "visible"
+
   },
   _____vector: {
     position: "absolute",
@@ -770,6 +834,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 17,
     overflow: "visible"
+
   },
   search: {
     position: "absolute",
@@ -778,12 +843,14 @@ const styles = StyleSheet.create({
     height: 45,
     left: 3,
     width: 341
+
   },
   group20: {
     position: "absolute",
     flexShrink: 0,
     height: 45,
     width: 341
+
   },
   _search: {
     position: "absolute",
@@ -797,6 +864,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3511: {
     position: "absolute",
@@ -804,6 +872,7 @@ const styles = StyleSheet.create({
     height: 32,
     left: 5,
     width: 137
+
   },
   letsexploretogether: {
     position: "absolute",
@@ -816,12 +885,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     letterSpacing: 0
+
   },
   group3501: {
     position: "absolute",
     flexShrink: 0,
     height: 19,
     width: 137
+
   },
   welcometoFirent: {
     position: "absolute",
@@ -832,6 +903,7 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 1)",
     fontSize: 16,
     fontWeight: "400",
-    letterSpacing: 0
-  }
-})
+
+    letterSpacing: 0,
+  },
+});

@@ -17,7 +17,6 @@ console.log(userGetter,"userGtter");
     const resetPassword = () => {
         sendPasswordResetEmail(FIREBASE_AUTH, email)
           .then((res) => {
-            console.log(email, "email")
             alert('password reset email has been sent successfully') 
           })
           .catch((error) => {
@@ -34,7 +33,6 @@ console.log(userGetter,"userGtter");
                 console.log("userFromAuth", user);
               })
           const response = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-          console.log(response);
           userGetter(response.user.uid)
     
         } catch (error) {

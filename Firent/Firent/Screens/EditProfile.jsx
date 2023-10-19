@@ -1,8 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
+import ADRESS_API from '../API';
 
-export default function EditProfile() {
+export default function EditProfile({ route }) {
+  const { userGetter, firebaseId } = route.params;
+
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    password: '',
+    address: '',
+    email: '',
+  });
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    password: '',
+    address: '',
+    email: '',
+  });
+
+  const handleInputChange = (field, text) => {
+    setFormData({ ...formData, [field]: text });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`${ADRESS_API}/users/${firebaseId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setUser(formData);
+        console.log('User data updated successfully');
+      } else {
+        console.error('Failed to update user data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(
+          `http://${ADRESS_API}/users/firebase/${firebaseId}`
+        );
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        } else {
+          console.error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [firebaseId]);
+
+
   return (
 
     <View style={styles.group3567}>
@@ -57,6 +123,8 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Name"
                     placeholderTextColor="white"
+                    value={formData.firstName} // Bind the value to the form data
+                    onChangeText={(text) => handleInputChange('firstName', text)} // Handle changes
                   />
                 </View>
               </View>
@@ -77,6 +145,8 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Last name"
                     placeholderTextColor="white"
+                    value={formData.lastName}
+                    onChangeText={(text) => handleInputChange('lastName', text)}
                   />
 
                 </View>
@@ -99,7 +169,8 @@ export default function EditProfile() {
                     placeholder="*************"
                     placeholderTextColor="white"
                     secureTextEntry={true}
-
+                    value={formData.password}
+                    onChangeText={(text) => handleInputChange('password', text)}
                   />
 
                 </View>
@@ -109,7 +180,7 @@ export default function EditProfile() {
           <View style={styles.group3555}>
             <View style={styles.___group3545}>
               <Text style={styles.dateofbirth}>
-                {`Date of birth`}
+                {`Adresse`}
               </Text>
               <View style={styles.___group3551}>
                 <Svg style={styles.___group3546} width="342" height="44" viewBox="0 0 342 44" fill="none" >
@@ -119,8 +190,10 @@ export default function EditProfile() {
 
                 <TextInput
                   style={styles._melissa}
-                  placeholder="JJ/MM/YYYY"
+                  placeholder="Tunisie"
                   placeholderTextColor="white"
+                  value={formData.address}
+                  onChangeText={(text) => handleInputChange('address', text)}
                 />
               </View>
             </View>
@@ -141,6 +214,8 @@ export default function EditProfile() {
                     style={styles._melissa}
                     placeholder="Email@email.com"
                     placeholderTextColor="white"
+                    value={formData.email}
+                    onChangeText={(text) => handleInputChange('email', text)}
                   />
                 </View>
               </View>
@@ -150,7 +225,7 @@ export default function EditProfile() {
         <View style={styles.group3564}>
           <View style={styles.group3529}>
             <View style={styles.group3521}>
-              <TouchableOpacity style={styles.group29}>
+              <TouchableOpacity style={styles.group29} onPress={handleSubmit} >
                 <View style={styles.rectangle33} />
                 <Text style={styles.savechanges}>
                   {`Save changes`}

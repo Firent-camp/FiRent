@@ -37,6 +37,7 @@ model User {
   profile    Profile?
   chat     Chat?     @relation(fields: [chatId], references: [id])
   chatId   Int?
+  sentMessages Message[] @relation("SentMessages") 
   threads  Thread[]
    comments Comment[]
 }
@@ -96,16 +97,18 @@ model Profile {
 }
 
 model Chat {
-  id       Int      @id @default(autoincrement())
-  users    User[]  
-  messages Message[]
+  id          Int      @id @default(autoincrement())
+  participants User[]   
+  messages    Message[]
 }
 
 model Message {
   id       Int      @id @default(autoincrement())
   content  String
+  senderId String   
   chat     Chat     @relation(fields: [chatId], references: [id])
   chatId   Int
+  sender   User     @relation("SentMessages", fields: [senderId], references: [firebaseId]) 
 }
 
 model Thread {
