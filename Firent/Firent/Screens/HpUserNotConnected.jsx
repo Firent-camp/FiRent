@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(31, 31, 41, 1)",
     alignItems: "flex-start",
     rowGap: 0
-
+  },
   group3508: {
     position: "absolute",
     flexShrink: 0,

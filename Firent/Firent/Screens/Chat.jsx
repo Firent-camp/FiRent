@@ -53,7 +53,6 @@ function Chat({ route }) {
     axios
       .post(`http://${ADRESS_API}:5000/chats/${selectedUser.id}/message`, messageInput)
       .then((newMessage) => {
-        // Emit the new message via socket and update the message list.
         socketRef.current.emit("sendMessage", newMessage.data);
         setMessages([...messages, newMessage.data]);
         scrollViewRef.current?.scrollToEnd({ animated: true });

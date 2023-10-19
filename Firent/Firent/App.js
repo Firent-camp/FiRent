@@ -25,48 +25,41 @@ import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
-
+import Test from "./Screens/test";
 export default function App() {
   const [user, setUser] = useState(null);
-const Stack = createStackNavigator();
-const InsideStack = createStackNavigator();
+  const Stack = createStackNavigator();
+  const InsideStack = createStackNavigator();
 
   const userGetter = (data) => {
     setUser(data);
   };
-
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
-            <Stack.Screen
-                  name="EditProfile"
-                  component={EditProfile}
-                  initialParams={{ userGetter, firebaseId: user.id }}
-                  options={{ headerShown: false }}
-           />
-            <Stack.Screen
-                  name="homePage"
-                  component={homePage}
-                  options={{ headerShown: false }}
+          <Stack.Screen
+              name="homePage"
+              component={homePage}
+              options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              initialParams={{ user}}
+              options={{ headerShown: false }}
+            />
+            
 
             <Stack.Screen
               name="Conversation1"
               component={Conversation1}
               initialParams={{ user }}
-
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              initialParams={{ user }}
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name="Cart"
               component={Cart}
@@ -98,12 +91,6 @@ const InsideStack = createStackNavigator();
               component={Payment1}
               options={{ headerShown: false }}
             />
-
-            <Stack.Screen
-              name="homePage"
-              component={homePage}
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name="ImageGrid"
               component={ImageGrid}
@@ -116,8 +103,7 @@ const InsideStack = createStackNavigator();
               options={{ headerShown: false }}
             />
 
-
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Threads"
               component={ThreadList}
               options={{ title: "Forum Threads" }}
@@ -126,8 +112,12 @@ const InsideStack = createStackNavigator();
               name="Comments"
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
+            /> */}
+            <Stack.Screen
+              name="Test"
+              component={Test}
+              options={{ headerShown: false }}
             />
-          <Stack.Screen name="Test" component={Test} options={{ headerShown: false }} />
           </>
         ) : (
           <>
