@@ -1,85 +1,45 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import axios from "axios";
-import { io } from "socket.io-client";
 import ADRESS_API from "../API";
 
 function Conversation1({ route, navigation }) {
   const { user } = route.params;
   const [users, setUsers] = useState([]);
-  const [chatId, setChatId] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const socket = useRef();
 
-  const getUsers = () => {
+  useEffect(() => {
     axios
       .get(`http://${ADRESS_API}:5000/users`)
       .then((res) => {
-        setUsers(res.data.filter((u) => u.firebaseId !== user));
+        setUsers(res.data);
       })
       .catch((error) => console.log(error));
-  };
-
-  const startConversation = (user2Id) => {
-    socket.current.emit("joinChat", { userId: user, otherUserId: user2Id }, (chatIdFromServer) => {
-      setChatId(chatIdFromServer);
-    });
-  };
-
-  const sendMessage = () => {
-    if (newMessage.trim() === "") {
-      return;
-    }
-
-    socket.current.emit("sendMessage", { chatId, userId: user, text: newMessage });
-    setNewMessage("");
-  };
-
-  useEffect(() => {
-    getUsers();
-
-    socket.current = io(`http://${ADRESS_API}:5000`);
-
-    socket.current.on("message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    return () => {
-      socket.current.disconnect(); // Clean up the socket connection when the component unmounts
-    };
   }, []);
 
-  return (
-    <View>
-      <Text>Conversations</Text>
-      {users.map((e) => (
-        <TouchableOpacity key={e.firebaseId} onPress={() => startConversation(e.firebaseId)}>
-          <Text>{e.userName}</Text>
-        </TouchableOpacity>
-      ))}
+  const navigateToChat = (selectedUser) => {
+    navigation.navigate("Chat", {
+      user: user,
+      selectedUser: selectedUser,
+    });
+  };
 
-      {chatId && (
-        <View>
-          <FlatList
-            data={messages}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+  return (
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Text> hjj</Text>
+        {users.map((selectedUser) => (
+          <TouchableOpacity
+            key={selectedUser.firebaseId}
+            onPress={() => navigateToChat(selectedUser)}
+          >
+            <View style={{ alignItems: 'flex-start' }}>
               <Text>
-                {item.sender.userName}: {item.content}
+                {selectedUser.userName}
               </Text>
-            )}
-          />
-          <TextInput
-            placeholder="Type your message"
-            value={newMessage}
-            onChangeText={(text) => setNewMessage(text)}
-          />
-          <TouchableOpacity onPress={sendMessage}>
-            <Text>Send</Text>
+            </View>
           </TouchableOpacity>
-        </View>
-      )}
+        ))}
+      </ScrollView>
     </View>
   );
 }
