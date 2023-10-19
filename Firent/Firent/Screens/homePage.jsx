@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, ImageBackground, StyleSheet, StatusBar, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Svg, Circle, Path, Defs, Pattern, Use, Image } from 'react-native-svg';
+import BottomNavigation from '../component/BottomNavigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
@@ -62,36 +64,6 @@ export default function HomeUserconnected() {
                     </View>
                 </View>
             </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             <View style={styles.frame27}>
                 <TouchableOpacity>
@@ -161,9 +133,6 @@ export default function HomeUserconnected() {
                     </View>
                 </View>
             </View>
-
-
-
             <View style={styles.frame28}>
                 <TouchableOpacity>
 
@@ -233,10 +202,6 @@ export default function HomeUserconnected() {
                     </View>
                 </View>
             </View>
-
-
-
-
             <View style={styles.frame30}>
                 <TouchableOpacity>
 
@@ -307,60 +272,6 @@ export default function HomeUserconnected() {
                 </View>
             </View>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <View style={styles.frame4}>
                 <TouchableOpacity>
 
@@ -385,73 +296,33 @@ export default function HomeUserconnected() {
                 </View>
             </View>
 
-            <View style={styles.frame5}>
-                <TouchableOpacity>
-                    <Svg style={styles.vector} width="22" height="22" viewBox="0 0 25 22" fill="none" >
-                        <Path d="M11.613 20.0868L11.6123 20.0862C8.38341 17.2779 5.74447 14.979 3.90692 12.8228C2.07412 10.6721 1.09668 8.72862 1.09668 6.64C1.09668 3.23155 3.87734 0.54599 7.47168 0.54599C9.50312 0.54599 11.4555 1.45554 12.7241 2.87314L13.0967 3.28953L13.4693 2.87314C14.7378 1.45554 16.6902 0.54599 18.7217 0.54599C22.316 0.54599 25.0967 3.23155 25.0967 6.64C25.0967 8.72862 24.1192 10.6721 22.2864 12.8228C20.4489 14.979 17.81 17.2779 14.5811 20.0862L14.5803 20.0868L13.0967 21.3822L11.613 20.0868Z" stroke="#AFAFAF" />
-                    </Svg>
-                </TouchableOpacity>
+            <TouchableOpacity style={styles.frame5}>
+                <Svg style={styles.vector} width="22" height="22" viewBox="0 0 25 22" fill="none" >
+                    <Path d="M11.613 20.0868L11.6123 20.0862C8.38341 17.2779 5.74447 14.979 3.90692 12.8228C2.07412 10.6721 1.09668 8.72862 1.09668 6.64C1.09668 3.23155 3.87734 0.54599 7.47168 0.54599C9.50312 0.54599 11.4555 1.45554 12.7241 2.87314L13.0967 3.28953L13.4693 2.87314C14.7378 1.45554 16.6902 0.54599 18.7217 0.54599C22.316 0.54599 25.0967 3.23155 25.0967 6.64C25.0967 8.72862 24.1192 10.6721 22.2864 12.8228C20.4489 14.979 17.81 17.2779 14.5811 20.0862L14.5803 20.0868L13.0967 21.3822L11.613 20.0868Z" stroke="#AFAFAF" />
+                </Svg>
 
-            </View>
+            </TouchableOpacity>
 
             <View style={styles._frame6}>
                 <View style={styles.group3470}>
                     <TouchableOpacity onPress={logout}>
 
-                        <View style={styles.logout}>
-                            <Svg style={styles._vector} width="14" height="9" viewBox="0 0 14 9" fill="none" >
-                                <Path d="M7.92641 7.42137L8.95031 8.45022L13.046 4.33473L8.95031 0.219231L7.92636 1.24813L10.2741 3.60721H0.0136108V5.06225H10.2741L7.92641 7.42137Z" fill="#AFAFAF" />
-                            </Svg>
+                    <View style={styles.logout}>
+                        <Svg style={styles._vector} width="14" height="9" viewBox="0 0 14 9" fill="none" >
+                            <Path d="M7.92641 7.42137L8.95031 8.45022L13.046 4.33473L8.95031 0.219231L7.92636 1.24813L10.2741 3.60721H0.0136108V5.06225H10.2741L7.92641 7.42137Z" fill="#AFAFAF" />
+                        </Svg>
 
-                            <Svg style={styles.__vector} width="19" height="21" viewBox="0 0 19 21" fill="none" >
-                                <Path d="M16.804 16.5707C15.1563 18.2363 12.9655 19.1536 10.6352 19.1536C8.30471 19.1536 6.11361 18.2363 4.46565 16.5707C2.81765 14.905 1.92261 12.6903 1.92261 10.3347C1.92261 7.9793 2.81765 5.76474 4.4657 4.09897C6.1137 2.43321 8.30476 1.51581 10.6352 1.51581C12.9654 1.51581 15.1562 2.43321 16.804 4.09893C16.9183 4.21469 17.0294 4.33357 17.1373 4.45545H18.9881C17.1489 1.79011 14.0937 0.04599 10.6352 0.04599C5.01353 0.04599 0.468506 4.65286 0.468506 10.3347C0.468506 16.0172 5.01353 20.6235 10.6352 20.6235C14.0938 20.6235 17.1492 18.8794 18.9882 16.214H17.1374C17.0295 16.336 16.9184 16.4549 16.804 16.5707Z" fill="#AFAFAF" />
-                            </Svg>
+                        <Svg style={styles.__vector} width="19" height="21" viewBox="0 0 19 21" fill="none" >
+                            <Path d="M16.804 16.5707C15.1563 18.2363 12.9655 19.1536 10.6352 19.1536C8.30471 19.1536 6.11361 18.2363 4.46565 16.5707C2.81765 14.905 1.92261 12.6903 1.92261 10.3347C1.92261 7.9793 2.81765 5.76474 4.4657 4.09897C6.1137 2.43321 8.30476 1.51581 10.6352 1.51581C12.9654 1.51581 15.1562 2.43321 16.804 4.09893C16.9183 4.21469 17.0294 4.33357 17.1373 4.45545H18.9881C17.1489 1.79011 14.0937 0.04599 10.6352 0.04599C5.01353 0.04599 0.468506 4.65286 0.468506 10.3347C0.468506 16.0172 5.01353 20.6235 10.6352 20.6235C14.0938 20.6235 17.1492 18.8794 18.9882 16.214H17.1374C17.0295 16.336 16.9184 16.4549 16.804 16.5707Z" fill="#AFAFAF" />
+                        </Svg>
 
-                        </View>
-                    </TouchableOpacity>
+                    </View>
 
                 </View>
-            </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            </TouchableOpacity>
 
             <View style={styles.frame20}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-
-
-
-
                     <View style={styles.frame10}>
                         <ImageBackground style={styles.unsplashoR0uERTVyD0} source={{ uri: /* dummy image */ 'https://media.routard.com/image/30/4/fb-nusa-penida.1521304.jpg' }} />
                         <View style={styles._unsplashoR0uERTVyD0} />
@@ -617,109 +488,9 @@ export default function HomeUserconnected() {
                 </ScrollView >
 
             </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            <BottomNavigation/>
         </View>
+
     )
 }
 
@@ -732,6 +503,36 @@ const styles = StyleSheet.create({
         alignItems: "center",
         rowGap: 0
     },
+    
+    bottomNavigation: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: "175%",
+        paddingHorizontal: 20,
+        width: "100%",
+        height:90
+    },
+    vector: {
+        flexShrink: 0,
+        overflow: "visible"
+    },
+    _vector: {
+        flexShrink: 0,
+        overflow: "visible"
+    },
+    group3600: {
+        flexShrink: 0,
+        width: 36
+    },
+    __vector: {
+        flexShrink: 0,
+        overflow: "visible"
+    },
+    group3595: {
+        flexShrink: 0,
+        width: 28
+    },
+
     frame30: {
         top: 702,
         flexShrink: 0,
