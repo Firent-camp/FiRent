@@ -17,7 +17,6 @@ console.log(userGetter,"userGtter");
     const resetPassword = () => {
         sendPasswordResetEmail(FIREBASE_AUTH, email)
           .then((res) => {
-            console.log(email, "email")
             alert('password reset email has been sent successfully') 
           })
           .catch((error) => {
@@ -33,12 +32,14 @@ console.log(userGetter,"userGtter");
     
             onAuthStateChanged(FIREBASE_AUTH, (user) => {
                 console.log("userFromAuth", user);
+
             });
     
             userGetter(response.user.uid);
     
             // Navigate to Threads screen after successful sign-in
             navigation.navigate('Threads');
+
     
         } catch (error) {
             alert(`Sign-in failed: ${error.message}`);
