@@ -17,6 +17,7 @@ const app = express();
 const server = http.createServer(app);
 const io: Server = new Server(server);
 const cors = require("cors");
+const reactionRoutes = require('./routes/reactionRoutes');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const prisma = new PrismaClient();
@@ -52,6 +53,7 @@ app.post("/create-payment-intent", createPaymentIntent);
 app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
 
+app.use(reactionRoutes);
 
 
 // Socket.IO logic

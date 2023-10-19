@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 // Import your screens here
 import BottomNavigation from "./component/BottomNavigation";
+
 import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
@@ -25,6 +27,7 @@ import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 import Test from "./Screens/Test";
+
 
 
 export default function App() {
@@ -53,10 +56,12 @@ const InsideStack = createStackNavigator();
                   component={homePage}
                   options={{ headerShown: false }}
             />
+
             <Stack.Screen
               name="Conversation1"
               component={Conversation1}
               initialParams={{ user }}
+
               options={{ headerShown: false }}
             />
             <Stack.Screen

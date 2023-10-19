@@ -24,6 +24,14 @@ enum NotificationTypes {
   TYPE2
 }
 
+enum ReactionType {
+  LIKE
+  LOVE
+  LAUGH
+  SAD
+  ANGRY
+}
+
 model User {
   firebaseId String   @id
   lastName   String   @default("")
@@ -40,6 +48,7 @@ model User {
   sentMessages Message[] @relation("SentMessages") 
   threads  Thread[]
    comments Comment[]
+   reactions Reaction[]
 }
 
 model Trip {
@@ -121,7 +130,8 @@ model Thread {
   author     User      @relation(fields: [authorId], references: [firebaseId])
   comments   Comment[]
   images     Image[]   
-  imagePath String?
+  imagePath String?   @db.LongText
+  reactions Reaction[]
 }
 
 
@@ -135,4 +145,20 @@ model Comment {
   thread     Thread    @relation(fields: [threadId], references: [id])
   authorId   String
   author     User      @relation(fields: [authorId], references: [firebaseId])
+  reactions Reaction[]
+}
+
+model Reaction {
+  id          Int          @id @default(autoincrement())
+  type        ReactionType
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      String
+  user        User         @relation(fields: [userId], references: [firebaseId])
+  threadId    Int?
+  thread      Thread?      @relation(fields: [threadId], references: [id])
+  commentId   Int?
+  comment     Comment?     @relation(fields: [commentId], references: [id])
+
+  @@index([userId, threadId, commentId], name: "reaction_index")
 }
