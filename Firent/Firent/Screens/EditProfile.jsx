@@ -12,7 +12,6 @@ export default function EditProfile({ route }) {
   const [formData, setFormData] = useState({
     userName: '',
     lastName: '',
-    password: '',
     address: '',
     email: '',
   });
