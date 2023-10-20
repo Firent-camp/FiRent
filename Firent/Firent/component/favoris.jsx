@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Svg, Rect, Path } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Favoris() {
+    const navigation = useNavigation();
+
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
 
@@ -19,7 +22,7 @@ export default function Favoris() {
                         {`RedFish Lake`}
                     </Text>
                     <View style={styles.search}>
-                        <TouchableOpacity style={styles.group20}>
+                        <TouchableOpacity style={styles.group20} onPress={() => navigation.navigate("Cart")}>
                             <View style={styles.rectangle3} />
                             <Text style={styles.bookNow}>
                                 {`Book Now `}

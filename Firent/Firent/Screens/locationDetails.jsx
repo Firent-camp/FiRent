@@ -4,7 +4,7 @@ import { Svg, Path } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavigation from '../component/BottomNavigation';
 
-export default function LocationDetails() {
+export default function LocationDetails({navigation}) {
 
     const [url, setUrl] = useState("https://idinterdesign.ca/wp-content/uploads/2016/07/paysage-ID-02.jpg")
 
@@ -163,7 +163,7 @@ export default function LocationDetails() {
                         {`/day`}
                     </Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
                     <View style={styles.frame47}>
                         <Text style={styles.bookNow}>
                             {`Book Now`}
