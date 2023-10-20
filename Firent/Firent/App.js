@@ -10,9 +10,8 @@ import Chat from "./Screens/Chat";
 // import Login from "./Screens/login";
 import homePage from "./Screens/HomeUserconnected";
 import checkEmail from "./Screens/checkEmail";
-import LocationDetails from "./Screens/locationDetails";
-// import list from "./Screens/list";
-// import { FIREBASE_AUTH } from "./FireBase";
+// import LocationDetails from "./Screens/LocationDetails";
+import list from "./Screens/list";
 import Conversation1 from "./Screens/Conversation1";
 import EditProfile from "./Screens/EditProfile";
 import ThreadList from "../Firent/components/forum/ThreadListItem";
@@ -23,9 +22,13 @@ import HpUserNotConnected from "./Screens/HpUserNotConnected";
 import Payment1 from "./Screens/Payment1";
 import Payment2 from "./Screens/Payment2";
 import Payment3 from "./Screens/payment3";
+import LocationDetails from "./Screens/locationDetails";
+// import Test from "./Screens/Test";
+import Test from "./Screens/test";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 import Test from "./Screens/test";
+
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
@@ -115,8 +118,9 @@ export default function App() {
               options={{ title: "Thread Comments" }}
             /> */}
             <Stack.Screen
-              name="Test"
-              component={Test}
+              name="Threads"
+              component={ThreadList}
+              
               options={{ headerShown: false }}
             />
           </>

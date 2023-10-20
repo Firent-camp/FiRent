@@ -493,6 +493,7 @@ export default function HomeUserconnected({route}) {
             </View>
             <BottomNavigation/>
         </View>
+    
 
     )
 }
