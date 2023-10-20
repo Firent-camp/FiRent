@@ -28,7 +28,6 @@ import Test from "./Screens/test";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 
-
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
