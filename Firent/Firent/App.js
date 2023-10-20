@@ -71,20 +71,20 @@ const InsideStack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? "homePage" : "Signup"}>
+      <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
+                  <Stack.Screen
+                        name="homePage"
+                        component={homePage}
+                        options={{ headerShown: false }}
+                  />
             <Stack.Screen
                   name="EditProfile"
                   component={EditProfile}
                   initialParams={{ userGetter, firebaseId: user.id }}
                   options={{ headerShown: false }}
            />
-            <Stack.Screen
-                  name="homePage"
-                  component={homePage}
-                  options={{ headerShown: false }}
-            />
 
             <Stack.Screen
               name="Conversation1"
@@ -94,12 +94,7 @@ const InsideStack = createStackNavigator();
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              initialParams={{ user }}
-              options={{ headerShown: false }}
-            />
+
             <Stack.Screen
               name="Cart"
               component={Cart}
@@ -133,11 +128,6 @@ const InsideStack = createStackNavigator();
             />
 
             <Stack.Screen
-              name="homePage"
-              component={homePage}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
               name="ImageGrid"
               component={ImageGrid}
               options={{ headerShown: false }}
@@ -153,7 +143,8 @@ const InsideStack = createStackNavigator();
             <Stack.Screen
               name="Threads"
               component={ThreadList}
-              options={{ title: "Forum Threads" }}
+              
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Comments"

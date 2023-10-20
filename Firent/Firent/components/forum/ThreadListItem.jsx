@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Padding, Color, FontFamily, FontSize, Border } from "../../globalcss";
 import {
+  Modal,
+  Button,
   ScrollView,
   Image,
   View,
@@ -17,6 +20,10 @@ import * as ImagePicker from 'expo-image-picker';
 const CLOUD_NAME = 'duwjio4uk'; // Replace 'your_cloud_name' with your Cloudinary cloud name
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 const UPLOAD_PRESET = 'rqhyhetx'; // Replace 'your_upload_preset' with your Cloudinary unsigned upload preset
+import { Dimensions } from 'react-native';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
 
 
 export default function ThreadListScreen() {
@@ -28,12 +35,15 @@ export default function ThreadListScreen() {
   const [commentText, setCommentText] = useState('');
   const [newThreadTitle, setNewThreadTitle] = useState("");
   const [newThreadContent, setNewThreadContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  // const [selectedImage, setSelectedImage] = useState(null);
   const [image,setImage] = useState("")
+  const [modalVisible, setModalVisible] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
   const user = FIREBASE_AUTH.currentUser.uid;
   const REACTIONS = ["like", "dislike"];
 
-  useEffect(() => fetchThreads(), []);
+  useEffect(() => fetchThreads(), [reloadTrigger]);
 
   const fetchThreads = async () => {
     const apiUrl = `http://${ADRESS_API}:5000/threads`;
@@ -186,7 +196,7 @@ export default function ThreadListScreen() {
         </View>
       </View>
       <Text style={styles.threadContentTitle}>{thread.title}</Text>
-      <Image source={{ uri: thread.imagePath }} style={{ width: 200, height: 200 }} />
+      <Image source={{ uri: thread.imagePath }} style={styles.centeredImage} />
 
       <Text style={styles.threadContent}>{thread.content}</Text>
       {renderReactions(thread)} 
@@ -215,7 +225,7 @@ export default function ThreadListScreen() {
       ))}
       <TextInput style={styles.commentInput} placeholder="Add a comment..." value={commentText} onChangeText={setCommentText} />
       <TouchableOpacity onPress={postComment} style={styles.postButton}>
-        <Text style={styles.postButtonText}>Post Comment</Text>
+      <Text style={{...styles.postButtonText, color: "white"}}>Post Comment</Text>
       </TouchableOpacity>
     </>
   );
@@ -223,39 +233,106 @@ export default function ThreadListScreen() {
   if (loading) return <LoadingView />;
   if (error) return <ErrorView error={error.message || 'An error occurred'} />;
 
+  
+
+
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Forum</Text>
-      </View>
-      <TextInput
-        placeholder="Thread Title"
-        value={newThreadTitle}
-        onChangeText={setNewThreadTitle}
-        style={styles.newThreadInput}
-      />
-      <TextInput
-        placeholder="Thread Content"
-        value={newThreadContent}
-        onChangeText={setNewThreadContent}
-        style={styles.newThreadInput}
-        multiline
-        numberOfLines={3}
-      />
-      <TouchableOpacity onPress={postNewThread} style={styles.postThreadButton}>
-        <Text style={styles.postButtonText}>Post Thread</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={pickImage}>
-      <Text>Select Image</Text>
-    </TouchableOpacity>
-    {/* {selectedImage && <Image source={selectedImage} style={{ width: 300, height: 300 }} />} */}
-      <FlatList
-        data={threads}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => renderThread(item)}
-      />
+        <FlatList
+            data={threads}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => renderThread(item)}
+            ListHeaderComponent={
+                <>
+                    <View style={styles.header}>
+                        {/* Place for potential header content */}
+                    </View>
+
+                    <TouchableOpacity
+                        onPress={() => setModalVisible(true)}
+                        style={styles.openModalButton}
+                    >
+                        <Text style={{color: "white", marginTop:5}}>Post Thread</Text>
+                    </TouchableOpacity>
+
+                    {/* Modal component */}
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <TextInput
+                                    placeholder="Thread Title"
+                                    value={newThreadTitle}
+                                    onChangeText={setNewThreadTitle}
+                                    style={styles.biggerNewThreadInput}
+                                />
+                                <TextInput
+                                    placeholder="Thread Content"
+                                    value={newThreadContent}
+                                    onChangeText={setNewThreadContent}
+                                    style={styles.biggerNewThreadTextarea}
+                                    multiline
+                                    numberOfLines={5}
+                                />
+                                <TouchableOpacity onPress={pickImage} style={styles.imageSelectButton}>
+                                    <Text style={{color: "white", textDecorationStyle:"bold"}}>Select Image</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        postNewThread();
+                                        setModalVisible(!modalVisible);
+                                    }}
+                                    style={styles.postThreadButton}
+                                >
+                                    <Text style={styles.postButtonText}>Post Thread</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => setModalVisible(!modalVisible)}
+                                    style={styles.closeModalButton}
+                                >
+                                    <Text style={{color: "#686dcd", marginTop:5}}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    {/* Commented-out components for future reference or use */}
+                    {/*
+                    <TextInput
+                        placeholder="Thread Title"
+                        value={newThreadTitle}
+                        onChangeText={setNewThreadTitle}
+                        style={styles.newThreadInput}
+                    />
+                    <TextInput
+                        placeholder="Thread Content"
+                        value={newThreadContent}
+                        onChangeText={setNewThreadContent}
+                        style={styles.newThreadInput}
+                        multiline
+                        numberOfLines={3}
+                    />
+                    <TouchableOpacity onPress={postNewThread} style={styles.postThreadButton}>
+                        <Text style={styles.postButtonText}>Post Thread</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={pickImage} style={styles.imageSelectButton}>
+                        <Text>Select Image</Text>
+                    </TouchableOpacity>
+                    {selectedImage && <Image source={selectedImage} style={{ width: 300, height: 300 }} />}
+                    */}
+                </>
+            }
+        />
     </View>
-  );
+);
 }
 
 const LoadingView = () => (
@@ -271,16 +348,117 @@ const ErrorView = ({ error }) => (
 );
 
 const styles = StyleSheet.create({
-  centeredContainer: {
+  centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white"
+    marginTop: 22,
+  },
+  modalView: {
+    width: screenWidth * 0.7, // For example, 90% of the screen width
+    height: screenHeight * 0.6, // For example, 80% of the screen height
+    margin: 20,
+    backgroundColor: "rgba(31, 31, 41, 1)",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  biggerNewThreadInput: {
+    height: 50,  // Increase the height
+    fontSize: 18, // Increase the font size
+    // ... rest of your styles for this input
+  },
+  biggerNewThreadTextarea: {
+    height: 100,  // Increase the height for multiline input
+    fontSize: 18, // Increase the font size
+    
+    // ... rest of your styles for this input
+  },
+  openModalButton: {
+    width: "100%",
+        height: 50,
+        backgroundColor: "rgba(19, 19, 22, 1)",
+        borderRadius: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 25,
+        color: "white",
+        
+  },
+  postButtonText:{
+    color: "rgba(255, 255, 255, 1)",
+    fontSize: 16,
+    fontWeight: "700",
+    backgroundColor: "rgba(19, 19, 22, 1)"
+  },
+  imageSelectButton:{
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+    backgroundColor: "rgba(19, 19, 22, 1)"
+  },
+  centeredImage: {
+    width: 300,  // Adjust to the size you want
+    height: 300, // Adjust to the size you want
+    alignSelf: 'center',
+    marginTop: 20,  // Optional: Adds some spacing at the top
+    marginBottom: 20, // Optional: Adds some spacing at the bottom
+    borderRadius: 10, // Optional: Rounds the corners a bit
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  postThreadButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(19, 19, 22, 1)",
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
+    Color:"white",
+  },
+  imageSelectButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(19, 19, 22, 1)",
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 5,
+    color: "white",
+  },
+  newThreadInput: {
+    borderWidth: 1,
+    borderColor: "#e1e8ed",
+    padding: 10,
+    margin: 10,
+    borderRadius: 20,
+    backgroundColor: "rgba(19, 19, 22, 1)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
   },
   threadItem: {
     padding: 10,
     borderBottomWidth: 0.5,
-    borderBottomColor: "#e1e8ed"
+    borderBottomColor: "#e1e8ed",
+    backgroundColor: "#1f1f29",
+    borderRadius: 10,
+    marginVertical: 5,
+    
   },
   authorInfoContainer: {
     flexDirection: "row",
@@ -336,7 +514,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f8fa"
   },
   postButton: {
-    backgroundColor: "#1DA1F2",
+    backgroundColor: "rgba(19, 19, 22, 1)",
     padding: 10,
     margin: 10,
     borderRadius: 20,
@@ -346,32 +524,23 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold"
   },
-  header: {
-    backgroundColor: "#1DA1F2",
-    padding: 10,
-    alignItems: "center",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#e1e8ed"
-  },
+  // header: {
+  //   backgroundColor: "#1DA1F2",
+  //   padding: 10,
+  //   alignItems: "center",
+  //   borderBottomWidth: 0.5,
+  //   borderBottomColor: "#e1e8ed"
+  // },
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "white"
   },
-  newThreadInput: {
-    height: 40,
-    borderColor: '#e1e8ed',
-    borderWidth: 1,
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    backgroundColor: "#f5f8fa"
-  },
+  
   postThreadButton: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#1DA1F2',
+    backgroundColor: "rgba(19, 19, 22, 1)",
     borderRadius: 20,
     alignItems: 'center',
   }

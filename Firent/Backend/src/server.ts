@@ -49,9 +49,10 @@ app.post("/create-payment-intent", async (req, res) => {
 app.use("/users", userRoutes);
 app.use("/trips", TripRoutes);
 app.use("/chats", chatRoutes);
-app.post("/create-payment-intent", createPaymentIntent);
 app.use('/threads', threadRoutes);
+// app.use('/threads/:threadId/comments', commentRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
+// app.use('/threads', commentRoutes); 
 
 app.use(reactionRoutes);
 

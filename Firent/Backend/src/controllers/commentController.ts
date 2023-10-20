@@ -21,16 +21,29 @@ export const createComment = async (req:Request, res:Response) => {
 };
 
 
-export const getCommentsByThreadId = async (req:Request, res:Response) => {
+export const getCommentsByThreadId = async (req: Request, res: Response) => {
     try {
         const { threadId } = req.params;
+
+        // Check if threadId is a valid integer
+        if (!Number.isInteger(Number(threadId))) {
+            return res.status(400).json({ error: "Invalid thread ID provided." });
+        }
+
         const comments = await prisma.comment.findMany({
             where: { threadId: parseInt(threadId) },
             include: { author: true },
         });
-        res.status(200).json(comments);
+
+        // Check if no comments are found for the provided threadId
+        if (!comments.length) {
+            return res.status(404).json({ message: "No comments found for the provided thread ID." });
+        }
+
+        return res.status(200).json(comments);
+
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -52,7 +65,8 @@ export const updateComment = async (req:Request, res:Response) => {
 
 export const deleteComment = async (req:Request, res:Response) => {
     try {
-        const { id } = req.params;
+        const { threadId, id } = req.params;
+        // Even if you don't use threadId, it's extracted to match the route params
         await prisma.comment.delete({
             where: { id: parseInt(id) },
         });
@@ -61,3 +75,4 @@ export const deleteComment = async (req:Request, res:Response) => {
         res.status(400).json({ error: error.message });
     }
 };
+
