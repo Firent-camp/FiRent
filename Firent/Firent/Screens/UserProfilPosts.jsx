@@ -3,10 +3,11 @@ import { View, Text, ImageBackground, StyleSheet, Image, StatusBar, TouchableOpa
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Svg, Path, Line, Rect } from 'react-native-svg';
 import ImageGrid from './ImageGrid';
+import Posts from '../component/Posts';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
-export default function Userprofilimages({ navigation }) {
+export default function UserProfilPosts({ navigation }) {
     StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
     useEffect(() => {
         StatusBar.setBarStyle('light-content');
@@ -22,23 +23,23 @@ export default function Userprofilimages({ navigation }) {
             </Svg>
 
             <View style={styles.menu}>
-                <TouchableOpacity onPress={() => navigation.navigate("UserProfilPosts")}>
 
-                    <Svg style={styles.timeLine} width="21" height="21" viewBox="0 0 21 21" fill="none" >
-                        <Path fillRule="evenodd" clipRule="evenodd" d="M0.672852 1.52861C0.672852 0.985873 1.11283 0.545898 1.65556 0.545898H19.3443C19.8871 0.545898 20.327 0.985872 20.327 1.52861V19.2174C20.327 19.7601 19.8871 20.2001 19.3443 20.2001H1.65556C1.11283 20.2001 0.672852 19.7601 0.672852 19.2174V1.52861ZM2.63827 6.43631V2.51132H6.57834V6.43631H2.63827ZM2.63827 8.40173V12.3385H6.57834V8.40173H2.63827ZM2.63827 14.304V18.2347H6.57834V14.304H2.63827ZM8.54376 18.2347H12.4804V14.304H8.54376V18.2347ZM14.4458 18.2347H18.3616V14.304H14.4458V18.2347ZM18.3616 12.3385V8.40173H14.4458V12.3385H18.3616ZM18.3616 6.43631V2.51132H14.4458V6.43631H18.3616ZM12.4804 2.51132H8.54376V6.43631H12.4804V2.51132ZM8.54376 12.3385V8.40173H12.4804V12.3385H8.54376Z" fill="white" />
+                <Svg style={styles.timeLine} width="21" height="21" viewBox="0 0 21 21" fill="none" >
+                    <Path fillRule="evenodd" clipRule="evenodd" d="M0.672852 1.52861C0.672852 0.985873 1.11283 0.545898 1.65556 0.545898H19.3443C19.8871 0.545898 20.327 0.985872 20.327 1.52861V19.2174C20.327 19.7601 19.8871 20.2001 19.3443 20.2001H1.65556C1.11283 20.2001 0.672852 19.7601 0.672852 19.2174V1.52861ZM2.63827 6.43631V2.51132H6.57834V6.43631H2.63827ZM2.63827 8.40173V12.3385H6.57834V8.40173H2.63827ZM2.63827 14.304V18.2347H6.57834V14.304H2.63827ZM8.54376 18.2347H12.4804V14.304H8.54376V18.2347ZM14.4458 18.2347H18.3616V14.304H14.4458V18.2347ZM18.3616 12.3385V8.40173H14.4458V12.3385H18.3616ZM18.3616 6.43631V2.51132H14.4458V6.43631H18.3616ZM12.4804 2.51132H8.54376V6.43631H12.4804V2.51132ZM8.54376 12.3385V8.40173H12.4804V12.3385H8.54376Z" fill="white" />
+                </Svg>
+                <Text style={styles.posts}>
+                    {`Posts`}
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Userprofilimages")}>
+
+                    <Svg style={styles._timeLine} width="20" height="20" viewBox="0 0 20 20" fill="none" >
+                        <Path fillRule="evenodd" clipRule="evenodd" d="M0.105713 0.98271C0.105713 0.439974 0.545687 0 1.08842 0H18.7772C19.3199 0 19.7599 0.439974 19.7599 0.982709V18.6715C19.7599 19.2142 19.3199 19.6542 18.7772 19.6542H1.08842C0.545687 19.6542 0.105713 19.2142 0.105713 18.6715V0.98271ZM2.07113 5.89042V1.96542H6.0112V5.89042H2.07113ZM2.07113 7.85583V11.7926H6.0112V7.85583H2.07113ZM2.07113 13.7581V17.6888H6.0112V13.7581H2.07113ZM7.97662 17.6888H11.9133V13.7581H7.97662V17.6888ZM13.8787 17.6888H17.7945V13.7581H13.8787V17.6888ZM17.7945 11.7926V7.85583H13.8787V11.7926H17.7945ZM17.7945 5.89042V1.96542H13.8787V5.89042H17.7945ZM11.9133 1.96542H7.97662V5.89042H11.9133V1.96542ZM7.97662 11.7926V7.85583H11.9133V11.7926H7.97662Z" fill="white" />
                     </Svg>
-                    <Text style={styles.posts}>
-                        {`Posts`}
+
+                    <Text style={styles.images}>
+                        {`Images`}
                     </Text>
                 </TouchableOpacity>
-
-                <Svg style={styles._timeLine} width="20" height="20" viewBox="0 0 20 20" fill="none" >
-                    <Path fillRule="evenodd" clipRule="evenodd" d="M0.105713 0.98271C0.105713 0.439974 0.545687 0 1.08842 0H18.7772C19.3199 0 19.7599 0.439974 19.7599 0.982709V18.6715C19.7599 19.2142 19.3199 19.6542 18.7772 19.6542H1.08842C0.545687 19.6542 0.105713 19.2142 0.105713 18.6715V0.98271ZM2.07113 5.89042V1.96542H6.0112V5.89042H2.07113ZM2.07113 7.85583V11.7926H6.0112V7.85583H2.07113ZM2.07113 13.7581V17.6888H6.0112V13.7581H2.07113ZM7.97662 17.6888H11.9133V13.7581H7.97662V17.6888ZM13.8787 17.6888H17.7945V13.7581H13.8787V17.6888ZM17.7945 11.7926V7.85583H13.8787V11.7926H17.7945ZM17.7945 5.89042V1.96542H13.8787V5.89042H17.7945ZM11.9133 1.96542H7.97662V5.89042H11.9133V1.96542ZM7.97662 11.7926V7.85583H11.9133V11.7926H7.97662Z" fill="white" />
-                </Svg>
-
-                <Text style={styles.images}>
-                    {`Images`}
-                </Text>
 
             </View>
             <View style={styles.message}>
@@ -61,16 +62,16 @@ export default function Userprofilimages({ navigation }) {
                 {`Jack of all, Master of Design`}
             </Text>
             <ScrollView style={styles.jokarta}>
-                <ImageGrid />
+                <Posts />
             </ScrollView>
 
             <View style={styles.group3586}>
-            <TouchableOpacity>
+                <TouchableOpacity>
 
-                <Svg style={styles.fleche} width="39" height="38" viewBox="0 0 39 38" fill="none" >
-                    <Rect width="38.1013" height="38" rx="6" fill="#131316" />
-                    <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 10.5042C24.4795 10.8271 24.6667 11.2651 24.6667 11.7217C24.6667 12.1784 24.4795 12.6163 24.1462 12.9392L18.2915 18.6101L24.1462 24.2809C24.47 24.6057 24.6492 25.0407 24.6452 25.4923C24.6411 25.9438 24.4542 26.3757 24.1245 26.695C23.7949 27.0143 23.349 27.1954 22.8828 27.1993C22.4166 27.2033 21.9675 27.0297 21.6322 26.716L14.5205 19.8276C14.1872 19.5047 14 19.0667 14 18.6101C14 18.1535 14.1872 17.7155 14.5205 17.3926L21.6322 10.5042C21.9656 10.1814 22.4178 10 22.8892 10C23.3606 10 23.8128 10.1814 24.1462 10.5042Z" fill="#686DCD" />
-                </Svg>
+                    <Svg style={styles.fleche} width="39" height="38" viewBox="0 0 39 38" fill="none" >
+                        <Rect width="38.1013" height="38" rx="6" fill="#131316" />
+                        <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 10.5042C24.4795 10.8271 24.6667 11.2651 24.6667 11.7217C24.6667 12.1784 24.4795 12.6163 24.1462 12.9392L18.2915 18.6101L24.1462 24.2809C24.47 24.6057 24.6492 25.0407 24.6452 25.4923C24.6411 25.9438 24.4542 26.3757 24.1245 26.695C23.7949 27.0143 23.349 27.1954 22.8828 27.1993C22.4166 27.2033 21.9675 27.0297 21.6322 26.716L14.5205 19.8276C14.1872 19.5047 14 19.0667 14 18.6101C14 18.1535 14.1872 17.7155 14.5205 17.3926L21.6322 10.5042C21.9656 10.1814 22.4178 10 22.8892 10C23.3606 10 23.8128 10.1814 24.1462 10.5042Z" fill="#686DCD" />
+                    </Svg>
                 </TouchableOpacity>
 
                 <View style={styles.information}>
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         flexShrink: 0,
         top: 314,
-        left: 245,
+        left: 115,
         width: 44,
         minHeight: 0.001,
         overflow: "visible"

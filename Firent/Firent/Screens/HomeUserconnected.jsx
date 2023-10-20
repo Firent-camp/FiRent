@@ -10,6 +10,7 @@ import { AuthContext } from './Context';
 import axios from 'axios';
 import ADRESS_API from '../API';
 export default function HomeUserconnected({route}) {
+
     StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
     const navigation = useNavigation();
     const [users, setUsers] = useState([]);
