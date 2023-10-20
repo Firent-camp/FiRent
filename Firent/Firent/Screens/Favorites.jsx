@@ -4,6 +4,7 @@ import { Svg, Rect, Path } from 'react-native-svg';
 import Favoris from '../component/favoris';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
 export default function Favorites({navigation}) {
     StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
 
@@ -32,7 +33,7 @@ export default function Favorites({navigation}) {
             </TouchableOpacity>
 
             <View style={styles.rectangle13} />
-            <TouchableOpacity style={styles.___vector} onPress={() => navigation.navigate("homePage")}>
+            <TouchableOpacity style={styles.___vector} onPress={() => navigation.navigate("HomeUserconnected")}>
                 <Svg width="24" height="23" viewBox="0 0 24 23" fill="none" >
                     <Path d="M13.499 0.844414C12.7542 0.221295 11.5891 0.221295 10.8443 0.844414L1.48641 8.67352C0.907408 9.15793 0.579346 9.83191 0.579346 10.537V20.0585C0.579346 21.4748 1.87685 22.623 3.47742 22.623H6.3755C7.97607 22.623 9.27358 21.4748 9.27358 20.0585V15.7843C9.27358 15.3123 9.70609 14.9296 10.2396 14.9296H14.1037C14.6372 14.9296 15.0697 15.3123 15.0697 15.7843V20.0585C15.0697 21.4748 16.3673 22.623 17.9678 22.623H20.8659C22.4664 22.623 23.764 21.4748 23.764 20.0585V10.537C23.764 9.83191 23.4359 9.15793 22.8569 8.67352L13.499 0.844414Z" fill="#AFAFAF" />
                 </Svg>

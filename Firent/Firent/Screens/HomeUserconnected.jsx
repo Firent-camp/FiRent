@@ -7,13 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
 
-export default function  () {
+export default function HomeUserconnected (route) {
     StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
     const navigation = useNavigation();
     const [users, setUsers] = useState([]);
-    const { userDetail } = route.params; 
-    console.log(userDetail,'form hommeee');
-    useEffect(() => {
+     useEffect(() => {
         StatusBar.setBarStyle('light-content');
     }, []);
 
