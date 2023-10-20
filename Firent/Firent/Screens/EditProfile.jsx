@@ -5,10 +5,11 @@ import ADRESS_API from '../API';
 import axios from 'axios';
 
 export default function EditProfile({ route }) {
-  const { user } = route.params;
+  const { user, userDetail } = route.params; 
   const firebaseId = user;
-
+  console.log(userDetail,'this is dett');
   const [userDetails, setUserDetails] = useState({});
+  
   const [formData, setFormData] = useState({
     userName: '',
     lastName: '',

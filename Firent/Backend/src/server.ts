@@ -4,20 +4,16 @@ import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import userRoutes from "./routes/userRoutes";
 import TripRoutes from "./routes/tripRoutes";
-// import WishlistRoutes from "./routes/wishlistRoutes";
 import chatRoutes from "./routes/chatRoutes";
-import threadRoutes from './routes/threadRoute';
-import commentRoutes from './routes/commentRoute';
+import threadRoutes from "./routes/threadRoute";
+import commentRoutes from "./routes/commentRoute";
 import Stripe from "stripe";
-import { Socket } from "socket.io";
 import { createPaymentIntent } from "./controllers/stripeController";
-import { Message } from "./types/rentfire";
 
 const app = express();
 const server = http.createServer(app);
 const io: Server = new Server(server);
 const cors = require("cors");
-const reactionRoutes = require('./routes/reactionRoutes');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const prisma = new PrismaClient();
@@ -53,36 +49,40 @@ app.post("/create-payment-intent", createPaymentIntent);
 app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
 
-app.use(reactionRoutes);
-
-
 // Socket.IO logic
 
-io.on("connection", (socket: Socket) => {
-  console.log(`User connected: ${socket.id}`);
+// Create an interface for the data sent when a user joins a chat
+// ... Previous code ...
 
-  socket.on("joinChat", async ({ userId, otherUserId }: { userId: string; otherUserId: string }) => {
+// Create an interface for the data sent when a user joins a chat
+interface JoinChatData {
+  userId: string;
+  otherUserId: string;
+}
+
+// Create an interface for the data sent when a user sends a message
+interface SendMessageData {
+  chatId: string;
+  userId: string;
+  text: string;
+}
+
+// Socket.IO logic
+io.on('connection', (socket) => {
+  socket.on('joinChat', async (data: JoinChatData) => {
     const chat = await prisma.chat.findFirst({
       where: {
-        participants: {
-          every: {
-            OR: [
-              { firebaseId: userId }, 
-              { firebaseId: otherUserId }, 
-            ],
-          },
-        },
+        AND: [
+          { participants: { some: { firebaseId: data.userId } } },
+          { participants: { some: { firebaseId: data.otherUserId } } },
+        ],
       },
     });
+
     if (!chat) {
       const newChat = await prisma.chat.create({
         data: {
-          participants: {
-            connect: [
-              { firebaseId: userId },
-              { firebaseId: otherUserId }, 
-            ],
-          },
+          participants: { connect: [{ firebaseId: data.userId }, { firebaseId: data.otherUserId }] },
         },
       });
       socket.join(newChat.id.toString());
@@ -91,27 +91,32 @@ io.on("connection", (socket: Socket) => {
     }
   });
 
-  socket.on("sendMessage", async ({ chatId, userId, text }: { chatId: number; userId: string; text: string }) => {
+  socket.on('sendMessage', async (data: SendMessageData) => {
     try {
       const message = await prisma.message.create({
         data: {
-          content:text,
+          content: data.text,
           sender: {
             connect: {
-              firebaseId: userId, 
+              firebaseId: data.userId,
             },
           },
           chat: {
             connect: {
-              id: chatId,
+              id: Number(data.chatId),
             },
           },
         },
       });
-      io.to(chatId.toString()).emit("message", message);
+  
+      io.to(data.chatId).emit('message', message);
     } catch (error) {
       console.error(error);
     }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
   });
 });
 

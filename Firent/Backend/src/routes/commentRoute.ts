@@ -9,4 +9,8 @@ router.get("/", commentController.getCommentsByThreadId);
 router.put("/:id", commentController.updateComment);
 router.delete("/:id", commentController.deleteComment);
 
+
+
+
+
 export default router;
