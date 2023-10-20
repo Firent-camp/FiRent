@@ -2,14 +2,18 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 import { FIREBASE_AUTH } from '../FireBase';
+
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import { onAuthStateChanged } from "firebase/auth";
+import BottomNavigation from '../component/BottomNavigation';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Signin({navigation,route}) {
-
+export default function Signin({route}) {
+    const navigation = useNavigation()
+const[test,settest]=useState("")
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 const {userGetter} = route.params
@@ -36,16 +40,14 @@ console.log(userGetter,"userGtter");
             });
     
             userGetter(response.user.uid);
-    
-            // Navigate to Threads screen after successful sign-in
-            navigation.navigate('Threads');
+            settest(response.user.uid)
+           
 
-    
+    navigation.navigate("HomeUserconnected", {data1:response.user.uid})
         } catch (error) {
             alert(`Sign-in failed: ${error.message}`);
         }
     };
-    
 
     return (
         <View style={styles.container}>

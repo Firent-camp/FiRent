@@ -1,22 +1,50 @@
-import React, { useEffect ,useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, StatusBar, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useEffect ,useState ,useContext} from 'react';
+import { View, Text, ImageBackground, StyleSheet, StatusBar, ScrollView, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import { Svg, Circle, Path, Defs, Pattern, Use, Image } from 'react-native-svg';
 import BottomNavigation from '../component/BottomNavigation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
-
+import { AuthContext } from './Context';
+import axios from 'axios';
+import ADRESS_API from '../API';
 export default function HomeUserconnected({route}) {
     StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
     const navigation = useNavigation();
     const [users, setUsers] = useState([]);
-    const { userDetail } = route.params; 
-    console.log(userDetail,'form hommeee');
+    const [authUser,setAuthUser]=useContext(AuthContext)
+const [userDetail,setUserDetail]=useState({})
+console.log(userDetail,'eehhehehehehehe');
+    console.log(authUser.email,"userName")
+console.log(route.params.data,'from hp');
     useEffect(() => {
         StatusBar.setBarStyle('light-content');
+        
     }, []);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            const response = await axios.get(
+              `http://${ADRESS_API}:5000/users/firebase/${route.params.user}`
+            );
+            if (response.status === 200) {
+              
+              setUserDetail(response.data)
+                
+             
+    
+            } else {
+              console.error("Failed to fetch user data. Status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        };
+    
+        fetchUserData();
+      }, [route.params.user]);
     const logout = async () => {
         try {
           await signOut(FIREBASE_AUTH);
@@ -24,7 +52,13 @@ export default function HomeUserconnected({route}) {
         } catch (error) {
           console.error("Error logging out:", error);   }
       };
-      
+     
+      const navigateToScreen5 = () => {
+        
+        navigation.navigate('EditProfile',{data:userDetail});
+    };
+        
+
     return (
         <View style={styles.homeUserconnected}>
             <View style={styles.frame7}>
@@ -275,7 +309,7 @@ export default function HomeUserconnected({route}) {
             </View>
 
             <View style={styles.frame4}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={navigateToScreen5}>
 
                     <Svg style={styles.ellipse9} width="40" height="40" viewBox="0 0 40 40" fill="none" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <Circle cx="20" cy="20" r="19.5" fill="url(#pattern0)" stroke="#575B66" />
@@ -283,7 +317,8 @@ export default function HomeUserconnected({route}) {
                             <Pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
                                 <Use xlinkHref="#image0_1_880" transform="translate(0 -0.00857499) scale(0.000330688)" />
                             </Pattern>
-                            <Image id="image0_1_880" width="3024" height="4032" xlinkHref="https://media.licdn.com/dms/image/D4D03AQFoYE-LnHkjjg/profile-displayphoto-shrink_800_800/0/1679271392318?e=2147483647&v=beta&t=esxJEfkCoYp1ZDwLnUMSUmv93nX4MleKea78lCSAcYU" />
+                            
+                            <Image  id="image0_1_880" width="3024" height="4032" xlinkHref="https://media.licdn.com/dms/image/D4D03AQFoYE-LnHkjjg/profile-displayphoto-shrink_800_800/0/1679271392318?e=2147483647&v=beta&t=esxJEfkCoYp1ZDwLnUMSUmv93nX4MleKea78lCSAcYU" />
                         </Defs>
                     </Svg>
                 </TouchableOpacity>
@@ -293,8 +328,7 @@ export default function HomeUserconnected({route}) {
                         {`Welcome back`}
                     </Text>
                     <Text style={styles.mohammadMahdi}>
-                    {/* {`${userDetails.name} ${userDetails.lastName}`} */}
-                    </Text>
+{userDetail.userName}                    </Text>
                 </View>
             </View>
 
@@ -491,7 +525,7 @@ export default function HomeUserconnected({route}) {
                 </ScrollView >
 
             </View>
-            <BottomNavigation/>
+            <BottomNavigation id={route.params.data1}/>
         </View>
 
     )

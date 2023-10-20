@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext,useEffect, useState } from "react";
 // import { StatusBar, Image, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -27,52 +27,37 @@ import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 import Test from "./Screens/test";
 import axios from "axios";
+import { AuthProvider} from "./Screens/Context";
+
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
-  const [userDetail, setUserDetail] = useState(null);
+  const [userDetail, setUserDetail] = useState({});
   const InsideStack = createStackNavigator();
+
   const userGetter = (data) => {
     setUser(data);
   };
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `http://${ADRESS_API}:5000/users/firebase/${user}`
-        );
-        if (response.status === 200) {
-          const userData = response.data;
-          setUserDetail(userData);
-        } else {
-          console.error("Failed to fetch user data. Status:", response.status);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [user]);
-  console.log(userDetail, "user form apppp");
-
+  
+  
   return (
+    <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              initialParams={{ user, userDetail }}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="HomeUserconnected"
-              component={HomeUserconnected}
-              initialParams={{ userDetail }}
-              options={{ headerShown: false }}
-            />
+                  <Stack.Screen
+                    name="HomeUserconnected"
+                    component={HomeUserconnected}
+                    initialParams={{user:user}}
+                    options={{ headerShown: false }}
+                  />
+                <Stack.Screen
+                  name="EditProfile"
+                  component={EditProfile}
+                  initialParams={{ user }}
+                  options={{ headerShown: false }}
+                />
             {/* <Stack.Screen
               name="Threads"
               component={ThreadList}
@@ -167,5 +152,6 @@ export default function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }
