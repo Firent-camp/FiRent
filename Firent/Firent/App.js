@@ -8,7 +8,7 @@ import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
 // import Login from "./Screens/login";
-import homePage from "./Screens/homePage";
+import HomeUserconnected from "./Screens/HomeUserconnected";
 import checkEmail from "./Screens/checkEmail";
 import LocationDetails from "./Screens/locationDetails";
 // import list from "./Screens/list";
@@ -26,32 +26,63 @@ import Payment3 from "./Screens/payment3";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 import Test from "./Screens/test";
+import axios from "axios";
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
+  const [userDetail, setUserDetail] = useState(null);
   const InsideStack = createStackNavigator();
-
   const userGetter = (data) => {
     setUser(data);
   };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://${ADRESS_API}:5000/users/firebase/${user}`
+        );
+        if (response.status === 200) {
+          const userData = response.data;
+          setUserDetail(userData);
+        } else {
+          console.error("Failed to fetch user data. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+  console.log(userDetail, "user form apppp");
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
-          <Stack.Screen
-              name="homePage"
-              component={homePage}
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name="EditProfile"
               component={EditProfile}
-              initialParams={{ user}}
+              initialParams={{ user, userDetail }}
               options={{ headerShown: false }}
             />
-            
+            <Stack.Screen
+              name="HomeUserconnected"
+              component={HomeUserconnected}
+              initialParams={{ userDetail }}
+              options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen
+              name="Threads"
+              component={ThreadList}
+              options={{ title: "Forum Threads" }}
+            />
+            <Stack.Screen
+              name="Comments"
+              component={CommentListItem}
+              options={{ title: "Thread Comments" }}
+            /> */}
 
             <Stack.Screen
               name="Conversation1"
@@ -59,7 +90,12 @@ export default function App() {
               initialParams={{ user }}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen
+              name="Chat"
+              component={Chat}
+              initialParams={{ user }}
+            />
+
             <Stack.Screen
               name="Cart"
               component={Cart}
@@ -103,16 +139,6 @@ export default function App() {
               options={{ headerShown: false }}
             />
 
-            {/* <Stack.Screen
-              name="Threads"
-              component={ThreadList}
-              options={{ title: "Forum Threads" }}
-            />
-            <Stack.Screen
-              name="Comments"
-              component={CommentListItem}
-              options={{ title: "Thread Comments" }}
-            /> */}
             <Stack.Screen
               name="Test"
               component={Test}

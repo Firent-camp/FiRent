@@ -16,19 +16,21 @@ function Chat({ route }) {
     // Use socket to send and receive new messages.
 
     socketRef.current = io(`http://${ADRESS_API}:5000`);
-    socketRef.current.emit("joinChat", user.id, selectedUser.id);
+
+    socketRef.current.emit("joinChatRoom", {
+      userIds: [user.id, selectedUser.id],
+    });
 
     // Subscribe to new messages
-    socketRef.current.on("message", (newMessage) => {
-      setMessages([...messages, newMessage]);
+    socketRef.current.on("newMessage", (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
       scrollViewRef.current.scrollToEnd({ animated: true });
     });
 
-    // Fetch existing chat messages
     axios
-      .get(`http://${ADRESS_API}:5000/chats/${user.id}/messages`)
+      .get(`http://${ADRESS_API}:5000/chats/${selectedUser.id}`)
       .then((res) => {
-        setMessages(res.data);
+        setMessages(res.data.messages);
         scrollViewRef.current.scrollToEnd({ animated: true });
       })
       .catch((err) => {
@@ -45,22 +47,19 @@ function Chat({ route }) {
       return;
     }
 
-    const messageInput = {
+    const newMessage = {
       content: msg,
-      chatId: selectedUser.id, // You should replace this with the actual chat room or user ID.
+      sender: user,
     };
+    
+    socketRef.current.emit("sendMessage", {
+      roomId: selectedUser.id,
+      message: newMessage,
+    });
 
-    axios
-      .post(`http://${ADRESS_API}:5000/chats/${selectedUser.id}/message`, messageInput)
-      .then((newMessage) => {
-        socketRef.current.emit("sendMessage", newMessage.data);
-        setMessages([...messages, newMessage.data]);
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-        setMsg("");
-      })
-      .catch((err) => {
-        console.log("Error sending message:", err);
-      });
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+    setMsg("");
   };
 
   return (
