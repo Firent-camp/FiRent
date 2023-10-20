@@ -25,6 +25,10 @@ export const createThread = async (req: Request, res:Response) => {
 };
 
 
+
+
+
+
 export const getAllThreads = async (req :Request, res:Response) => {
     try {
         const threads = await prisma.thread.findMany({

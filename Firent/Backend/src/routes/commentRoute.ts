@@ -10,4 +10,8 @@ router.put("/:id", commentController.updateComment);
 router.delete("/threads/:threadId/comments/:id", commentController.deleteComment);
 
 
+
+
+
+
 export default router;

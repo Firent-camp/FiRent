@@ -186,6 +186,10 @@ export default function ThreadListScreen() {
     </View>
   );
 
+
+
+
+  
   const renderThread = (thread) => (
     <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
       <View style={styles.authorInfoContainer}>

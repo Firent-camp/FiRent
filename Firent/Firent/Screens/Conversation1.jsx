@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import axios from "axios";
 import ADRESS_API from "../API";
+import { useNavigation } from "@react-navigation/native";
 
-function Conversation1({ route, navigation }) {
+function Conversation({ route }) {
   const { user } = route.params;
   const [users, setUsers] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     axios
@@ -13,30 +15,26 @@ function Conversation1({ route, navigation }) {
       .then((res) => {
         setUsers(res.data);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log("Error fetching users:", error);
+      });
   }, []);
 
-  const navigateToChat = (selectedUser) => {
-    navigation.navigate("Chat", {
-      user: user,
-      selectedUser: selectedUser,
-    });
+  const startChatWithUser = (selectedUser) => {
+    // Navigate to the Chat component with the selected user
+    navigation.navigate("Chat", { user, selectedUser });
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Text> hjj</Text>
+    <View style={{ flex: 1 }}>
+      <Text>Select a user to start a conversation:</Text>
+      <ScrollView>
         {users.map((selectedUser) => (
           <TouchableOpacity
-            key={selectedUser.firebaseId}
-            onPress={() => navigateToChat(selectedUser)}
+            key={selectedUser.id}
+            onPress={() => startChatWithUser(selectedUser)}
           >
-            <View style={{ alignItems: 'flex-start' }}>
-              <Text>
-                {selectedUser.userName}
-              </Text>
-            </View>
+            <Text>{selectedUser.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -44,4 +42,4 @@ function Conversation1({ route, navigation }) {
   );
 }
 
-export default Conversation1;
+export default Conversation;

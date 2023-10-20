@@ -8,7 +8,7 @@ import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
 // import Login from "./Screens/login";
-import homePage from "./Screens/homePage";
+import HomeUserconnected from "./Screens/HomeUserconnected";
 import checkEmail from "./Screens/checkEmail";
 // import LocationDetails from "./Screens/LocationDetails";
 import list from "./Screens/list";
@@ -31,9 +31,9 @@ import ImageGrid from "./Screens/ImageGrid";
 
 export default function App() {
   const [user, setUser] = useState(null);
-const Stack = createStackNavigator();
-const InsideStack = createStackNavigator();
-
+  const Stack = createStackNavigator();
+  const [userDetail, setUserDetail] = useState(null);
+  const InsideStack = createStackNavigator();
   const userGetter = (data) => {
     setUser(data);
   };
@@ -90,7 +90,6 @@ const InsideStack = createStackNavigator();
               name="Conversation1"
               component={Conversation1}
               initialParams={{ user }}
-
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Chat" component={Chat} />
@@ -126,7 +125,6 @@ const InsideStack = createStackNavigator();
               component={Payment1}
               options={{ headerShown: false }}
             />
-
             <Stack.Screen
               name="ImageGrid"
               component={ImageGrid}
@@ -139,19 +137,12 @@ const InsideStack = createStackNavigator();
               options={{ headerShown: false }}
             />
 
-
             <Stack.Screen
               name="Threads"
               component={ThreadList}
               
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Comments"
-              component={CommentListItem}
-              options={{ title: "Thread Comments" }}
-            />
-          <Stack.Screen name="Test" component={Test} options={{ headerShown: false }} />
           </>
         ) : (
           <>

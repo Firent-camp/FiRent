@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     rowGap: 0
   },
-
   group3508: {
     position: "absolute",
     flexShrink: 0,
