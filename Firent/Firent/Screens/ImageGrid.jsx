@@ -5,7 +5,51 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { } from 'react-native-svg';
 export default function ImageGrid() {
     return (
-<View style={styles.row}>
+        <View style={styles.row}>
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
+            <Image
+                style={styles.__images}
+                source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
+            />
             <Image
                 style={styles.__images}
                 source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
@@ -19,8 +63,7 @@ export default function ImageGrid() {
                 source={{ uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg" }}
             />
             
-           
-            </View>
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -29,7 +72,7 @@ const styles = StyleSheet.create({
         width: 108,
         height: 141,
         borderRadius: 15
-        
+
     },
     row: {
         flexDirection: 'row',

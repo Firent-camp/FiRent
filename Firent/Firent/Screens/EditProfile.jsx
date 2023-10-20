@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
 import axios from 'axios';
@@ -58,6 +58,10 @@ export default function EditProfile({ route }) {
       console.error('Error:', error);
     }
   };
+  StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
+    useEffect(() => {
+        StatusBar.setBarStyle('light-content');
+    }, []);
 
   return (
     <View style={styles.group3567}>
