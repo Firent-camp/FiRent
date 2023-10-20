@@ -1,15 +1,15 @@
-import { loadStripe } from "@stripe/stripe-js";  // assuming you're using Stripe's JS library
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 
-let stripe;
+let stripe: Stripe | null = null;
 
-const initializeStripe = async () => {
+const initializeStripe = async (): Promise<Stripe> => {
     if (!stripe) {
-        stripe = await loadStripe("YOUR_PUBLIC_STRIPE_KEY");  // replace with your public key
+        stripe = await loadStripe("YOUR_PUBLIC_STRIPE_KEY");
     }
     return stripe;
 };
 
-const initiatePayment = async (totalAmount) => {
+const initiatePayment = async (totalAmount: number, cardElement: any): Promise<void> => {
     try {
         const response = await fetch("http://your_server_url/create-payment-intent", {
             method: "POST",
@@ -21,13 +21,13 @@ const initiatePayment = async (totalAmount) => {
 
         const { clientSecret } = await response.json();
 
-        const stripe = await initializeStripe();
+        const stripeInstance = await initializeStripe();
 
-        const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+        const paymentResult = await stripeInstance.confirmCardPayment(clientSecret, {
             payment_method: {
-                card: cardElement,  // This assumes you've created a cardElement with Stripe's Elements
+                card: cardElement,
                 billing_details: {
-                    name: 'Cardholder Name',  // Adjust as needed
+                    name: 'Cardholder Name',
                 },
             }
         });

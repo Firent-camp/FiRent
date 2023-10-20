@@ -124,8 +124,8 @@ export default function ThreadListScreen() {
         authorId: user,
         threadId: selectedThreadId 
       });
-      setCommentText('');
       fetchCommentsForThread(selectedThreadId);
+      setCommentText('');
     } catch (error) {
       console.error("Error posting comment:", error);
     }
@@ -181,7 +181,9 @@ export default function ThreadListScreen() {
 
   
   const renderThread = (thread) => (
-    <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+    <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() =>{ 
+      console.log(thread.id);
+      fetchCommentsForThread(thread.id)}}>
       <View style={styles.authorInfoContainer}>
         <Image source={{ uri: getImageUri(thread.author.profileImage) || null }} style={styles.authorImage} />
         <View style={styles.authorTextContainer}>
