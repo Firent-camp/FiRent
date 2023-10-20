@@ -13,11 +13,14 @@ export const createUserController = async (req: Request, res: Response) => {
         lastName: req.body.lastName,
         userName: req.body.userName,
         email:req.body.email,
-        address:req.body.address
+        address:req.body.address,
+        image:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
       }
-    })    
+    }) 
+    console.log(req.body);
+       
     return res.status(200).json(response)
-  }
+  }  
   catch (error) {
     console.log(error)
     res.status(500).json(error)

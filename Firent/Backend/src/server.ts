@@ -7,6 +7,7 @@ import TripRoutes from "./routes/tripRoutes";
 import chatRoutes from "./routes/chatRoutes";
 import threadRoutes from "./routes/threadRoute";
 import commentRoutes from "./routes/commentRoute";
+import reactionRoutes from "./routes/reactionRoutes";
 import Stripe from "stripe";
 import { createPaymentIntent } from "./controllers/stripeController";
 
@@ -47,7 +48,7 @@ app.use("/trips", TripRoutes);
 app.use("/chats", chatRoutes);
 app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
-// app.use('/threads/:threadId/comments', commentRoutes);
+app.use('/threads/:threadId/reactions', reactionRoutes);
 // app.use('/threads', commentRoutes); 
 
 // Socket.IO logic
