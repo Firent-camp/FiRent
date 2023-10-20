@@ -4,9 +4,7 @@
 node_modules/
 package-lock.json
 # Expo
-.expo/
-dist/
-web-build/
+.expo
 
 # Native
 *.orig.*
@@ -29,7 +27,7 @@ yarn-error.*
 *.pem
 
 # local env files
-.env
+
 
 # typescript
 *.tsbuildinfo

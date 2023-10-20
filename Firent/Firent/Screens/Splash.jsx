@@ -1,83 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import { io } from 'socket.io-client';
-import ADDRESS_IP from '../API';
-import { FIREBASE_AUTH } from '../FireBase';
+import React, { useEffect } from 'react';
+import { View, ImageBackground, Text, StyleSheet,TouchableOpacity, StatusBar } from 'react-native';
+import {  } from 'react-native-svg';
 
-const ChatScreen = ({ route }) => {
-  const [messages, setMessages] = useState([]);
-  const [messageInput, setMessageInput] = useState('');
-  const [socket, setSocket] = useState(null);
+export default function Splash() {
+    StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
+    useEffect(() => {
+        // Set status bar style to light-content (for light elements on a dark background)
+        StatusBar.setBarStyle('light-content');
+    }, []);
+    return (
+    		<View style={styles.splash}>
+      			<ImageBackground style={styles.e0bb3fe3d2570f2cc68719abdd75ca9111} source={{uri: /* dummy image */ 'https://i.pinimg.com/736x/7a/26/ba/7a26ba10e73253a65af8276496f615ea.jpg'}}/>
+      			<View style={styles.buttonSignUp}>
+                    <TouchableOpacity>
+        				<View style={styles.rectangle8}/>
+        				<Text style={styles.letsstart}>
+          					{`Let’s start`}
+        				</Text>
+                        </TouchableOpacity>
+      			</View>
+    		</View>
+    )
+}
 
-  useEffect(() => {
-    const user = FIREBASE_AUTH.currentUser.uid;
-    const newSocket = io(`http://192.168.104.19:8081`);
-
-    newSocket.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
-    });
-
-    newSocket.on('receive', (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
-    });
-
-    newSocket.on('connect', () => {
-      console.log('WebSocket connected');
-      newSocket.emit('join', user);
-    });
-
-    setSocket(newSocket);
-
-    return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
-    };
-  }, [route.params]);
-
-  const sendMessage = () => {
-    if (messageInput.trim() === '') {
-      return;
-    }
-
-    const message = {
-      content: messageInput,
-      sender: FIREBASE_AUTH.currentUser.uid,
-    };
-
-    socket.emit('send', message, (response) => {
-      if (response.error) {
-        console.error('Error sending message:', response.error);
-      } else {
-        console.log('Message sent successfully:', response);
-        setMessageInput('');
-      }
-    });
-  };
-
-  return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.content}</Text>
-          </View>
-        )}
-      />
-      <View>
-        <TextInput
-          placeholder="Type a message..."
-          value={messageInput}
-          onChangeText={(text) => setMessageInput(text)}
-        />
-        <TouchableOpacity onPress={sendMessage}>
-          <Text>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-export default ChatScreen;
+const styles = StyleSheet.create({
+  	splash: {
+    flexShrink: 0,
+    height: "100%",
+    width: "100%",
+    backgroundColor: "rgba(31, 31, 41, 1)",
+    alignItems: "center",
+    rowGap: 0
+},
+  	e0bb3fe3d2570f2cc68719abdd75ca9111: {
+    position: "absolute",
+    flexShrink: 0,
+    width: "100%",
+    height: "100%"
+},
+  	buttonSignUp: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 671,
+    height: 50,
+    left: 48,
+    width: 300
+},
+  	rectangle8: {
+    position: "absolute",
+    flexShrink: 0,
+    width: 300,
+    height: 50,
+    backgroundColor: "rgba(19, 19, 22, 1)",
+    borderRadius: 40
+},
+  	letsstart: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 15,
+    left: 114,
+    width: 90,
+    height: 19,
+    textAlign: "left",
+    color: "rgba(255, 255, 255, 1)",
+    fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: 0
+}
+})

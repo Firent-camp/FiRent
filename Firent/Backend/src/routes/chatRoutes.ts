@@ -1,10 +1,18 @@
-import express from 'express';
-import { sendMessage, getMessages } from "../controllers/chatController";
+import { Router, Request, Response } from "express";
 
-const router = express.Router();
+import getConversationMessages from "../controllers/chatController";
+import { getChatId } from "../controllers/chatController";
 
-router.get('/', getMessages);
+const router = Router();
 
-router.post('/send', sendMessage);
+router.get("/:chatId/messages", getConversationMessages);
+
+router.get("/get-chat-id", async (req: Request, res: Response) => {
+  const userId: string = req.query.userId as string;
+  const otherUserId: string = req.query.otherUserId as string;
+
+  const chatId = await getChatId(userId, otherUserId);
+  res.json({ chatId });
+});
 
 export default router;
