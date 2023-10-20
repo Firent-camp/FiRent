@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext,useEffect, useState } from "react";
 // import { StatusBar, Image, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -27,11 +27,16 @@ import LocationDetails from "./Screens/locationDetails";
 import Test from "./Screens/test";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
-// import Test from "./Screens/test";
+
+import Test from "./Screens/test";
+import axios from "axios";
+import { AuthProvider} from "./Screens/Context";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
+
+  const [userDetail, setUserDetail] = useState({});
   const InsideStack = createStackNavigator();
 
   const userGetter = (data) => {
@@ -39,12 +44,27 @@ export default function App() {
   };
 
   return (
+    <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
 
 <Stack.Screen
+
+                  <Stack.Screen
+                    name="HomeUserconnected"
+                    component={HomeUserconnected}
+                    initialParams={{user:user}}
+                    options={{ headerShown: false }}
+                  />
+                <Stack.Screen
+                  name="EditProfile"
+                  component={EditProfile}
+                  initialParams={{ user }}
+                  options={{ headerShown: false }}
+                />
+            {/* <Stack.Screen
               name="Threads"
               component={ThreadList}
               options={{ title: "Forum Threads" }}
@@ -143,5 +163,6 @@ export default function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }
