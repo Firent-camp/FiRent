@@ -10,4 +10,8 @@ router.get("/:id", threadController.getThreadById);
 router.put("/:id", threadController.updateThread);
 router.delete("/:id", threadController.deleteThread);
 
+
+
+
+
 export default router;
