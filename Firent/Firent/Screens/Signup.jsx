@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View, TextInput, StyleSheet, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, TouchableOpacity, View, TextInput, StyleSheet, ActivityIndicator, StatusBar } from "react-native";
 import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -23,16 +23,16 @@ const Signup = ({ navigation }) => {
     }
     try {
 
-     const credentials =  await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-     const user = credentials.user
-     const uid = user.uid
-     console.log(uid,"uid");
+      const credentials = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+      const user = credentials.user
+      const uid = user.uid
+      console.log(uid, "uid");
       await axios
         .post(`http://${ADRESS_API}:5000/users/add`, {
           firebaseId: uid,
           userName: userName,
           email: email,
-          address:'Tunisia'
+          address: 'Tunisia'
         })
         .then((res) => {
           console.log(res.data);
@@ -47,12 +47,28 @@ const Signup = ({ navigation }) => {
     }
   };
 
+  StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)');
+  useEffect(() => {
+      StatusBar.setBarStyle('light-content');
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.mainFlame}>
         <Svg style={styles.flame} width="62" height="75" viewBox="0 0 62 75" fill="none">
-          <Path d="M31 0C-1.27287 21.0162 -17.4798 75 31 75C79.4797 75 63.2728 21.0162 31 0Z" fill="#FF9601"/>
+          <Path d="M31 0C-1.27287 21.0162 -17.4798 75 31 75C79.4797 75 63.2728 21.0162 31 0Z" fill="#FF9601" />
         </Svg>
+        <View style={styles.inner}>
+          <Svg style={styles.innerBase} width="28" height="36" viewBox="0 0 28 36" fill="none" >
+            <Path d="M13.9999 36C-11.5001 36 6.49995 4 13.9999 0C21.4999 4 39.4999 36 13.9999 36Z" fill="#FFC803" />
+          </Svg>
+          <Svg style={styles.inner01} width="18" height="23" viewBox="0 0 18 23" fill="none" >
+            <Path d="M17 22C2.49996 22.5 -1.69469 8.26173 2.49996 0C5.47671 7.77356 18.9189 14.6666 17 22Z" fill="#FFC803" />
+          </Svg>
+          <Svg style={styles.inner02} width="12" height="28" viewBox="0 0 12 28" fill="none" >
+            <Path d="M1.19404 27.071C15.2742 23.5711 11.7735 10.7209 7.92954 0.450789C3.95189 7.70876 -2.66441 20.5461 1.19404 27.071Z" fill="#FFC803" />
+          </Svg>
+        </View>
       </View>
 
       <Text style={styles.headerText}>
@@ -121,6 +137,43 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
+  inner: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 30,
+    height: 36,
+    left: 14,
+    width: 31,
+    alignItems: "flex-start",
+    rowGap: 0
+    },
+    innerBase: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 0,
+    right: 2,
+    bottom: 0,
+    left: 3,
+    overflow: "visible"
+    },
+    inner01: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 14,
+    right: 15,
+    bottom: 0,
+    left: 0,
+    overflow: "visible"
+    },
+    inner02: {
+    position: "absolute",
+    flexShrink: 0,
+    top: 8,
+    right: 0,
+    bottom: 1,
+    left: 21,
+    overflow: "visible"
+    },
   input: {
     width: "100%",
     height: 50,

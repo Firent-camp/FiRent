@@ -1,41 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import React, {useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView ,StatusBar} from 'react-native';
+
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
 import axios from 'axios';
-
-export default function EditProfile({ route }) {
+import { AuthContext } from "./Context";
+import HomeUserconnected from "./HomeUserconnected";
+export default function EditProfile({navigation, route }) {
   const { user, userDetail } = route.params; 
+  const datauser = route.params.datauser
   const firebaseId = user;
-  console.log(userDetail,'this is dett');
-  const [userDetails, setUserDetails] = useState({});
-  
+  const [authUser,setAuthUser]=useContext(AuthContext)
+  const [userDetails,setUserDetails]=useState({})
+  console.log(route.params.data,'email from profile');
   const [formData, setFormData] = useState({
     userName: '',
     lastName: '',
     address: '',
     email: '',
   });
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`http://${ADRESS_API}:5000/users/firebase/${firebaseId}`);
-        if (response.status === 200) {
-          const userData = response.data;
-          setUserDetails(userData);
-          setFormData(userData);
-        } else {
-          console.error('Failed to fetch user data. Status:', response.status);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    fetchUserData();
-  }, [firebaseId]);
-
+useEffect(()=>{setUserDetails(route.params.data)},[])
+ 
+console.log(userDetails);
   const handleInputChange = (field, text) => {
     setFormData({ ...formData, [field]: text });
   };
@@ -58,6 +44,14 @@ export default function EditProfile({ route }) {
       console.error('Error:', error);
     }
   };
+  const hp = () => {
+    navigation.navigate('HomeUserconnected'); 
+};
+  StatusBar.setBackgroundColor('rgba(31, 31, 41, 1)')
+    useEffect(() => {
+        StatusBar.setBarStyle('light-content');
+    }, []);
+
 
   return (
     <View style={styles.group3567}>
@@ -88,12 +82,12 @@ export default function EditProfile({ route }) {
         <Text style={styles.editProfile}>
           {`Edit Profile`}
         </Text>
-        <TouchableOpacity>
-          <Svg style={styles.group3530} width="39" height="38" viewBox="0 0 39 38" fill="none" >
-            <Rect width="38.1013" height="38" rx="6" fill="#131316" />
-            <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 11.5042C24.4795 11.8271 24.6667 12.2651 24.6667 12.7217C24.6667 13.1784 24.4795 13.6163 24.1462 13.9392L18.2915 19.6101L24.1462 25.2809C24.47 25.6057 24.6492 26.0407 24.6452 26.4923C24.6411 26.9438 24.4542 27.3757 24.1245 27.695C23.7949 28.0143 23.349 28.1954 22.8828 28.1993C22.4166 28.2033 21.9675 28.0297 21.6322 27.716L14.5205 20.8276C14.1872 20.5047 14 20.0667 14 19.6101C14 19.1535 14.1872 18.7155 14.5205 18.3926L21.6322 11.5042C21.9656 11.1814 22.4178 11 22.8892 11C23.3606 11 23.8128 11.1814 24.1462 11.5042Z" fill="#686DCD" />
-          </Svg>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={hp}>
+                        <Svg style={styles.group3530} width="39" height="38" viewBox="0 0 39 38" fill="none" >
+                          <Rect width="38.1013" height="38" rx="6" fill="#131316" />
+                          <Path fillRule="evenodd" clipRule="evenodd" d="M24.1462 11.5042C24.4795 11.8271 24.6667 12.2651 24.6667 12.7217C24.6667 13.1784 24.4795 13.6163 24.1462 13.9392L18.2915 19.6101L24.1462 25.2809C24.47 25.6057 24.6492 26.0407 24.6452 26.4923C24.6411 26.9438 24.4542 27.3757 24.1245 27.695C23.7949 28.0143 23.349 28.1954 22.8828 28.1993C22.4166 28.2033 21.9675 28.0297 21.6322 27.716L14.5205 20.8276C14.1872 20.5047 14 20.0667 14 19.6101C14 19.1535 14.1872 18.7155 14.5205 18.3926L21.6322 11.5042C21.9656 11.1814 22.4178 11 22.8892 11C23.3606 11 23.8128 11.1814 24.1462 11.5042Z" fill="#686DCD" />
+                        </Svg>
+                      </TouchableOpacity>
         <View style={styles.group3563}>
           <View style={styles.group3558}>
             <View style={styles.group3552}>
@@ -110,7 +104,7 @@ export default function EditProfile({ route }) {
                     style={styles._melissa}
                     placeholder="Name"
                     placeholderTextColor="white"
-                    value={formData.userName} // Use formData here
+                    value={userDetails ? userDetails.userName : datauser.userName} // Use formData here
                     onChangeText={(text) => handleInputChange('userName', text)} // Pass 'firstName' as the field
                   />
                 </View>
@@ -132,7 +126,7 @@ export default function EditProfile({ route }) {
                     style={styles._melissa}
                     placeholder="Last name"
                     placeholderTextColor="white"
-                    value={formData.lastName} // Use formData here
+                    value={userDetails ? userDetails.LastName : datauser.LastName} // Use formData here
                     onChangeText={(text) => handleInputChange('lastName', text)} // Pass 'lastName' as the field
                   />
                 </View>
@@ -155,7 +149,7 @@ export default function EditProfile({ route }) {
                     placeholder="*************"
                     placeholderTextColor="white"
                     secureTextEntry={true}
-                    value={formData.password} // Use formData here
+                    value={userDetails ? userDetails.password : datauser.password} // Use formData here
                     onChangeText={(text) => handleInputChange('password', text)} // Pass 'password' as the field
                   />
                 </View>
@@ -176,7 +170,7 @@ export default function EditProfile({ route }) {
                   style={styles._melissa}
                   placeholder="Tunisie"
                   placeholderTextColor="white"
-                  value={formData.address} // Use formData here
+                  value={userDetails ? userDetails.address : datauser.address} // Use formData here
                   onChangeText={(text) => handleInputChange('address', text)} // Pass 'address' as the field
                 />
               </View>
@@ -197,7 +191,7 @@ export default function EditProfile({ route }) {
                     style={styles._melissa}
                     placeholder="Email@email.com"
                     placeholderTextColor="white"
-                    value={formData.email} // Use formData here
+                    value={userDetails ? userDetails.email : datauser.email} // Use formData here
                     onChangeText={(text) => handleInputChange('email', text)} // Pass 'email' as the field
                   />
                 </View>
