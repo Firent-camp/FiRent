@@ -43,7 +43,7 @@ console.log(userGetter,"userGtter");
             userGetter(response.user.uid);
             settest(response.user.uid)
            
-
+            navigation.navigate(Threads)
     navigation.navigate("HomeUserconnected", {data1:response.user.uid})
 
         } catch (error) {
