@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     bottomNavigation: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: "177%",
+        marginTop: "175%",
         marginLeft: -55
     },
     vector: {

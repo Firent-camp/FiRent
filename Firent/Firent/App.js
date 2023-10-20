@@ -28,15 +28,15 @@ import Test from "./Screens/test";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
 
-
 export default function App() {
   const [user, setUser] = useState(null);
-const Stack = createStackNavigator();
-const InsideStack = createStackNavigator();
+  const Stack = createStackNavigator();
+  const InsideStack = createStackNavigator();
 
   const userGetter = (data) => {
     setUser(data);
   };
+
   
   
   // export default function App() {
@@ -69,11 +69,14 @@ const InsideStack = createStackNavigator();
     //             options={{ headerShown: false }}
     //           />
 
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
+
                   <Stack.Screen
                         name="homePage"
                         component={homePage}
@@ -86,11 +89,11 @@ const InsideStack = createStackNavigator();
                   options={{ headerShown: false }}
            />
 
+
             <Stack.Screen
               name="Conversation1"
               component={Conversation1}
               initialParams={{ user }}
-
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Chat" component={Chat} />
@@ -139,8 +142,7 @@ const InsideStack = createStackNavigator();
               options={{ headerShown: false }}
             />
 
-
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Threads"
               component={ThreadList}
               
@@ -150,8 +152,12 @@ const InsideStack = createStackNavigator();
               name="Comments"
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
+            /> */}
+            <Stack.Screen
+              name="Test"
+              component={Test}
+              options={{ headerShown: false }}
             />
-          <Stack.Screen name="Test" component={Test} options={{ headerShown: false }} />
           </>
         ) : (
           <>
