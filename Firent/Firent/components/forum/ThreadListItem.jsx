@@ -28,11 +28,11 @@ export default function ThreadListScreen() {
   const [commentText, setCommentText] = useState('');
   const [newThreadTitle, setNewThreadTitle] = useState("");
   const [newThreadContent, setNewThreadContent] = useState("");
-  
+  const [selectedImage, setSelectedImage] = useState(null);
   const [image,setImage] = useState("")
   const user = FIREBASE_AUTH.currentUser.uid;
   const REACTIONS = ["like", "dislike"];
-console.log(user,"useerrrrrrrrrrrrrrrrr");
+
   useEffect(() => fetchThreads(), []);
 
   const fetchThreads = async () => {
@@ -102,7 +102,8 @@ console.log(user,"useerrrrrrrrrrrrrrrrr");
       if (response.data.secure_url !== '') {
         const image = response.data.secure_url;
         const images = response.data 
-  
+        console.log(images,"imaaaagessssssssssssssssssssssssssssssssssssss");
+        console.log(image,"imaaaaaaaaaaaaaaaaaaaaaaaaaaaage");
         setImage(image);
       } else {
         Alert.alert('Error', 'Image upload failed');
@@ -123,13 +124,13 @@ console.log(user,"useerrrrrrrrrrrrrrrrr");
         authorId: user,
         threadId: selectedThreadId 
       });
-      setCommentText('');
       fetchCommentsForThread(selectedThreadId);
+      setCommentText('');
     } catch (error) {
       console.error("Error posting comment:", error);
     }
   };
-
+  console.log(image,"imageurl");
   const handleReaction = async (threadId, reactionType) => {
     const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
     try {
@@ -147,12 +148,11 @@ console.log(user,"useerrrrrrrrrrrrrrrrr");
   
     // Start by picking an image
   
-  console.log(user,"user");
-    try {
   
+    try {
+   console.log(typeof image,"salem");
       const res = await Axios.post(apiUrl, {title:newThreadTitle,content:newThreadContent,imagePath:image,authorId:user});
-      console.log(res.data,"response")
-
+      console.log(res.data,"response");
       // setNewThreadTitle('');
       // setNewThreadContent('');  
       // fetchThreads();
@@ -181,7 +181,9 @@ console.log(user,"useerrrrrrrrrrrrrrrrr");
 
   
   const renderThread = (thread) => (
-    <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() => fetchCommentsForThread(thread.id)}>
+    <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() =>{ 
+      console.log(thread.id);
+      fetchCommentsForThread(thread.id)}}>
       <View style={styles.authorInfoContainer}>
         <Image source={{ uri: getImageUri(thread.author.profileImage) || null }} style={styles.authorImage} />
         <View style={styles.authorTextContainer}>

@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 
 export const createComment = async (req:Request, res:Response) => {
+    const { content, authorId, threadId } = req.body;
     try {
-        const { content, authorId, threadId } = req.body;
         const comment = await prisma.comment.create({
             data: {
                 content,
@@ -35,10 +35,6 @@ export const getCommentsByThreadId = async (req: Request, res: Response) => {
             include: { author: true },
         });
 
-        // Check if no comments are found for the provided threadId
-        if (!comments.length) {
-            return res.status(404).json({ message: "No comments found for the provided thread ID." });
-        }
 
         return res.status(200).json(comments);
 
