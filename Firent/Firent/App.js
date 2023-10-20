@@ -27,7 +27,7 @@ import LocationDetails from "./Screens/locationDetails";
 import Test from "./Screens/test";
 import Userprofilimages from "./Screens/UserProfilImages";
 import ImageGrid from "./Screens/ImageGrid";
-import Test from "./Screens/test";
+// import Test from "./Screens/test";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -43,6 +43,12 @@ export default function App() {
       <Stack.Navigator initialRouteName={user ? "Inside" : "Signup"}>
         {user ? (
           <>
+
+<Stack.Screen
+              name="Threads"
+              component={ThreadList}
+              options={{ title: "Forum Threads" }}
+            />
           <Stack.Screen
               name="homePage"
               initialParams={{ user}}
@@ -107,22 +113,13 @@ export default function App() {
               options={{ headerShown: false }}
             />
 
-            {/* <Stack.Screen
-              name="Threads"
-              component={ThreadList}
-              options={{ title: "Forum Threads" }}
-            />
+            
             <Stack.Screen
               name="Comments"
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
-            /> */}
-            <Stack.Screen
-              name="Threads"
-              component={ThreadList}
-              
-              options={{ headerShown: false }}
             />
+            
           </>
         ) : (
           <>

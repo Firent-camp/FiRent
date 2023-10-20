@@ -20,6 +20,8 @@ export const createThread = async (req: Request, res:Response) => {
         });
         res.status(201).json(thread);
     } catch (error) {
+        console.log(error);
+        
         res.status(400).json({ error: error.message });
     }
 };
