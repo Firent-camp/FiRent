@@ -5,6 +5,7 @@ export interface User {
   userName: string;
   email: string;
   role: UserRoles;
+  image:string;
   address: string;
   trips: Trip[];
   cart: Cart[];

@@ -24,13 +24,7 @@ enum NotificationTypes {
   TYPE2
 }
 
-enum ReactionType {
-  LIKE
-  LOVE
-  LAUGH
-  SAD
-  ANGRY
-}
+
 
 model User {
   firebaseId String   @id
@@ -39,6 +33,7 @@ model User {
   email      String   @unique
   role       UserRoles @default(USER) 
   address    String
+  image      String
   trips      Trip[]
   cart       Cart[]
   wishlist   Wishlist[]
@@ -145,20 +140,16 @@ model Comment {
   thread     Thread    @relation(fields: [threadId], references: [id])
   authorId   String
   author     User      @relation(fields: [authorId], references: [firebaseId])
-  reactions Reaction[]
 }
 
 model Reaction {
   id          Int          @id @default(autoincrement())
-  type        ReactionType
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   userId      String
   user        User         @relation(fields: [userId], references: [firebaseId])
   threadId    Int?
   thread      Thread?      @relation(fields: [threadId], references: [id])
-  commentId   Int?
-  comment     Comment?     @relation(fields: [commentId], references: [id])
 
-  @@index([userId, threadId, commentId], name: "reaction_index")
+  @@index([userId, threadId], name: "reaction_index")
 }
