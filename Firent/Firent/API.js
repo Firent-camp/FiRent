@@ -1,4 +1,6 @@
-const ADRESS_API="192.168.101.8"
+
+ 
+const ADDRESS_IP="192.168.101.6"
 
 
-export default ADRESS_API
+export default ADDRESS_IP

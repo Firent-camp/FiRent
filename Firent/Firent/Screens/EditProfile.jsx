@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
 import axios from 'axios';
+
 import { AuthContext } from "./Context";
 import HomeUserconnected from "./HomeUserconnected";
 export default function EditProfile({navigation, route }) {

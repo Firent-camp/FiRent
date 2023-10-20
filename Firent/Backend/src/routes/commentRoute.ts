@@ -7,7 +7,8 @@ const router = express.Router({ mergeParams: true });
 router.post("/", commentController.createComment);
 router.get("/", commentController.getCommentsByThreadId);
 router.put("/:id", commentController.updateComment);
-router.delete("/:id", commentController.deleteComment);
+router.delete("/threads/:threadId/comments/:id", commentController.deleteComment);
+
 
 
 

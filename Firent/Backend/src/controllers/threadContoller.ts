@@ -20,6 +20,8 @@ export const createThread = async (req: Request, res:Response) => {
         });
         res.status(201).json(thread);
     } catch (error) {
+        console.log(error);
+        
         res.status(400).json({ error: error.message });
     }
 };
@@ -72,15 +74,37 @@ export const updateThread = async (req:Request, res:Response) => {
 };
 
 
-export const deleteThread = async (req:Request, res:Response) => {
+// export const deleteThread = async (req:Request, res:Response) => {
+//     try {
+//         const { id } = req.params;
+//         await prisma.thread.delete({
+//             where: { id: parseInt(id) },
+//         });
+//         res.status(200).json({ message: "Thread deleted successfully." });
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
+
+
+export const deleteThread = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        await prisma.thread.delete({
-            where: { id: parseInt(id) },
+        
+        // First, delete all comments associated with the thread
+        await prisma.comment.deleteMany({
+            where: { threadId: parseInt(id) }
         });
+
+        // Then, delete the thread
+        await prisma.thread.delete({
+            where: { id: parseInt(id) }
+        });
+
         res.status(200).json({ message: "Thread deleted successfully." });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
 

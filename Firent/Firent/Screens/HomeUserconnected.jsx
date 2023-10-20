@@ -528,6 +528,7 @@ console.log(route.params.data,'from hp');
             </View>
             <BottomNavigation id={route.params.data1}/>
         </View>
+    
 
     )
 }
