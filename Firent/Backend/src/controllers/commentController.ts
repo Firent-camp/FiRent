@@ -21,6 +21,10 @@ export const createComment = async (req:Request, res:Response) => {
 };
 
 
+
+
+
+
 export const getCommentsByThreadId = async (req:Request, res:Response) => {
     try {
         const { threadId } = req.params;
