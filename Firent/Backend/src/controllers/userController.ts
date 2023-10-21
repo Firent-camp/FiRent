@@ -83,6 +83,7 @@ export const getUserByFirebaseIdController = async (req: Request, res: Response)
         email: user.email,
         role: user.role,
         address: user.address,
+        image:user.image
       };
       res.status(200).json(userData);
     } else {

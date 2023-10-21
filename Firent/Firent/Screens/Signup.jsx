@@ -26,7 +26,6 @@ const Signup = ({ navigation }) => {
       const credentials = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const user = credentials.user
       const uid = user.uid
-      console.log(uid, "uid");
       await axios
         .post(`http://${ADRESS_API}:5000/users/add`, {
           firebaseId: uid,
@@ -36,6 +35,7 @@ const Signup = ({ navigation }) => {
         })
         .then((res) => {
           console.log(res.data);
+          navigation.navigate('Signin');
         })
         .catch((err) => {
           console.log(err);
