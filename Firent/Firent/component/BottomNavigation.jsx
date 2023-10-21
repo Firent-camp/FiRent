@@ -5,31 +5,10 @@ import { Svg, Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import ADRESS_API from '../API';
 import axios from 'axios';
-export default function BottomNavigation(props) {
+export default function BottomNavigation(details) {
 const [userdetail,setUserDetail]=useState({})
+console.log(details,"from navv");
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-          try {
-            const response = await axios.get(
-              `http://${ADRESS_API}:5000/users/firebase/${props.id}`
-            );
-            if (response.status === 200) {
-              
-              setUserDetail(response.data)
-                
-              console.log(response.data,"userDetail");
-    
-            } else {
-              console.error("Failed to fetch user data. Status:", response.status);
-            }
-          } catch (error) {
-            console.error("Error:", error);
-          }
-        };
-    
-        fetchUserData();
-      }, []);
     const navigation = useNavigation();
     const navigateToScreen1 = () => {
         navigation.navigate('HomeUserconnected'); 
@@ -48,8 +27,10 @@ const [userdetail,setUserDetail]=useState({})
     };
 
     const navigateToScreen5 = () => {
-        navigation.navigate('UserProfil',{datauser : userdetail});
+        console.log(userdetail,'tttt');
+        navigation.navigate('UserProfilPosts', { userDetail: details });
     };
+    
     
 return (
         <View style={styles.bottomNavigation}>

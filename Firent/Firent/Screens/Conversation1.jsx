@@ -4,7 +4,7 @@ import axios from "axios";
 import ADRESS_API from "../API";
 import { useNavigation } from "@react-navigation/native";
 
-function Conversation({ route }) {
+function Conversation1({ route }) {
   const { user } = route.params;
   const [users, setUsers] = useState([]);
   const navigation = useNavigation();
@@ -42,4 +42,4 @@ function Conversation({ route }) {
   );
 }
 
-export default Conversation;
+export default Conversation1;

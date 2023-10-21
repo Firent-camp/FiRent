@@ -4,25 +4,29 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
 
 import { AuthContext } from "./Context";
 import HomeUserconnected from "./HomeUserconnected";
 export default function EditProfile({navigation, route }) {
-  const { user, userDetail } = route.params; 
-  const datauser = route.params.datauser
+  const { user} = route.params; 
+  const details = route.params.details
   const firebaseId = user;
-  const [authUser,setAuthUser]=useContext(AuthContext)
-  const [userDetails,setUserDetails]=useState({})
-  console.log(route.params.data,'email from profile');
+  const [userDetail,setUserDetails]=useState(details)
+
+  
   const [formData, setFormData] = useState({
-    userName: '',
-    lastName: '',
-    address: '',
-    email: '',
+    userName: details.userName,
+    lastName: details.lastName,
+    address: details.address,
+    email: details.email,
+    image:details.image
   });
-useEffect(()=>{setUserDetails(route.params.data)},[])
- 
-console.log(userDetails);
+
+  useEffect(() => {
+    setUserDetails(userDetail);
+    setFormData(userDetail);
+  }, [userDetail]);
   const handleInputChange = (field, text) => {
     setFormData({ ...formData, [field]: text });
   };
@@ -52,8 +56,62 @@ console.log(userDetails);
     useEffect(() => {
         StatusBar.setBarStyle('light-content');
     }, []);
-
-
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.cancelled && result.assets && result.assets.length > 0) {
+        uploadImageToCloudinary(result.assets[0].uri);
+      }
+    }
+    const uploadImageToCloudinary = async (imageUri) => {
+      const data = new FormData();
+      let filename = imageUri.split('/').pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+    
+      if (type === 'image/jpg') type = 'image/jpeg';
+      if (type === 'image/png') type = 'image/png';
+    
+      data.append('file', { uri: imageUri, name: filename, type });
+      data.append('upload_preset', 'rqhyhetx');
+    
+      try {
+        let response = await Axios.post(
+          'https://api.cloudinary.com/v1_1/duwjio4uk/image/upload',
+          data,
+          {
+            headers: {
+              accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+    
+        if (response.data.secure_url !== '') {
+          const newImageUrl = response.data.secure_url;
+    
+          // Update the state with the new image URL
+          setFormData({ ...formData, image: newImageUrl });
+    
+          // Optionally, you can also update userDetail if needed:
+          setUserDetails({ ...userDetail, image: newImageUrl });
+    
+          // Show an alert
+          Alert.alert('Success', 'Image uploaded and updated successfully');
+        } else {
+          Alert.alert('Error', 'Image upload failed');
+        }
+      } catch (err) {
+        Alert.alert('Error', 'Image upload failed');
+        console.log('Upload Image Error', err, err.request, err.response);
+      }
+    };
+    
   return (
     <View style={styles.group3567}>
       <View style={styles.userprofil} />
@@ -69,11 +127,11 @@ console.log(userDetails);
                 <Pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
                   <Use xlinkHref="#image0_54_1192" transform="matrix(0.00236264 0 0 0.00234192 -0.00912758 -0.034133)" />
                 </Pattern>
-                <Image id="image0_54_1192" width="427" height="450" xlinkHref="https://yt3.googleusercontent.com/5JKZOja-dk0C8P59C5acTbwGRmAquNDr5CzgeNXyM4gasep8Lzq-3_JPi9I5U9FTxSX6aRd2Jg=s900-c-k-c0x00ffffff-no-rj" />
+                <Image id="image0_54_1192" width="427" height="450" xlinkHref={formData.image} />
               </Defs>
             </Svg>
 
-            <TouchableOpacity style={styles.solarcameraminimalisticbold}>
+            <TouchableOpacity style={styles.solarcameraminimalisticbold} onPress={pickImage}>
               <Svg style={styles.vector} width="28" height="25" viewBox="0 0 28 25" fill="none" >
                 <Path fillRule="evenodd" clipRule="evenodd" d="M8.86273 1.57715C8.86273 0.845354 9.41025 0.251434 10.0864 0.251434H18.2448C18.9209 0.251434 19.4684 0.845354 19.4684 1.57715C19.4684 2.30894 18.9209 2.90286 18.2448 2.90286H10.0864C9.41025 2.90286 8.86273 2.30894 8.86273 1.57715ZM11.2199 24.1143H17.1113C21.2489 24.1143 23.3183 24.1143 24.8044 23.1571C25.4438 22.746 25.9961 22.2131 26.4298 21.5888C27.4227 20.157 27.4227 18.1618 27.4227 14.1714C27.4227 10.181 27.4227 8.18716 26.4284 6.75406C25.9953 6.12981 25.4434 5.59691 24.8044 5.18574C23.3183 4.22858 21.2489 4.22858 17.1113 4.22858H11.2199C7.0823 4.22858 5.01286 4.22858 3.52673 5.18574C2.88777 5.59693 2.33596 6.12983 1.90273 6.75406C0.908447 8.18584 0.908447 10.181 0.908447 14.1688V14.1714C0.908447 18.1618 0.908447 20.1557 1.90141 21.5888C2.33094 22.2092 2.88244 22.7422 3.52673 23.1571C5.01286 24.1143 7.0823 24.1143 11.2199 24.1143ZM8.64134 14.1714C8.64134 11.2283 11.1151 8.84472 14.1656 8.84472C17.2161 8.84472 19.6898 11.2297 19.6898 14.1714C19.6898 17.1132 17.2147 19.4982 14.1656 19.4982C11.1151 19.4982 8.64134 17.1119 8.64134 14.1714ZM10.8513 14.1714C10.8513 12.4056 12.3361 10.9765 14.1656 10.9765C15.9951 10.9765 17.4799 12.4069 17.4799 14.1714C17.4799 15.936 15.9951 17.3664 14.1656 17.3664C12.3361 17.3664 10.8513 15.936 10.8513 14.1714ZM22.267 8.84472C21.6572 8.84472 21.1627 9.32197 21.1627 9.91059C21.1627 10.4979 21.6572 10.9751 22.267 10.9751H23.0041C23.614 10.9751 24.1084 10.4979 24.1084 9.91059C24.1084 9.32197 23.614 8.84472 23.0041 8.84472H22.267Z" fill="white" />
               </Svg>
@@ -105,7 +163,7 @@ console.log(userDetails);
                     style={styles._melissa}
                     placeholder="Name"
                     placeholderTextColor="white"
-                    value={userDetails ? userDetails.userName : datauser.userName} // Use formData here
+                    value={formData.userName} // Use formData here
                     onChangeText={(text) => handleInputChange('userName', text)} // Pass 'firstName' as the field
                   />
                 </View>
@@ -127,7 +185,7 @@ console.log(userDetails);
                     style={styles._melissa}
                     placeholder="Last name"
                     placeholderTextColor="white"
-                    value={userDetails ? userDetails.LastName : datauser.LastName} // Use formData here
+                    value={formData.lastName} // Use formData here
                     onChangeText={(text) => handleInputChange('lastName', text)} // Pass 'lastName' as the field
                   />
                 </View>
@@ -150,7 +208,7 @@ console.log(userDetails);
                     placeholder="*************"
                     placeholderTextColor="white"
                     secureTextEntry={true}
-                    value={userDetails ? userDetails.password : datauser.password} // Use formData here
+                    value={formData.password} // Use formData here
                     onChangeText={(text) => handleInputChange('password', text)} // Pass 'password' as the field
                   />
                 </View>
@@ -171,7 +229,7 @@ console.log(userDetails);
                   style={styles._melissa}
                   placeholder="Tunisie"
                   placeholderTextColor="white"
-                  value={userDetails ? userDetails.address : datauser.address} // Use formData here
+                  value={formData.address} // Use formData here
                   onChangeText={(text) => handleInputChange('address', text)} // Pass 'address' as the field
                 />
               </View>
@@ -192,7 +250,7 @@ console.log(userDetails);
                     style={styles._melissa}
                     placeholder="Email@email.com"
                     placeholderTextColor="white"
-                    value={userDetails ? userDetails.email : datauser.email} // Use formData here
+                    value={formData.email} // Use formData here
                     onChangeText={(text) => handleInputChange('email', text)} // Pass 'email' as the field
                   />
                 </View>
