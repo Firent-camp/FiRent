@@ -4,8 +4,7 @@ import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
-import ADRESS_API from "../API";
-
+import ADDRESS_IP from "../API";
 const Signup = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +26,7 @@ const Signup = ({ navigation }) => {
       const user = credentials.user
       const uid = user.uid
       await axios
-        .post(`http://${ADRESS_API}:5000/users/add`, {
+        .post(`http://${ADDRESS_IP}:5000/users/add`, {
           firebaseId: uid,
           userName: userName,
           email: email,

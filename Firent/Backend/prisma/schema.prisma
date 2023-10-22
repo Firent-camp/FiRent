@@ -38,7 +38,7 @@ model User {
   cart       Cart[]
   wishlist   Wishlist[]
   profile    Profile?
-  chat     Chat?     @relation(fields: [chatId], references: [id])
+  chat      Chat[]  @relation("participants")
   chatId   Int?
   sentMessages Message[] @relation("SentMessages") 
   threads  Thread[]
@@ -104,7 +104,7 @@ model Profile {
 
 model Chat {
   id          Int      @id @default(autoincrement())
-  participants User[]   
+  participants User[] @relation("participants")
   messages    Message[]
 }
 

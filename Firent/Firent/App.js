@@ -14,6 +14,7 @@ import LocationDetails from "./Screens/locationDetails";
 // import list from "./Screens/list";
 // import { FIREBASE_AUTH } from "./FireBase";
 import Conversation1 from "./Screens/Conversation1";
+import Conversation from "./Screens/Conversation";
 import EditProfile from "./Screens/EditProfile";
 import ThreadList from "../Firent/components/forum/ThreadListItem";
 import Cart from "./Screens/Cart";
@@ -52,22 +53,40 @@ export default function App() {
         console.error("Error:", error);
       }
     };
-
+    
     fetchUserData();
   }, [user]);
-
+  
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={user ? "Inside" : "HpUserNotConnected"}>
         {user ? (
           <>
-            <Stack.Screen
-              name="HomeUserconnected"
-              component={HomeUserconnected}
-              initialParams={{ user }}
+          <Stack.Screen
+              name="Cart"
+              component={Cart}
               options={{ headerShown: false }}
             />
+                <Stack.Screen
+                  name="HomeUserconnected"
+                  component={HomeUserconnected}
+                  initialParams={{ user }}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Chat"
+                  component={Chat}
+                  initialParams={{ user }}
+                  options={{ headerShown: false }}
+
+                />
+              <Stack.Screen
+                name="Conversation"
+                component={Conversation}
+                initialParams={{ user }}
+                options={{ headerShown: false }}
+              />
             <Stack.Screen
               name="EditProfile"
               component={EditProfile}
@@ -85,23 +104,8 @@ export default function App() {
               options={{ title: "Thread Comments" }}
             /> */}
 
-            <Stack.Screen
-              name="Conversation1"
-              component={Conversation1}
-              initialParams={{ user }}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Chat"
-              component={Chat}
-              initialParams={{ user }}
-            />
 
-            <Stack.Screen
-              name="Cart"
-              component={Cart}
-              options={{ headerShown: false }}
-            />
+            
             <Stack.Screen
               name="Payment3"
               component={Payment3}

@@ -1,4 +1,4 @@
-import { Chat, Message, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -9,35 +9,21 @@ interface MyRequest extends Request {
   };
 }
 
-export default async function getConversationMessages(req: MyRequest, res: Response) {
+
+
+export default async function getChatMessagesByChatId(req: MyRequest, res: Response) {
   try {
+    // Get the chat ID from the request.
     const chatId: number = Number(req.params.chatId);
 
     if (isNaN(chatId)) {
       return res.status(400).json({ error: "Invalid chatId" });
     }
 
-    const chat: Chat | null = await prisma.chat.findFirst({
-      where: {
-        id: chatId,
-        participants: {
-          some: {
-            firebaseId: req.user?.firebaseId,
-          },
-        },
-      },
-    });
-
-    if (!chat) {
-      return res.status(401).json({ error: "Not authorized to access chat" });
-    }
-
-    const messages: Message[] = await prisma.message.findMany({
+    // Retrieve messages for the specified chatId.
+    const messages = await prisma.message.findMany({
       where: {
         chatId,
-      },
-      include: {
-        chat: true,
       },
     });
 
@@ -51,15 +37,20 @@ export default async function getConversationMessages(req: MyRequest, res: Respo
 
 export async function getChatId(userId: string, otherUserId: string): Promise<number | null> {
   try {
+    const participants = [userId, otherUserId].filter((id) => id !== undefined);
+
     const chat = await prisma.chat.findFirst({
       where: {
         participants: {
           every: {
-            firebaseId: { in: [userId, otherUserId] },
+            firebaseId: { in: participants },
           },
         },
       },
     });
+
+    console.log("Participants:", participants);
+    console.log("Chat ID result:", chat ? chat.id : "Chat not found");
 
     return chat ? chat.id : null;
   } catch (error) {
@@ -67,3 +58,34 @@ export async function getChatId(userId: string, otherUserId: string): Promise<nu
     return null;
   }
 }
+export async function getUsersInChat(chatId: number): Promise<string[] | null> {
+  try {
+    const chat = await prisma.chat.findUnique({
+      where: {
+        id: chatId,
+      },
+      include: {
+        participants: {
+          select: {
+            firebaseId: true,
+          },
+        },
+      },
+    });
+
+    if (!chat) {
+      return null;
+    }
+
+    const participants = chat.participants.map((participant) => participant.firebaseId);
+
+    return participants;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+
+
+
