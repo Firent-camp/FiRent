@@ -5,9 +5,6 @@ import { Svg, Path, Defs, Pattern, Use, Image, Rect } from 'react-native-svg';
 import ADRESS_API from '../API';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-
-import { AuthContext } from "./Context";
-import HomeUserconnected from "./HomeUserconnected";
 export default function EditProfile({navigation, route }) {
   const { user} = route.params; 
   const details = route.params.details
@@ -67,21 +64,22 @@ export default function EditProfile({navigation, route }) {
       if (!result.cancelled && result.assets && result.assets.length > 0) {
         uploadImageToCloudinary(result.assets[0].uri);
       }
-    }
+    };
+  
     const uploadImageToCloudinary = async (imageUri) => {
       const data = new FormData();
       let filename = imageUri.split('/').pop();
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-    
+  
       if (type === 'image/jpg') type = 'image/jpeg';
       if (type === 'image/png') type = 'image/png';
-    
+  
       data.append('file', { uri: imageUri, name: filename, type });
       data.append('upload_preset', 'rqhyhetx');
-    
+  
       try {
-        let response = await Axios.post(
+        let response = await axios.post( // Corrected 'Axios' to 'axios'
           'https://api.cloudinary.com/v1_1/duwjio4uk/image/upload',
           data,
           {
@@ -91,17 +89,12 @@ export default function EditProfile({navigation, route }) {
             },
           }
         );
-    
+  
         if (response.data.secure_url !== '') {
           const newImageUrl = response.data.secure_url;
-    
-          // Update the state with the new image URL
+          console.log(newImageUrl, 'url new images');
           setFormData({ ...formData, image: newImageUrl });
-    
-          // Optionally, you can also update userDetail if needed:
           setUserDetails({ ...userDetail, image: newImageUrl });
-    
-          // Show an alert
           Alert.alert('Success', 'Image uploaded and updated successfully');
         } else {
           Alert.alert('Error', 'Image upload failed');

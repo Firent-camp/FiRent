@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     },
     svgContainer: {
       marginRight: 50, 
-
+      marginTop : 25,// Increase this margin to move the header down
     },
     headerText: {
       fontSize: 24,
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
       color: "black",
       textAlign: "center",
       marginBottom: 20, 
-      marginTop : 25,// Increase this margin to move the header down
-      marginLeft: 20,
+      marginTop : 40,// Increase this margin to move the header down
+      marginLeft: 30,
 
     },
     groupInner: {
