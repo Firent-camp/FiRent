@@ -8,7 +8,11 @@ import Signin from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Chat from "./Screens/Chat";
 // import Login from "./Screens/login";
+<<<<<<< HEAD
+// import homePage from "./Screens/homePage";
+=======
 import HomeUserconnected from "./Screens/HomeUserconnected";
+>>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
 import checkEmail from "./Screens/checkEmail";
 import LocationDetails from "./Screens/locationDetails";
 // import list from "./Screens/list";
@@ -28,11 +32,17 @@ import Userprofilimages from "./Screens/UserProfilImages";
 import UserProfilPosts from "./Screens/UserProfilPosts";
 import ImageGrid from "./Screens/ImageGrid";
 import Test from "./Screens/test";
+<<<<<<< HEAD
+export default function App() {
+  const [user, setUser] = useState(null);
+  const Stack = createStackNavigator();
+=======
 import axios from "axios";
 export default function App() {
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
   const [userDetail, setUserDetail] = useState(null);
+>>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
   const InsideStack = createStackNavigator();
   const userGetter = (data) => {
     setUser(data);
@@ -63,6 +73,24 @@ export default function App() {
         initialRouteName={user ? "Inside" : "HpUserNotConnected"}>
         {user ? (
           <>
+<<<<<<< HEAD
+            <Stack.Screen
+              name="Threads"
+              component={ThreadList}
+              options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen
+              name="homePage"
+              component={homePage}
+              options={{ headerShown: false }}
+            /> */}
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              initialParams={{ user }}
+              options={{ headerShown: false }}
+            />
+=======
                 <Stack.Screen
                   name="HomeUserconnected"
                   component={HomeUserconnected}
@@ -98,6 +126,7 @@ export default function App() {
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
             /> */}
+>>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
 
 
             
@@ -149,6 +178,18 @@ export default function App() {
               component={HpUserNotConnected}
               options={{ headerShown: false }}
             />
+<<<<<<< HEAD
+
+            <Stack.Screen
+              name="Test"
+              component={Test}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          <>
+=======
+>>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
             <Stack.Screen
               name="Signup"
               component={Signup}
