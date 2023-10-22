@@ -30,12 +30,9 @@ const Signup = ({ navigation }) => {
           firebaseId: uid,
           userName: userName,
           email: email,
-<<<<<<< HEAD
           address:'Tunisia',
           image:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
-=======
-          address: 'Tunisia'
->>>>>>> f788a16d43e106fd61c97f42df23c8c654531e6b
+
         })
         .then((res) => {
           console.log(res.data);
