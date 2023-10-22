@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
 import {
   View,
   Text,
@@ -11,24 +10,11 @@ import { Svg, Path } from "react-native-svg";
 import { FIREBASE_AUTH } from "../FireBase";
 
 import {
-=======
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { Svg, Path } from "react-native-svg";
-import { FIREBASE_AUTH } from "../FireBase";
-import {
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 
-<<<<<<< HEAD
 import { useNavigation } from "@react-navigation/native";
 
 export default function Signin({ route }) {
@@ -53,23 +39,6 @@ export default function Signin({ route }) {
     navigation.navigate("Signup"); // Assuming "SignUp" is the name of your SignUp screen in your navigator
   };
 
-=======
-export default function Signin({ navigation, route }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { userGetter } = route.params;
-  console.log(userGetter, "userGtter");
-  const resetPassword = () => {
-    sendPasswordResetEmail(FIREBASE_AUTH, email)
-      .then((res) => {
-        alert("password reset email has been sent successfully");
-      })
-      .catch((error) => {
-        alert("Please enter a valid email", error);
-      });
-  };
-
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
   const signIn = async () => {
     try {
       const response = await signInWithEmailAndPassword(
@@ -77,7 +46,6 @@ export default function Signin({ navigation, route }) {
         email,
         password
       );
-<<<<<<< HEAD
       console.log(response);
 
       onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -88,10 +56,6 @@ export default function Signin({ navigation, route }) {
       settest(response.user.uid);
 
       navigation.navigate("HomeUserconnected", { data1: response.user.uid });
-=======
-      onAuthStateChanged(FIREBASE_AUTH, (user) => {});
-      userGetter(response.user.uid);
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
     } catch (error) {
       alert(`Sign-in failed: ${error.message}`);
     }
@@ -111,7 +75,6 @@ export default function Signin({ navigation, route }) {
           fill="#FF9601"
         />
       </Svg>
-<<<<<<< HEAD
       <View style={styles.inner}>
         <Svg
           style={styles.innerBase}
@@ -177,33 +140,6 @@ export default function Signin({ navigation, route }) {
       <Text style={styles.link} onPress={navigateToSignUp}>
         Don't have an account ? Signup here.
       </Text>
-=======
-
-      <Text style={styles.title}>Welcome Back!</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Name@email.com"
-        placeholderTextColor="white"
-        onChangeText={setEmail}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="white"
-        secureTextEntry={true}
-        onChangeText={setPassword}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={signIn}>
-        <Text style={styles.buttonText}>Sign in</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.link} onPress={resetPassword}>
-        Forgot Password?
-      </Text>
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
     </View>
   );
 }
@@ -217,7 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
   },
-<<<<<<< HEAD
   inner: {
     position: "absolute",
     flexShrink: 0,
@@ -255,8 +190,6 @@ const styles = StyleSheet.create({
     left: 21,
     overflow: "visible",
   },
-=======
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
   title: {
     fontSize: 25,
     fontWeight: "700",
@@ -275,19 +208,11 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 50,
-<<<<<<< HEAD
     backgroundColor: "rgba(104, 109, 205, 1)", // A shade of blue, you can adjust this
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20
-=======
-    backgroundColor: "rgba(19, 19, 22, 1)",
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
   },
   buttonText: {
     color: "rgba(255, 255, 255, 1)",
@@ -303,13 +228,10 @@ const styles = StyleSheet.create({
   flame: {
     marginTop: 40,
   },
-<<<<<<< HEAD
 
   signUpButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "700",
   },
-=======
->>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
 });
