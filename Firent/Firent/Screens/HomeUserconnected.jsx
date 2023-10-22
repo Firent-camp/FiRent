@@ -18,20 +18,23 @@ import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
 import { AuthContext } from "./Context";
 import axios from "axios";
-import ADRESS_API from "../API";
 import { useIsFocused } from "@react-navigation/native";
-
+import ADDRESS_IP from "../API";
 export default function HomeUserconnected({ route }) {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const { user } = route.params;
   const [users, setUsers] = useState([]);
   const [userDetail, setUserDetail] = useState({});
+  const [locationData, setLocationData] = useState([]);
+  const [images, setImages] = useState([]);
+
+
 
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        `http://${ADRESS_API}:5000/users/firebase/${user}`
+        `http://${ADDRESS_IP}:5000/users/firebase/${user}`
       );
       if (response.status === 200) {
         setUserDetail(response.data);
@@ -57,10 +60,30 @@ export default function HomeUserconnected({ route }) {
   };
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   StatusBar.setBarStyle("light-content");
+  const fetchTripsFromBackend = async () => {
+    try {
+      const response = await fetch(`http://${ADDRESS_IP}:5000/trips`);
+      if (response.ok) {
+        const data = await response.json();
+        const imageUrls = data.map((trip) =>
+          trip.images.length > 0 ? trip.images[0].imageId : "default_image_url"
+        );
+        setImages(imageUrls);
+        setLocationData(data);
+      } else {
+        console.error("Failed to fetch trips data from the backend.");
+      }
+    } catch (error) {
+      console.error("Error while fetching trips data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTripsFromBackend();
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
-      // Fetch user data when the component is focused
       fetchUserData();
     }
   }, [isFocused]);
@@ -693,253 +716,58 @@ export default function HomeUserconnected({ route }) {
 
       <View style={styles.frame20}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.frame10}>
-            <ImageBackground
-              style={styles.unsplashoR0uERTVyD0}
-              source={{
-                uri: /* dummy image */ "https://media.routard.com/image/30/4/fb-nusa-penida.1521304.jpg",
-              }}
-            />
-            <View style={styles._unsplashoR0uERTVyD0} />
-            <View style={styles.frame14}>
-              <Text style={styles.nusaPedina}>{`Nusa Pedina`}</Text>
-              <View style={styles.frame13}>
-                {/* RN-Flow:: can be replaced with <____vuesaxOutlineLocation  /> */}
-                <View style={styles.____vuesaxOutlineLocation}>
-                  <Svg
-                    style={styles._____vuesaxOutlineLocation}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <Path
-                      d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
-                      fill="white"
-                    />
-                    <Path
-                      d="M6 11.38C5.26 11.38 4.515 11.1 3.935 10.545C2.46 9.125 0.829997 6.86 1.445 4.165C2 1.72 4.135 0.625 6 0.625C6 0.625 6 0.625 6.005 0.625C7.87 0.625 10.005 1.72 10.56 4.17C11.17 6.865 9.54 9.125 8.065 10.545C7.485 11.1 6.74 11.38 6 11.38ZM6 1.375C4.545 1.375 2.675 2.15 2.18 4.33C1.64 6.685 3.12 8.715 4.46 10C5.325 10.835 6.68 10.835 7.545 10C8.88 8.715 10.36 6.685 9.83 4.33C9.33 2.15 7.455 1.375 6 1.375Z"
-                      fill="white"
-                    />
-                  </Svg>
-                </View>
-                <Text style={styles.baliIndonesia}>{`Bali, Indonesia`}</Text>
-              </View>
+          {locationData.map((trip, index) => (
+            <View key={index} style={styles.tripContainer}>
+              {trip.images.map((image, imageIndex) => (
+                <ImageBackground
+                  key={imageIndex}
+                  style={styles.imageBackgroundStyle}
+                  source={{
+                    uri: image.imageId
+                      ? image.imageId
+                      : "https://cdn.getyourguide.com/img/tour/648043171daa5.jpeg/145.jpg",
+                  }}
+                >
+                  <View style={styles._unsplashoR0uERTVyD0} />
+                  <View style={styles.frame14}>
+                    <Text style={styles.nusaPedina}>{trip.text}</Text>
+                    <View style={styles.frame13}>
+                      <View style={styles.____vuesaxOutlineLocation}>
+                        <Svg
+                          style={styles._____vuesaxOutlineLocation}
+                          width={12}
+                          height={12}
+                          viewBox="0 0 12 12"
+                          fill="none"
+                        >
+                          <Path
+                            d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
+                            fill="white"
+                          />
+                        </Svg>
+                      </View>
+                      <Text style={styles.baliIndonesia}>{trip.location}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.frame17}>
+                    <Text style={styles._5}>{trip.rating}</Text>
+                    <Svg
+                      style={styles.__star3}
+                      width={10}
+                      height={10}
+                      viewBox="0 0 10 10"
+                      fill="none"
+                    >
+                      <Path
+                        d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
+                        fill="#EBB513"
+                      />
+                    </Svg>
+                  </View>
+                </ImageBackground>
+              ))}
             </View>
-            <View style={styles.frame17}>
-              <Text style={styles._5}>{`4.5`}</Text>
-              <Svg
-                style={styles.__star3}
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
-                <Path
-                  d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
-                  fill="#EBB513"
-                />
-              </Svg>
-            </View>
-          </View>
-
-          <View style={styles.frame10}>
-            <ImageBackground
-              style={styles.unsplashoR0uERTVyD0}
-              source={{
-                uri: /* dummy image */ "https://cdn.britannica.com/10/152310-050-5A09D74A/Sand-dunes-Sahara-Morocco-Merzouga.jpg",
-              }}
-            />
-            <View style={styles._unsplashoR0uERTVyD0} />
-            <View style={styles.frame14}>
-              <Text style={styles.nusaPedina}>{`Désert marocain`}</Text>
-              <View style={styles.frame13}>
-                {/* RN-Flow:: can be replaced with <____vuesaxOutlineLocation  /> */}
-                <View style={styles.____vuesaxOutlineLocation}>
-                  <Svg
-                    style={styles._____vuesaxOutlineLocation}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <Path
-                      d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
-                      fill="white"
-                    />
-                    <Path
-                      d="M6 11.38C5.26 11.38 4.515 11.1 3.935 10.545C2.46 9.125 0.829997 6.86 1.445 4.165C2 1.72 4.135 0.625 6 0.625C6 0.625 6 0.625 6.005 0.625C7.87 0.625 10.005 1.72 10.56 4.17C11.17 6.865 9.54 9.125 8.065 10.545C7.485 11.1 6.74 11.38 6 11.38ZM6 1.375C4.545 1.375 2.675 2.15 2.18 4.33C1.64 6.685 3.12 8.715 4.46 10C5.325 10.835 6.68 10.835 7.545 10C8.88 8.715 10.36 6.685 9.83 4.33C9.33 2.15 7.455 1.375 6 1.375Z"
-                      fill="white"
-                    />
-                  </Svg>
-                </View>
-                <Text style={styles.baliIndonesia}>{`Bali, Indonesia`}</Text>
-              </View>
-            </View>
-            <View style={styles.frame17}>
-              <Text style={styles._5}>{`4.5`}</Text>
-              <Svg
-                style={styles.__star3}
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
-                <Path
-                  d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
-                  fill="#EBB513"
-                />
-              </Svg>
-            </View>
-          </View>
-          <View style={styles.frame10}>
-            <ImageBackground
-              style={styles.unsplashoR0uERTVyD0}
-              source={{
-                uri: /* dummy image */ "https://daily.jstor.org/wp-content/uploads/2016/10/Moving_Forest_1050_700.jpg",
-              }}
-            />
-            <View style={styles._unsplashoR0uERTVyD0} />
-            <View style={styles.frame14}>
-              <Text style={styles.nusaPedina}>{`Moving Forest`}</Text>
-              <View style={styles.frame13}>
-                {/* RN-Flow:: can be replaced with <____vuesaxOutlineLocation  /> */}
-                <View style={styles.____vuesaxOutlineLocation}>
-                  <Svg
-                    style={styles._____vuesaxOutlineLocation}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <Path
-                      d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
-                      fill="white"
-                    />
-                    <Path
-                      d="M6 11.38C5.26 11.38 4.515 11.1 3.935 10.545C2.46 9.125 0.829997 6.86 1.445 4.165C2 1.72 4.135 0.625 6 0.625C6 0.625 6 0.625 6.005 0.625C7.87 0.625 10.005 1.72 10.56 4.17C11.17 6.865 9.54 9.125 8.065 10.545C7.485 11.1 6.74 11.38 6 11.38ZM6 1.375C4.545 1.375 2.675 2.15 2.18 4.33C1.64 6.685 3.12 8.715 4.46 10C5.325 10.835 6.68 10.835 7.545 10C8.88 8.715 10.36 6.685 9.83 4.33C9.33 2.15 7.455 1.375 6 1.375Z"
-                      fill="white"
-                    />
-                  </Svg>
-                </View>
-                <Text style={styles.baliIndonesia}>{`Bali, Indonesia`}</Text>
-              </View>
-            </View>
-            <View style={styles.frame17}>
-              <Text style={styles._5}>{`4.5`}</Text>
-              <Svg
-                style={styles.__star3}
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
-                <Path
-                  d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
-                  fill="#EBB513"
-                />
-              </Svg>
-            </View>
-          </View>
-          <View style={styles.frame10}>
-            <ImageBackground
-              style={styles.unsplashoR0uERTVyD0}
-              source={{
-                uri: /* dummy image */ "https://cdn.britannica.com/79/149179-050-DC23D823/snowflake-threads-wool-coat.jpg",
-              }}
-            />
-            <View style={styles._unsplashoR0uERTVyD0} />
-            <View style={styles.frame14}>
-              <Text style={styles.nusaPedina}>{`Snow mountain`}</Text>
-              <View style={styles.frame13}>
-                {/* RN-Flow:: can be replaced with <____vuesaxOutlineLocation  /> */}
-                <View style={styles.____vuesaxOutlineLocation}>
-                  <Svg
-                    style={styles._____vuesaxOutlineLocation}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <Path
-                      d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
-                      fill="white"
-                    />
-                    <Path
-                      d="M6 11.38C5.26 11.38 4.515 11.1 3.935 10.545C2.46 9.125 0.829997 6.86 1.445 4.165C2 1.72 4.135 0.625 6 0.625C6 0.625 6 0.625 6.005 0.625C7.87 0.625 10.005 1.72 10.56 4.17C11.17 6.865 9.54 9.125 8.065 10.545C7.485 11.1 6.74 11.38 6 11.38ZM6 1.375C4.545 1.375 2.675 2.15 2.18 4.33C1.64 6.685 3.12 8.715 4.46 10C5.325 10.835 6.68 10.835 7.545 10C8.88 8.715 10.36 6.685 9.83 4.33C9.33 2.15 7.455 1.375 6 1.375Z"
-                      fill="white"
-                    />
-                  </Svg>
-                </View>
-                <Text style={styles.baliIndonesia}>{`Bali, Indonesia`}</Text>
-              </View>
-            </View>
-            <View style={styles.frame17}>
-              <Text style={styles._5}>{`4.5`}</Text>
-              <Svg
-                style={styles.__star3}
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
-                <Path
-                  d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
-                  fill="#EBB513"
-                />
-              </Svg>
-            </View>
-          </View>
-          <View style={styles.frame10}>
-            <ImageBackground
-              style={styles.unsplashoR0uERTVyD0}
-              source={{
-                uri: /* dummy image */ "https://www.nationsonline.org/gallery/World/island-countries.jpg",
-              }}
-            />
-            <View style={styles._unsplashoR0uERTVyD0} />
-            <View style={styles.frame14}>
-              <Text style={styles.nusaPedina}>{`Snow mountain`}</Text>
-              <View style={styles.frame13}>
-                {/* RN-Flow:: can be replaced with <____vuesaxOutlineLocation  /> */}
-                <View style={styles.____vuesaxOutlineLocation}>
-                  <Svg
-                    style={styles._____vuesaxOutlineLocation}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <Path
-                      d="M6 7.085C4.935 7.085 4.065 6.22 4.065 5.15C4.065 4.08 4.935 3.22 6 3.22C7.065 3.22 7.935 4.085 7.935 5.155C7.935 6.225 7.065 7.085 6 7.085ZM6 3.97C5.35 3.97 4.815 4.5 4.815 5.155C4.815 5.81 5.345 6.34 6 6.34C6.655 6.34 7.185 5.81 7.185 5.155C7.185 4.5 6.65 3.97 6 3.97Z"
-                      fill="white"
-                    />
-                    <Path
-                      d="M6 11.38C5.26 11.38 4.515 11.1 3.935 10.545C2.46 9.125 0.829997 6.86 1.445 4.165C2 1.72 4.135 0.625 6 0.625C6 0.625 6 0.625 6.005 0.625C7.87 0.625 10.005 1.72 10.56 4.17C11.17 6.865 9.54 9.125 8.065 10.545C7.485 11.1 6.74 11.38 6 11.38ZM6 1.375C4.545 1.375 2.675 2.15 2.18 4.33C1.64 6.685 3.12 8.715 4.46 10C5.325 10.835 6.68 10.835 7.545 10C8.88 8.715 10.36 6.685 9.83 4.33C9.33 2.15 7.455 1.375 6 1.375Z"
-                      fill="white"
-                    />
-                  </Svg>
-                </View>
-                <Text style={styles.baliIndonesia}>{`Bali, Indonesia`}</Text>
-              </View>
-            </View>
-            <View style={styles.frame17}>
-              <Text style={styles._5}>{`4.5`}</Text>
-              <Svg
-                style={styles.__star3}
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
-                <Path
-                  d="M4.52447 0.463526C4.67415 0.00287056 5.32585 0.00286996 5.47553 0.463525L6.23483 2.80041C6.30176 3.00642 6.49374 3.1459 6.71036 3.1459H9.1675C9.65186 3.1459 9.85325 3.76571 9.46139 4.05041L7.47352 5.49468C7.29828 5.622 7.22495 5.84768 7.29188 6.0537L8.05118 8.39058C8.20086 8.85123 7.67362 9.23429 7.28176 8.94959L5.29389 7.50532C5.11865 7.378 4.88135 7.378 4.70611 7.50532L2.71824 8.94959C2.32638 9.23429 1.79914 8.85123 1.94882 8.39058L2.70812 6.0537C2.77505 5.84768 2.70172 5.622 2.52648 5.49468L0.538611 4.05041C0.146754 3.76571 0.348141 3.1459 0.832503 3.1459H3.28964C3.50626 3.1459 3.69824 3.00642 3.76517 2.80041L4.52447 0.463526Z"
-                  fill="#EBB513"
-                />
-              </Svg>
-            </View>
-          </View>
-
+          ))}
           <View style={styles.frame29} />
         </ScrollView>
       </View>
@@ -957,7 +785,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     rowGap: 0,
   },
-
+  tripContainer: {
+    marginRight: 20, // Add any desired margin or padding
+  },
   bottomNavigation: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1752,7 +1582,7 @@ const styles = StyleSheet.create({
   nusaPedina: {
     flexShrink: 0,
     textAlign: "left",
-    color: "rgba(255, 255, 255, 1)",
+    color: "rgba(233, 244, 242, 0.72)",
     fontSize: 14,
     fontWeight: "400",
     letterSpacing: 0,
@@ -1842,6 +1672,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     rowGap: 5,
+  },
+  imageBackgroundStyle: {
+    width: 175, // Adjust width as needed
+    height: 160, // Adjust height as needed
   },
   wachauForest: {
     flexShrink: 0,

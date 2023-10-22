@@ -74,7 +74,7 @@ function Chat({ route }) {
             </Svg>
           </View>
         </TouchableOpacity>
-        <Text style={styles.chatHeaderText}>Firent Chat</Text>
+        <Text style={styles.headerText}>Firent Chat</Text>
       </View>
       <ScrollView
         style={styles.messageContainer}
@@ -139,6 +139,20 @@ const styles = StyleSheet.create({
     width: "100%",
     borderStyle: "solid",
     backgroundColor: "#1f1f29",
+  },
+  svgContainer: {
+    marginRight: 50, 
+    marginTop : 25,// Increase this margin to move the header down
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "black",
+    textAlign: "center",
+    marginBottom: 20, 
+    marginTop : 40,// Increase this margin to move the header down
+    marginLeft: 30,
+
   },
   chatChild: {
     height: "8.62%",

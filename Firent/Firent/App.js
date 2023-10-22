@@ -63,11 +63,6 @@ export default function App() {
         initialRouteName={user ? "Inside" : "HpUserNotConnected"}>
         {user ? (
           <>
-          <Stack.Screen
-              name="Cart"
-              component={Cart}
-              options={{ headerShown: false }}
-            />
                 <Stack.Screen
                   name="HomeUserconnected"
                   component={HomeUserconnected}
