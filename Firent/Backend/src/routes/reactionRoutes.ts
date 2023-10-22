@@ -1,7 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const reactionController = require('../controllers/reactionController');
 
-router.post('/threads/:threadId/reactions', reactionController.addOrUpdateReaction);
+import * as reactionController from "../controllers/reactioncontroller";
 
-module.exports = router;
+const router = express.Router({ mergeParams: true });
+router.post('/', reactionController.likePost);
+router.get('/', reactionController.getthreadLikes)
+router.delete('/', reactionController.unlikethread)
+export default router
