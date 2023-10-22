@@ -19,7 +19,7 @@ console.log(details,"from navv");
     };
 
     const navigateToScreen3 = () => {
-        navigation.navigate('Conversation1');
+        navigation.navigate('Conversation');
     };
 
     const navigateToScreen4 = () => {
