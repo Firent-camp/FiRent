@@ -32,12 +32,8 @@ const Signup = ({ navigation }) => {
           firebaseId: uid,
           userName: userName,
           email: email,
-<<<<<<< HEAD
           address:'Tunisia',
           image:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
-=======
-          address: 'Tunisia'
->>>>>>> f788a16d43e106fd61c97f42df23c8c654531e6b
         })
         .then((res) => {
           console.log(res.data);
@@ -193,11 +189,11 @@ const styles = StyleSheet.create({
   buttonSignUp: {
     width: "100%",
     height: 50,
-    backgroundColor: "rgba(19, 19, 22, 1)",
+    backgroundColor: "rgba(104, 109, 205, 1)", 
     borderRadius: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20
   },
   signUpText: {
     color: "white",
