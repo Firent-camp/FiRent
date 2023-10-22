@@ -17,12 +17,13 @@ import * as ImagePicker from 'expo-image-picker';
 const CLOUD_NAME = 'duwjio4uk'; // Replace 'your_cloud_name' with your Cloudinary cloud name
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 const UPLOAD_PRESET = 'rqhyhetx'; // Replace 'your_upload_preset' with your Cloudinary unsigned upload preset
-
+import Icon from "react-native-vector-icons/Ionicons";
 
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedThreadComments, setSelectedThreadComments] = useState([]);
+  const [selectedReaction,setSelectedReaction]=useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [commentText, setCommentText] = useState('');
@@ -57,7 +58,7 @@ export default function ThreadListScreen() {
       quality: 1,
     });
 
-    if (!result.cancelled && result.assets && result.assets.length > 0) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       uploadImageToCloudinary(result.assets[0].uri);
     }
   }
@@ -70,6 +71,18 @@ export default function ThreadListScreen() {
       const response = await Axios.get(apiUrl);
       setSelectedThreadId(threadId);
       setSelectedThreadComments(response.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  const fetchReactionsForThread = async (threadId) => {
+    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
+    try {
+      const response = await Axios.get(apiUrl);
+      setSelectedThreadId(threadId);
+      setSelectedReaction(response.data);
+      console.log(response.data,"dataaa");
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
@@ -132,10 +145,12 @@ export default function ThreadListScreen() {
   };
   console.log(image,"imageurl");
   const handleReaction = async (threadId, reactionType) => {
+    console.log(threadId,"threadId 1");
+  
     const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
     try {
-      await Axios.post(apiUrl, { userId: user, type: reactionType });
-      fetchThreads();
+      await Axios.post(apiUrl, { userId: user , threadId:threadId});
+      fetchReactionsForThread(threadId);
     } catch (error) {
       console.error("Error posting reaction:", error);
     }
@@ -163,18 +178,7 @@ export default function ThreadListScreen() {
   
   
 
-  const renderReactions = (thread) => (
-    <View style={{ flexDirection: "row", marginVertical: 5 }}>
-      {REACTIONS.map((reaction) => (
-        <TouchableOpacity
-          key={reaction}
-          style={{ marginHorizontal: 5 }}
-          onPress={() => handleReaction(thread.id, reaction)}
-        >
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+
 
 
 
@@ -183,9 +187,11 @@ export default function ThreadListScreen() {
   const renderThread = (thread) => (
     <TouchableOpacity style={styles.threadItem} key={thread.id} onPress={() =>{ 
       console.log(thread.id);
-      fetchCommentsForThread(thread.id)}}>
+      console.log(thread.author,"author");
+      fetchCommentsForThread(thread.id)
+      fetchReactionsForThread(thread.id)}}>
       <View style={styles.authorInfoContainer}>
-        <Image source={{ uri: getImageUri(thread.author.profileImage) || null }} style={styles.authorImage} />
+        <Image  source={{ uri: getImageUri(thread.author.image) }} style={styles.authorImage} />
         <View style={styles.authorTextContainer}>
           <Text style={styles.authorName}>{thread.author.userName}</Text>
           <Text style={styles.timestampText}>5 minutes ago</Text>
@@ -212,7 +218,7 @@ export default function ThreadListScreen() {
     <>
       {selectedThreadComments.map((comment) => (
         <View key={comment.id} style={styles.commentContainer}>
-          <Image source={{ uri: getImageUri(comment.author.profileImage) }} style={styles.commenterImage} />
+          <Image source={{ uri: getImageUri(comment.author.image) }} style={styles.commenterImage} />
           <View style={styles.commentTextContainer}>
             <Text style={styles.commenterName}>{comment.author.userName}</Text>
             <Text>{comment.content}</Text>
@@ -224,6 +230,29 @@ export default function ThreadListScreen() {
         <Text style={styles.postButtonText}>Post Comment</Text>
       </TouchableOpacity>
     </>
+  );
+  const renderReactions = (thread) => (
+    <View style={{ flexDirection: "row", marginVertical: 5 }}>
+      
+      {selectedReaction.map((reaction) => {
+        console.log(reaction,"reactionss");
+        return (
+        <View key={reaction.id}>
+            <TouchableOpacity style={styles.like} onPress={() => {
+              console.log(reaction,"reaction");
+              handleReaction(thread.id)}}>
+            <Icon
+              name="heart"
+              size={30}
+              color={reaction.length > 0 ? "#A47E53" : "#A47E53"}
+            />
+
+              <Text >Liked By: {reaction.userName}</Text>
+
+          </TouchableOpacity>
+          </View>
+      )})}
+    </View>
   );
 
   if (loading) return <LoadingView />;
