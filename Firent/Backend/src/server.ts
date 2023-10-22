@@ -45,7 +45,7 @@ app.use('/trips', TripRoutes);
 app.use('/chats', chatRoutes);
 app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
-app.use('/threads/:threadId/reactions', reactionRoutes);
+// app.use('/threads/:threadId/reactions', reactionRoutes);
 
 
 // Socket.IO logic
