@@ -16,7 +16,7 @@ enum EntityTypes {
   CAMPGROUND
   USER
   EQUIPMENT
-  THREAD 
+  THREAD
 }
 
 enum NotificationTypes {
@@ -24,26 +24,24 @@ enum NotificationTypes {
   TYPE2
 }
 
-
-
 model User {
-  firebaseId String   @id
-  lastName   String   @default("")
-  userName   String
-  email      String   @unique
-  role       UserRoles @default(USER) 
-  address    String
-  image      String
-  trips      Trip[]
-  cart       Cart[]
-  wishlist   Wishlist[]
-  profile    Profile?
-  chat     Chat?     @relation(fields: [chatId], references: [id])
-  chatId   Int?
-  sentMessages Message[] @relation("SentMessages") 
-  threads  Thread[]
-   comments Comment[]
-   reactions Reaction[]
+  firebaseId   String     @id
+  lastName     String     @default("")
+  userName     String
+  email        String     @unique
+  role         UserRoles  @default(USER)
+  address      String
+  trips        Trip[]
+  cart         Cart[]
+  wishlist     Wishlist[]
+  profile      Profile?
+  chat         Chat[]     @relation("participants")
+  chatId       Int?
+  sentMessages Message[]  @relation("SentMessages")
+  threads      Thread[]
+  comments     Comment[]
+  reactions    Reaction[]
+  image        String     @default("https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D")
 }
 
 model Trip {
@@ -61,14 +59,14 @@ model Trip {
 }
 
 model Image {
-  id         Int        @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   imageId    String
   entityType EntityTypes
   entityId   String
   tripId     Int?
-  trip       Trip?      @relation(fields: [tripId], references: [id])
-  threadId   Int?       // Added this line
-  thread     Thread?    @relation(fields: [threadId], references: [id])  // And this line
+  trip       Trip?       @relation(fields: [tripId], references: [id])
+  threadId   Int? // Added this line
+  thread     Thread?     @relation(fields: [threadId], references: [id]) // And this line
 }
 
 model Wishlist {
@@ -90,7 +88,7 @@ model Cart {
 }
 
 model Notification {
-  id   Int              @id @default(autoincrement())
+  id   Int               @id @default(autoincrement())
   type NotificationTypes
   time DateTime
 }
@@ -101,55 +99,53 @@ model Profile {
 }
 
 model Chat {
-  id          Int      @id @default(autoincrement())
-  participants User[]   
-  messages    Message[]
+  id           Int       @id @default(autoincrement())
+  participants User[]    @relation("participants")
+  messages     Message[]
 }
 
 model Message {
-  id       Int      @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   content  String
-  senderId String   
-  chat     Chat     @relation(fields: [chatId], references: [id])
+  senderId String
+  chat     Chat   @relation(fields: [chatId], references: [id])
   chatId   Int
-  sender   User     @relation("SentMessages", fields: [senderId], references: [firebaseId]) 
+  sender   User   @relation("SentMessages", fields: [senderId], references: [firebaseId])
 }
 
 model Thread {
-  id         Int       @id @default(autoincrement())
-  title      String
-  content    String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  authorId   String
-  author     User      @relation(fields: [authorId], references: [firebaseId])
-  comments   Comment[]
-  images     Image[]   
-  imagePath String?   @db.LongText
+  id        Int        @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  authorId  String
+  author    User       @relation(fields: [authorId], references: [firebaseId])
+  comments  Comment[]
+  images    Image[]
+  imagePath String?    @db.LongText
   reactions Reaction[]
 }
 
-
-
 model Comment {
-  id         Int       @id @default(autoincrement())
-  content    String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  threadId   Int
-  thread     Thread    @relation(fields: [threadId], references: [id])
-  authorId   String
-  author     User      @relation(fields: [authorId], references: [firebaseId])
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  threadId  Int
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [firebaseId])
 }
 
 model Reaction {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  userId      String
-  user        User         @relation(fields: [userId], references: [firebaseId])
-  threadId    Int?
-  thread      Thread?      @relation(fields: [threadId], references: [id])
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [firebaseId])
+  threadId  Int?
+  thread    Thread?  @relation(fields: [threadId], references: [id])
 
   @@index([userId, threadId], name: "reaction_index")
 }

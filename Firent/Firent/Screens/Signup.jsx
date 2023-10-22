@@ -4,8 +4,7 @@ import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FireBase";
-import ADRESS_API from "../API";
-
+import ADDRESS_IP from "../API";
 const Signup = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,17 +25,21 @@ const Signup = ({ navigation }) => {
       const credentials = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const user = credentials.user
       const uid = user.uid
-      console.log(uid, "uid");
       await axios
-        .post(`http://${ADRESS_API}:5000/users/add`, {
+        .post(`http://${ADDRESS_IP}:5000/users/add`, {
           firebaseId: uid,
           userName: userName,
           email: email,
           address:'Tunisia',
           image:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+<<<<<<< HEAD
+=======
+
+>>>>>>> f0e2103bd5e5e2c8448550b9e7e021f5d88fd894
         })
         .then((res) => {
           console.log(res.data);
+          navigation.navigate('Signin');
         })
         .catch((err) => {
           console.log(err);
