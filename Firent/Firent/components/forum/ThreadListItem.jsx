@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
   Modal,
   Image,
   View,
@@ -10,6 +13,7 @@ import {
   TextInput,
   FlatList,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import Axios from "axios";
 import ADRESS_API from "../../API";
@@ -23,7 +27,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
 export default function ThreadListScreen() {
   const [threads, setThreads] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
@@ -34,9 +37,9 @@ export default function ThreadListScreen() {
   const [commentText, setCommentText] = useState("");
   const [newThreadTitle, setNewThreadTitle] = useState("");
   const [newThreadContent, setNewThreadContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const user = FIREBASE_AUTH.currentUser.uid;
   const REACTIONS = ["like", "dislike"];
 
@@ -46,6 +49,28 @@ export default function ThreadListScreen() {
     };
     fetchData();
   }, []);
+  
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+}, []);
+
+
 
   const fetchThreads = async () => {
     const apiUrl = `http://${ADRESS_API}:5000/threads`;
@@ -80,7 +105,7 @@ export default function ThreadListScreen() {
       setSelectedThreadId(threadId);
       setSelectedThreadComments(response.data);
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      // console.error("Error fetching comments:", error);
     }
   };
 
@@ -92,7 +117,7 @@ export default function ThreadListScreen() {
       setSelectedReaction(response.data);
       console.log(response.data, "dataaa");
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      // console.error("Error fetching comments:", error);
     }
   };
 
@@ -148,7 +173,7 @@ export default function ThreadListScreen() {
       console.error("Error posting comment:", error);
     }
   };
-  console.log(image, "imageurl");
+
   const handleReaction = async (threadId, reactionType) => {
     console.log(threadId, "threadId 1");
 
@@ -214,13 +239,6 @@ export default function ThreadListScreen() {
     </TouchableOpacity>
   );
 
-  // const getImageUri = (path) => {
-  //   if (!path) {
-  //     return "";
-  //   }
-  //   return `http://${ADRESS_API}:5000/${path.replace(/\\/g, "/")}`;
-  // };
-
   const renderComments = () => (
     <>
       {selectedThreadComments.map((comment) => (
@@ -277,15 +295,33 @@ export default function ThreadListScreen() {
   if (error) return <ErrorView error={error.message || "An error occurred"} />;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}></View>
-      <TouchableOpacity
-        onPress={() => setModalVisible(true)}
-        style={styles.openModalButton}
-      >
-        <Text style={{ color: "white", marginTop: 5 }}>Post Thread</Text>
-      </TouchableOpacity>
-
+    <KeyboardAvoidingView 
+      style={{flex: 1}} 
+      
+    >
+      <FlatList
+        style={{flex: 1}}
+        keyboardShouldPersistTaps="always"
+        data={threads}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => renderThread(item)}
+        ListHeaderComponent={() => (
+          <View style={styles.container}>
+            <View style={styles.header}></View>
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={styles.openModalButton}
+            >
+              <Text style={{ color: "white", marginTop: 5 }}>Post Thread</Text>
+            </TouchableOpacity>
+            {/* You can continue adding other components here if needed */}
+          </View>
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      />
+  
       {/* Modal component */}
       <Modal
         animationType="slide"
@@ -334,19 +370,13 @@ export default function ThreadListScreen() {
               style={styles.closeModalButton}
             >
               <Text style={{ color: "#4b0082", marginTop: 5 }}>Close</Text>
-
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-
-      <FlatList
-        data={threads}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => renderThread(item)}
-      />
-    </View>
+    </KeyboardAvoidingView>
   );
+  
 }
 const LoadingView = () => (
   <View style={styles.centeredContainer}>
@@ -359,7 +389,7 @@ const ErrorView = ({ error }) => (
   </View>
 );
 const styles = StyleSheet.create({
-  container: { backgroundColor: "rgba(31, 31, 41, 1)" },
+  // container: { backgroundColor: "rgba(31, 31, 41, 1)" },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -377,40 +407,45 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffsetWidth: 0,
     shadowOffsetHeight: 2,
-    border: '1px solid rgba(255, 255, 255, 0.2)', 
-    backdropFilter: 'blur(15px)'
-},
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    backdropFilter: "blur(15px)",
+  },
 
-biggerNewThreadInput: {
-  height: 25,
-  width: 260,
-  fontSize: 18,
-  color: "white",
-  backgroundColor: "rgba(255, 255, 255, 0.8)", 
-  borderRadius: 15,
-},
+  biggerNewThreadInput: {
+    height: 25,
+    width: 260,
+    fontSize: 18,
+    color: "black",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 15,
+    paddingLeft: 10, 
+    paddingRight: 10
+  },
 
-biggerNewThreadTextarea: {
-  height: 190,
-  width: 260,
-  fontSize: 18,
-  color: "white",
-  backgroundColor: "rgba(255, 255, 255, 0.8)", 
-  marginTop: 10,
-  marginBottom: 10,
-  borderRadius: 15,
-  textAlignVertical: "top",
-  paddingTop: 10,
-},
+  biggerNewThreadTextarea: {
+    height: 190,
+    width: 260,
+    fontSize: 18,
+    color: "black",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 15,
+    textAlignVertical: "top",
+    paddingTop: 10,
+    paddingLeft: 10, 
+    paddingRight: 10
+  
+  },
 
   openModalButton: {
     width: "100%",
     height: 50,
-    backgroundColor: "rgba(19, 19, 22, 1)",
+    backgroundColor: "rgba(104, 109, 205, 1)",
     borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 25,
+    marginTop: 5,
     color: "white",
   },
   postButtonText: {
@@ -534,6 +569,7 @@ biggerNewThreadTextarea: {
     borderRadius: 20,
     alignItems: "center",
   },
+  
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
