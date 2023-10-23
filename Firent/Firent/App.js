@@ -53,60 +53,58 @@ export default function App() {
         console.error("Error:", error);
       }
     };
-    
+
     fetchUserData();
   }, [user]);
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={user ? "Inside" : "HpUserNotConnected"}>
+        initialRouteName={user ? "Inside" : "HpUserNotConnected"}
+      >
         {user ? (
           <>
-                <Stack.Screen
-                  name="HomeUserconnected"
-                  component={HomeUserconnected}
-                  initialParams={{ user }}
-                  options={{ headerShown: false }}
-                />
-          <Stack.Screen
+            <Stack.Screen
+              name="HomeUserconnected"
+              component={HomeUserconnected}
+              initialParams={{ user }}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="Cart"
               component={Cart}
               options={{ headerShown: false }}
             />
-                <Stack.Screen
-                  name="Chat"
-                  component={Chat}
-                  initialParams={{ user }}
-                  options={{ headerShown: false }}
-
-                />
-              <Stack.Screen
-                name="Conversation"
-                component={Conversation}
-                initialParams={{ user }}
-                options={{ headerShown: false }}
-              />
+            <Stack.Screen
+              name="Chat"
+              component={Chat}
+              initialParams={{ user }}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Conversation"
+              component={Conversation}
+              initialParams={{ user }}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="EditProfile"
               component={EditProfile}
               initialParams={{ user, userDetail }}
               options={{ headerShown: false }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
               name="Threads"
               component={ThreadList}
-              options={{ title: "Forum Threads" }}
+              options={{ headerShown: false }}
             />
+            {/*
             <Stack.Screen
               name="Comments"
               component={CommentListItem}
               options={{ title: "Thread Comments" }}
             /> */}
 
-
-            
-    
             <Stack.Screen
               name="LocationDetails"
               component={LocationDetails}

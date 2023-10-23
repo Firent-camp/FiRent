@@ -82,7 +82,7 @@ export const updateTrip = async (
 
 export const createTrip = async (tripData: any, imageUrls: string[]) => {
   try {
-    const { location, duration, rating, text, date, userId } = tripData;
+    const { location, duration, rating, text, date,current, userId } = tripData;
     
     
     const createdTrip = await prisma.trip.create({
@@ -92,6 +92,7 @@ export const createTrip = async (tripData: any, imageUrls: string[]) => {
         rating,
         text,
         date,
+        current,
         userId,
         images: {
           create: imageUrls.map(url => ({

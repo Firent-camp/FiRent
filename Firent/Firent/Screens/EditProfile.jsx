@@ -39,6 +39,7 @@ export default function EditProfile({navigation, route }) {
       if (response.status === 200) {
         setUserDetails(formData);
         console.log('User data updated successfully');
+        navigation.navigate('HomeUserconnected');
       } else {
         console.error('Failed to update user data');
       }
