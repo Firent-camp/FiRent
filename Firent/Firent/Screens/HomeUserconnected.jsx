@@ -20,6 +20,9 @@ import { AuthContext } from "./Context";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import ADDRESS_IP from "../API";
+
+
+
 export default function HomeUserconnected({ route }) {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -719,8 +722,13 @@ export default function HomeUserconnected({ route }) {
           {locationData.map((trip, index) => (
             <View key={index} style={styles.tripContainer}>
               {trip.images.map((image, imageIndex) => (
+                <TouchableOpacity
+                key={imageIndex}
+                onPress={() => navigation.navigate("LocationDetails", { trip: trip })}
+              >
                 <ImageBackground
                   key={imageIndex}
+                  // onPress={() => navigation.navigate("LocationDetails", { trip: trip })}
                   style={styles.imageBackgroundStyle}
                   source={{
                     uri: image.imageId
@@ -765,6 +773,7 @@ export default function HomeUserconnected({ route }) {
                     </Svg>
                   </View>
                 </ImageBackground>
+                </TouchableOpacity>
               ))}
             </View>
           ))}

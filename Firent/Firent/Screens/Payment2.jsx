@@ -1,49 +1,74 @@
-import * as React from "react";
+
+import React, { useState,useEffect } from 'react'
 import { Image, TextInput, StyleSheet, Text, View, Button } from "react-native";
 import { CardField, useStripe } from "@stripe/stripe-react-native";
 import { Padding, FontFamily, FontSize, Color, Border } from "../globalcss";
-
+import ADRESS_API from '../API';
 const Payment2 = () => {
-  const { confirmPayment } = useStripe();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe;
+  const [loading, setLoading] = useState(false);
   const [clientSecret, setClientSecret] = React.useState(null);
   const [totalAmount, setTotalAmount] = React.useState("");  // New state
 
-  const fetchPaymentIntent = async () => {
-    try {
-      const response = await fetch("http://your_server_url/create-payment-intent", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ amount: Number(totalAmount) }),  // Convert string to number
-      });
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
-    } catch (error) {
-      console.error("Error fetching clientSecret:", error);
-    }
-  }
-
-  const handlePay = async () => {
-    if (!clientSecret) {
-      console.error("Client secret is missing");
-      return;
-    }
-
-    const { error } = await confirmPayment(clientSecret, {
-      type: 'Card',
+  const fetchPaymentSheetParams = async () => {
+    const response = await fetch(`http://${ADRESS_IP}:5000/payment-sheet`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    const { paymentIntent, ephemeralKey, customer} = await response.json();
+    return {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+    };
+  };
 
-    if (error) {
-      console.error("Payment failed: ", error);
-    } else {
-      console.log("Payment succeeded!");
+  const initializePaymentSheet = async () => {
+    const {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+      publishableKey,
+    } = await fetchPaymentSheetParams();
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: "Example, Inc.",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+
+      allowsDelayedPaymentMethods: true,
+      defaultBillingDetails: {
+        name: 'Jane Doe',
+      }
+    });
+    if (!error) {
+      setLoading(true);
     }
   };
 
+  
+const openPaymentSheet = async () => {
+  const { error } = await presentPaymentSheet();
+  if (error) {
+    alert(`Error code: ${error.code}`, error.message);
+    console.log(error)
+  } else {
+    alert('Success', 'Your order is confirmed!');
+    console.log("works")
+
+  }
+};
+
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
+
   return (
     <View style={styles.payment2}>
-      <View style={[styles.topAppBar, styles.topAppBarLayout]}>
+      {/* <View style={[styles.topAppBar, styles.topAppBarLayout]}>
         <View style={[styles.headerIcon, styles.headerIconFlexBox]}>
           <Image
             style={styles.iconLayout}
@@ -130,7 +155,14 @@ const Payment2 = () => {
             placeholderTextColor={Color.colorWhite}
           />
         </View>
-      </View>
+      </View> */}
+      <Button
+          variant="primary"
+          disabled={!loading}
+          title="Pay Now"
+          onPress={()=>{openPaymentSheet()
+          navigation.navigate("Payment3")}}
+        />
     </View>
   );
 };

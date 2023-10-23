@@ -1,20 +1,21 @@
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
-import userRoutes from './routes/userRoutes';
-import TripRoutes from './routes/tripRoutes';
-import chatRoutes from './routes/chatRoutes';
-import threadRoutes from './routes/threadRoute';
-import commentRoutes from './routes/commentRoute';
-import Stripe from 'stripe';
-import { createPaymentIntent } from './controllers/stripeController';
-
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import { PrismaClient } from "@prisma/client";
+import userRoutes from "./routes/userRoutes";
+import TripRoutes from "./routes/tripRoutes";
+import chatRoutes from "./routes/chatRoutes";
+import threadRoutes from "./routes/threadRoute";
+import commentRoutes from "./routes/commentRoute";
+import reactionRoutes from "./routes/reactionRoutes";
+import cartRoutes from "./routes/cartRoutes"
 
 const app = express();
+const stripSecretKey="sk_test_51O42kIFw8lvOmf8jF3upAEf6BZ2G8z89i3q9h5vPuMD5iNF4dnFHIRRUrOlz9jlg7jwi1JU4F4OLLIWgYpYK3HZf00uN2aR8u5";
+const stripePublicKey="pk_test_51O42kIFw8lvOmf8jnERB3KVjMcxlXxqH7VlSmiomhjl3U1Vv2qObZPWRGyPYdGAiAxG7BFgwUbzkLRZxOI6bD8tT0035Ef8kVR";
+const stripe = require('stripe')(stripSecretKey);
 const server = http.createServer(app);
 const cors = require('cors');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const prisma = new PrismaClient();
 
@@ -22,33 +23,69 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-08-16',
-});
+// Initialize Stripe with your secret key
 
-app.post('/create-payment-intent', async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'usd',
-    });
-    res.send({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    res.status(500).send({ error: 'Payment Intent creation failed' });
-  }
-});
 
+// Add Stripe Route to Handle Payments
+// app.post("/create-payment-intent", async (req, res) => {
+//   try {
+//     const { amount } = req.body;
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount, // in the smallest currency unit, e.g., cents for USD
+//       currency: "usd",
+//     });
+//     res.send({ clientSecret: paymentIntent.client_secret });
+//   } catch (error) {
+//     res.status(500).send({ error: "Payment Intent creation failed" });
+//   } 
+// });
+ 
 // Routes
 app.use('/users', userRoutes);
 app.use('/trips', TripRoutes);
 app.use('/chats', chatRoutes);
 app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
-// app.use('/threads/:threadId/reactions', reactionRoutes);
+app.use('/threads/:threadId/reactions', reactionRoutes);
+app.use('/cart',cartRoutes)
 
 
 // Socket.IO logic
+
+// Create an interface for the data sent when a user joins a chat
+// ... Previous code ...
+app.post('/payment-sheet', async (req, res) => {//
+  
+  try{
+    const customer = await stripe.customers.create();
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+      {customer: customer.id},
+      {apiVersion: '2023-10-16'}
+    );
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 2000,
+      currency: 'eur',
+      customer: customer.id,
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+    res.json({
+      paymentIntent: paymentIntent.client_secret,
+      ephemeralKey: ephemeralKey.secret,
+      customer: customer.id,
+      publishableKey:stripePublicKey
+    });
+    console.log(customer.id)
+  }
+  catch(err){
+    res.status(404)
+    console.log(err)
+  
+  }
+    
+  });
+// Create an interface for the data sent when a user joins a chat
 const io = new Server(server);
 
 io.on('connection', (socket) => {
@@ -111,6 +148,7 @@ io.on('connection', (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });
+
 
 const PORT = process.env.PORT || 5000;
 
