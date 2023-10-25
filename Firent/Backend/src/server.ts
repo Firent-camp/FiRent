@@ -9,6 +9,7 @@ import threadRoutes from "./routes/threadRoute";
 import commentRoutes from "./routes/commentRoute";
 import reactionRoutes from "./routes/reactionRoutes";
 import cartRoutes from "./routes/cartRoutes"
+import wishlistRoutes from './routes/wishlistRoutes';
 
 const app = express();
 const stripSecretKey="sk_test_51O42kIFw8lvOmf8jF3upAEf6BZ2G8z89i3q9h5vPuMD5iNF4dnFHIRRUrOlz9jlg7jwi1JU4F4OLLIWgYpYK3HZf00uN2aR8u5";
@@ -48,6 +49,7 @@ app.use('/threads', threadRoutes);
 app.use('/threads/:threadId/comments', commentRoutes);
 app.use('/threads/:threadId/reactions', reactionRoutes);
 app.use('/cart',cartRoutes)
+app.use('/wishlists', wishlistRoutes);
 
 
 // Socket.IO logic
@@ -76,7 +78,7 @@ app.post('/payment-sheet', async (req, res) => {//
       customer: customer.id,
       publishableKey:stripePublicKey
     });
-    console.log(customer.id)
+    console.log(customer.id,'strip id')
   }
   catch(err){
     res.status(404)

@@ -1,9 +1,9 @@
 /* fonts */
-export const FontFamily = {
-    latoRegular: "Lato-Regular",
-    subtitle14pxmedium: "Mulish-Medium",
-    subtitle16pxRegular: "Mulish-Regular",
-  };
+// export const FontFamily = {
+//     latoRegular: "Lato-Regular",
+//     subtitle14pxmedium: "Mulish-Medium",
+//     subtitle16pxRegular: "Mulish-Regular",
+//   };
   /* font sizes */
   export const FontSize = {
     subtitle14pxmedium_size: 14,

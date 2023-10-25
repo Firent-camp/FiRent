@@ -12,18 +12,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BottomNavigation from "../component/BottomNavigation";
 import { useStripe } from "@stripe/stripe-react-native";
 import ADDRESS_IP from "../API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function LocationDetails({ navigation, route }) {
+  const [locationData, setLocationData] = useState([]);
   const trip = route.params.trip;
-  console.log(trip.current, "this is trip");
+  const user = route.params.user;
+console.log(user);
+console.log(trip.id);
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+      console.log("Data stored successfully:", key, value);
+    } catch (e) {
+      console.error("Error storing data:", e);
+    }
+  };
+
+
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [selectedImage, setSelectedImage] = useState(trip.images[0].imageId);
   const [loading, setLoading] = useState(false);
-  const [url, setUrl] = useState(
-    "https://idinterdesign.ca/wp-content/uploads/2016/07/paysage-ID-02.jpg"
-  );
 
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   useEffect(() => {
-    // Set status bar style to light-content (for light elements on a dark background)
     StatusBar.setBarStyle("light-content");
   }, []);
 
@@ -55,44 +67,10 @@ export default function LocationDetails({ navigation, route }) {
         name: "Jane Doe",
       },
     });
-    console.log(error, "err");
     if (!error) {
       setLoading(true);
-    }
-  };
-  const updateCurrent = async () => {
-    try {
-      await axios.put(
-        `http://${ADDRESS_IP}:5000/trips/current/${props.route.params.trip.id}`,
-        current
-      );
-      console.log(trip.current, "this is current");
-
-      // if (current >= cause.target) {
-      //   const updatedCause = { ...cause, status: false };
-      //   await axios.put(`http://${ADDRESS_IP}:5000/update-cause/${props.route.params.cause.causeId}`, updatedCause);
-      //   console.log(updatedCause);
-      // }
-    } catch (err) {
-      console.log(err, "from update");
-    }
-  };
-  const openPaymentSheet = async () => {
-    try {
-      if (loading) {
-        const { error } = await presentPaymentSheet();
-        if (error) {
-          alert(`Error code: ${error.code}`, error.message);
-          console.log(error);
-        } else {
-          alert("Success", "Your order is confirmed!");
-          updateCurrent();
-        }
-      } else {
-        alert("Payment sheet is not initialized yet");
-      }
-    } catch (error) {
-      console.error("Error in openPaymentSheet:", error);
+    } else {
+      console.error("Error initializing payment sheet:", error);
     }
   };
 
@@ -100,35 +78,61 @@ export default function LocationDetails({ navigation, route }) {
     initializePaymentSheet();
   }, []);
 
+  const addToWishlist = async (userId, tripId) => {
+    try {
+      const response = await fetch(`http://${ADDRESS_IP}:5000/wishlists`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          tripId: tripId,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Item added to the wishlist successfully");
+      } else {
+        console.error("Failed to add item to the wishlist");
+      }
+    } catch (error) {
+      console.error("Error adding item to the wishlist:", error);
+    }
+  };
   return (
     <SafeAreaView>
       <View style={styles.locationDetails}>
         <View style={styles.frame61}>
           {trip.images.map((image, index) => (
-            <TouchableOpacity key={index} onPress={() => setUrl(image)}>
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                setSelectedImage(image.imageId);
+              }}
+            >
               <View style={styles.frame55}>
                 <ImageBackground
                   style={styles.unsplashDD1fSz2HF1s}
                   source={{
-                    uri:
-                      url ||
-                      "https://idinterdesign.ca/wp-content/uploads/2016/07/paysage-ID-02.jpg",
+                    uri: image.imageId,
                   }}
-                >
-                  <Text style={styles.imageOverlayText}>Click to view</Text>
-                </ImageBackground>
+                ></ImageBackground>
               </View>
             </TouchableOpacity>
           ))}
         </View>
-
         <View style={styles.frame54}>
           <ImageBackground
             style={styles._unsplashDD1fSz2HF1s}
-            source={{ uri: url }}
+            source={{ uri: selectedImage }}
           />
-          <View style={styles.unsplashoR0uERTVyD0} />
-          <TouchableOpacity style={styles.frame50}>
+          <TouchableOpacity
+            style={styles.frame50}
+            onPress={() => {
+              navigation.navigate("HomeUserconnected");
+            }}
+          >
             <View style={styles.vuesaxOutlineArrowleft}>
               <Svg
                 style={styles._vuesaxOutlineArrowleft}
@@ -144,7 +148,11 @@ export default function LocationDetails({ navigation, route }) {
               </Svg>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.frame51}>
+          <TouchableOpacity
+            style={styles.frame51}
+            onPress={() => addToWishlist(user, trip.id)} // Replace "yourUserId" with the actual user's ID
+          >
+            
             <View style={styles.vuesaxOutlineArchiveadd}>
               <Svg
                 style={styles._vuesaxOutlineArchiveadd}
@@ -161,7 +169,7 @@ export default function LocationDetails({ navigation, route }) {
             </View>
           </TouchableOpacity>
           <View style={styles.frame53}>
-            <Text style={styles.nusaPedina}>{`Location`}</Text>
+            <Text style={styles.nusaPedina}>{trip.location}</Text>
             <View style={styles.frame52}>
               <View style={styles.vuesaxOutlineLocation}>
                 <Svg
@@ -185,7 +193,7 @@ export default function LocationDetails({ navigation, route }) {
             </View>
           </View>
         </View>
-        <Text style={styles.description}>{`Description`}</Text>
+        <Text style={styles.description}>{trip.text}</Text>
         <View style={styles.frame44}>
           <View style={styles.frame41}>
             <View style={styles.frame35}>
@@ -234,14 +242,10 @@ export default function LocationDetails({ navigation, route }) {
                 </Svg>
               </View>
             </View>
-            {/* <View style={styles.frame39}>
-                        <Text style={styles.distance}>
-                            {`Distance`}
-                        </Text>
-                        <Text style={styles.kM}>
-                            {`411 KM`}
-                        </Text>
-                    </View> */}
+            <View style={styles.frame39}>
+              <Text style={styles.distance}>{"Location"}</Text>
+              <Text style={styles.kM}>{trip.location}</Text>
+            </View>
           </View>
           <View style={styles.frame43}>
             <View style={styles.frame37}>
@@ -279,24 +283,21 @@ export default function LocationDetails({ navigation, route }) {
           </View>
         </View>
         <View style={styles.frame46}>
-          <Text style={styles.travelsummary}>{`Travel summary`}</Text>
+          <Text style={styles.travelsummary}>{trip.location}</Text>
         </View>
         <Text
           style={
             styles.ifyouwishtoexperiencebreezybeachesswayingpalmtreesandquirkybeachshacksmakeyourwaytoBaliOurBalitourisdottedwithvolcanicmountainsiconicricepaddiesandvibrantnightlifeNowthatyouhavebookedyourexperientialtourpackage
           }
-        >
-          {trip.text}
-        </Text>
+        ></Text>
         <View style={styles.frame3725} />
         <View style={styles.frame49}>
           <View style={styles.frame48}>
-            <Text style={styles.$250}>{trip.current}</Text>
-            <Text style={styles.day}>{`/day`}</Text>
+            <Text style={styles.$250}>{trip.current} DT</Text>
           </View>
           <TouchableOpacity
             onPress={() => {
-              openPaymentSheet();
+              // openPaymentSheet();
               navigation.navigate("Cart", { trip });
             }}
           >

@@ -1,23 +1,25 @@
-
-import React, { useState,useEffect } from 'react'
-import { Image, TextInput, StyleSheet, Text, View, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, TextInput, StyleSheet, Text, View, Button,TouchableOpacity } from "react-native";
 import { CardField, useStripe } from "@stripe/stripe-react-native";
 import { Padding, FontFamily, FontSize, Color, Border } from "../globalcss";
-import ADRESS_API from '../API';
-const Payment2 = () => {
-  const { initPaymentSheet, presentPaymentSheet } = useStripe;
+import ADDRESS_IP from "../API";
+import { useNavigation } from "@react-navigation/native";
+
+const Payment2 = (route) => {
+  const navigation = useNavigation();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [clientSecret, setClientSecret] = React.useState(null);
-  const [totalAmount, setTotalAmount] = React.useState("");  // New state
+  // const [totalAmount, setTotalAmount] = React.useState("");
 
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(`http://${ADRESS_IP}:5000/payment-sheet`,{
-      method: 'POST',
+    const response = await fetch(`http://${ADDRESS_IP}:5000/payment-sheet`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
-    const { paymentIntent, ephemeralKey, customer} = await response.json();
+    const { paymentIntent, ephemeralKey, customer } = await response.json();
     return {
       paymentIntent,
       ephemeralKey,
@@ -26,12 +28,8 @@ const Payment2 = () => {
   };
 
   const initializePaymentSheet = async () => {
-    const {
-      paymentIntent,
-      ephemeralKey,
-      customer,
-      publishableKey,
-    } = await fetchPaymentSheetParams();
+    const { paymentIntent, ephemeralKey, customer, publishableKey } =
+      await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
       merchantDisplayName: "Example, Inc.",
@@ -41,26 +39,24 @@ const Payment2 = () => {
 
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
-        name: 'Jane Doe',
-      }
+        name: "Jane Doe",
+      },
     });
     if (!error) {
       setLoading(true);
     }
   };
 
-  
-const openPaymentSheet = async () => {
-  const { error } = await presentPaymentSheet();
-  if (error) {
-    alert(`Error code: ${error.code}`, error.message);
-    console.log(error)
-  } else {
-    alert('Success', 'Your order is confirmed!');
-    console.log("works")
-
-  }
-};
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+    if (error) {
+      alert(`Error code: ${error.code}`, error.message);
+      console.log(error);
+    } else {
+      alert("Success", "Your order is confirmed!");
+      console.log("works");
+    }
+  };
 
   useEffect(() => {
     initializePaymentSheet();
@@ -68,20 +64,18 @@ const openPaymentSheet = async () => {
 
   return (
     <View style={styles.payment2}>
-      {/* <View style={[styles.topAppBar, styles.topAppBarLayout]}>
+      <View style={[styles.topAppBar, styles.topAppBarLayout]}>
         <View style={[styles.headerIcon, styles.headerIconFlexBox]}>
-          <Image
-            style={styles.iconLayout}
-            contentFit="cover"
-            source={require("../assets/arrow-left.png")}
-          />
+        <TouchableOpacity onPress={() => {
+              navigation.navigate("Payment1");
+            }}>
+        <Image
+          style={styles.iconLayout}
+          source={require("../assets/arrow-left.png")}
+        />
+      </TouchableOpacity>
           <Text style={styles.title}>Payment method</Text>
         </View>
-        <Image
-          style={[styles.moreVerticalIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/more-vertical.png")}
-        />
       </View>
 
       <View style={styles.progressBar}>
@@ -104,12 +98,8 @@ const openPaymentSheet = async () => {
       />
 
       <View style={[styles.continueWrapper, styles.headerIconFlexBox]}>
-        <Button title="Pay Now" onPress={handlePay} />
+        <Button title="Pay Now"  onPress={ ()=>{ navigation.navigate("Payment3")}}/>
       </View>
-
-      <CardField
-        style={{ height: 50, margin: 10 }}
-      />
 
       <View style={[styles.form, styles.formPosition]}>
         <TextInput
@@ -118,7 +108,13 @@ const openPaymentSheet = async () => {
           placeholderTextColor={Color.colorWhite}
         />
       </View>
-
+      <View style={styles.form4}>
+        <TextInput
+          style={[styles.formChild, styles.formPosition]}
+          placeholder="Number of card"
+          placeholderTextColor={Color.colorWhite}
+        />
+      </View>
       <View style={[styles.form1, styles.formPosition]}>
         <TextInput
           style={[styles.formChild, styles.formPosition]}
@@ -128,26 +124,6 @@ const openPaymentSheet = async () => {
       </View>
 
       <View style={styles.form2}>
-        <TextInput
-          style={[styles.formChild, styles.formPosition]}
-          placeholder="Name"
-          placeholderTextColor={Color.colorWhite}
-        />
-        <View style={[styles.form3, styles.formPosition]}>
-          <TextInput
-            style={[styles.formChild, styles.formPosition]}
-            placeholder="Name"
-            placeholderTextColor={Color.colorWhite}
-          />
-        </View>
-      </View>
-
-      <View style={styles.form2}>
-        <TextInput
-          style={[styles.formChild, styles.formPosition]}
-          placeholder="Card number"
-          placeholderTextColor={Color.colorWhite}
-        />
         <View style={[styles.form3, styles.formPosition]}>
           <TextInput
             style={[styles.formChild, styles.formPosition]}
@@ -155,19 +131,23 @@ const openPaymentSheet = async () => {
             placeholderTextColor={Color.colorWhite}
           />
         </View>
-      </View> */}
-      <Button
-          variant="primary"
-          disabled={!loading}
-          title="Pay Now"
-          onPress={()=>{openPaymentSheet()
-          navigation.navigate("Payment3")}}
-        />
+      </View>
     </View>
   );
 };
 
+{
+  /* <Button
+      style={styles.form3}
+          variant="primary"
+          disabled={!loading}
+          title="Pay Now"
+          onPress={ ()=>{
+            // openPaymentSheet()
 
+            navigation.navigate("Payment3")}}
+        /> */
+}
 const styles = StyleSheet.create({
   topAppBarLayout: {
     top: 45,
@@ -193,9 +173,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   detailsTypo: {
-    fontFamily: FontFamily.subtitle14pxmedium,
     fontWeight: "500",
-    fontSize: FontSize.subtitle14pxmedium_size,
     textAlign: "left",
     letterSpacing: 0,
   },
@@ -208,17 +186,14 @@ const styles = StyleSheet.create({
   },
   nameTypo: {
     height: 14,
-    fontFamily: FontFamily.latoRegular,
     left: 22,
     top: 14,
-    fontSize: FontSize.subtitle14pxmedium_size,
     textAlign: "left",
     color: Color.colorWhite,
     position: "absolute",
   },
   title: {
     fontSize: FontSize.subtitle16pxRegular_size,
-    fontFamily: FontFamily.subtitle16pxRegular,
     marginLeft: 8,
     textAlign: "left",
     letterSpacing: 0,
@@ -231,11 +206,11 @@ const styles = StyleSheet.create({
     height: 48,
     left: 0,
   },
-iconLayout: {
-        height: 24,
-        width: 24,
-        overflow: "hidden",
-      },
+  iconLayout: {
+    height: 24,
+    width: 24,
+    overflow: "hidden",
+  },
   topAppBar: {
     top: 32,
     width: "100%",
@@ -249,16 +224,12 @@ iconLayout: {
   },
   details: {
     color: Color.colorWhite,
-    fontFamily: FontFamily.subtitle14pxmedium,
     fontWeight: "500",
-    fontSize: FontSize.subtitle14pxmedium_size,
   },
   payment: {
     marginLeft: 32,
     color: Color.colorWhite,
-    fontFamily: FontFamily.subtitle14pxmedium,
     fontWeight: "500",
-    fontSize: FontSize.subtitle14pxmedium_size,
   },
   textItem: {
     marginTop: 8,
@@ -309,17 +280,27 @@ iconLayout: {
   form: {
     top: 355,
   },
-  cvvCvc: {
-    width: 82,
-  },
+
   form1: {
     top: 525,
   },
   name: {
     width: 40,
   },
+  form4: {
+    width: 100,
+    height: 39,
+    marginLeft: 155, 
+    top: 410,
+
+  },
   form3: {
-    top: 58,
+    top: 55,
+
+    width: 100,
+    height: 39,
+    marginLeft: 164,
+
   },
   form2: {
     top: 412,
