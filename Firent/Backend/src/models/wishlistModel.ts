@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Define a WishlistCreateInput type (modify fields accordingly)
 type WishlistCreateInput = {
   userId: string;
   tripId: number;
@@ -18,11 +17,22 @@ export const createWishlist = async (wishlistData: WishlistCreateInput) => {
   }
 };
 
-export const getWishlist = async (id: number) => {
+export const getWishlist = async (userId: string) => {
   try {
-    return await prisma.wishlist.findUnique({
+    return await prisma.wishlist.findMany({
       where: {
-        id: id,
+        userId: userId,
+      },
+      include: {
+        trip: {
+          include: {
+            images: {
+              where: {
+                entityType: 'CAMPGROUND', // Adjust this to match your entity type
+              },
+            },
+          },
+        },
       },
     });
   } catch (error) {
@@ -30,20 +40,21 @@ export const getWishlist = async (id: number) => {
   }
 };
 
-// Define a WishlistUpdateInput type (modify fields accordingly)
+
+
 type WishlistUpdateInput = {
   userId?: string;
   tripId?: number;
 };
 
-export const updateWishlist = async (
-  id: number,
-  wishlistData: WishlistUpdateInput
-) => {
+export const updateWishlist = async (userId: string, tripId: number, wishlistData: WishlistUpdateInput) => {
   try {
     return await prisma.wishlist.update({
       where: {
-        id: id,
+        userId_tripId: {
+          userId: userId,
+          tripId: tripId,
+        },
       },
       data: wishlistData,
     });
@@ -52,11 +63,14 @@ export const updateWishlist = async (
   }
 };
 
-export const deleteWishlist = async (id: number) => {
+export const deleteWishlist = async (userId: string, tripId: number) => {
   try {
     return await prisma.wishlist.delete({
       where: {
-        id: id,
+        userId_tripId: {
+          userId: userId,
+          tripId: tripId,
+        },
       },
     });
   } catch (error) {
@@ -68,8 +82,8 @@ export const deleteWishlist = async (id: number) => {
 export const getAllWishlists = async () => {
   return await prisma.wishlist.findMany({
     include: {
-      trip: true, 
-      user: true, 
+      user: true,
+      trip: true,
     },
   });
 };

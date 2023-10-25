@@ -1,22 +1,50 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable ,TouchableOpacity} from "react-native";
 import { Padding, Color, FontFamily, FontSize, Border } from "../globalcss";
 import { TextInput } from "react-native-gesture-handler";
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Payment1 = () => {
-    const [name, setName] = React.useState('');
+const Payment1 = (route) => {
+  const navigation = useNavigation();
+  const [name, setName] = React.useState('');
   const [country, setCountry] = React.useState('');
-
+  const [total, setTotal] = React.useState('');
+  const [trip, setTrip] = React.useState('');
+const tripTotal = total + trip.current
+  useEffect(() => {
+    const retrieveTotalData = async () => {
+      try {
+        const total = await AsyncStorage.getItem('totalKey');
+        const trip = await AsyncStorage.getItem('tripData')
+        if (total !== null) {
+          const parsedTotal = JSON.parse(total);
+          const data = JSON.parse(trip);
+          setTotal(parsedTotal)
+          setTrip(data)
+        } else {
+          console.log('Data not found');
+        }
+      } catch (e) {
+        console.error('Error retrieving data:', e);
+      }
+    };
+    retrieveTotalData();
+  }, []);
   return (
     <View style={styles.payment1} >
       <View style={[styles.topAppBar, styles.topAppBarLayout]}>
         <View style={[styles.headerIcon, styles.headerIconFlexBox]}>
-          <Image
-            style={styles.iconLayout}
-            contentFit="cover"
-            source={require("../assets/arrow-left.png")}
-          />
+        <TouchableOpacity onPress={() => {
+              navigation.navigate("Cart",{trip});
+            }}>
+        <Image
+          style={styles.iconLayout}
+          source={require("../assets/arrow-left.png")}
+        />
+      </TouchableOpacity>
           <Text style={[styles.title, styles.nameFlexBox]}>Payment method</Text>
         </View>
         <Image
@@ -50,15 +78,15 @@ const Payment1 = () => {
                 <View>
                   <View style={[styles.productParent, styles.parentFlexBox]}>
                     <Text style={[styles.product, styles.nameFlexBox]}>
-                      Ivory sun hat
+                     {trip.location}
                     </Text>
-                    <Text style={[styles.price1, styles.textTypo]}>$49.00</Text>
+                    <Text style={[styles.price1, styles.textTypo]}>{trip.current} DT</Text>
                   </View>
                   <View style={[styles.taxesParent, styles.parentFlexBox]}>
                     <Text style={[styles.product, styles.nameFlexBox]}>
-                      Taxes
+                      equipement
                     </Text>
-                    <Text style={[styles.price2, styles.textTypo]}>$5.00</Text>
+                    <Text style={[styles.price2, styles.textTypo]}>{total} DT</Text>
                   </View>
                 </View>
                 <View style={styles.divider} />
@@ -67,26 +95,20 @@ const Payment1 = () => {
                 <Text style={[styles.product, styles.nameFlexBox]}>
                   Subtotal
                 </Text>
-                <Text style={[styles.text, styles.textTypo]}>$54.00</Text>
+                <Text style={[styles.text, styles.textTypo]}>{tripTotal} DT</Text>
               </View>
-            </View>
-            <View style={styles.shippingFeeParent}>
-              <Text style={[styles.product, styles.nameFlexBox]}>
-                Shipping fee
-              </Text>
-              <Text style={[styles.text1, styles.textTypo]}>$00.00</Text>
             </View>
           </View>
           <View style={styles.divider} />
         </View>
         <View style={styles.totalParent}>
           <Text style={[styles.product, styles.nameFlexBox]}>Total</Text>
-          <Text style={[styles.text2, styles.textTypo]}>$54.00</Text>
+          <Text style={[styles.text2, styles.textTypo]}>{tripTotal} DT</Text>
         </View>
       </View>
       <Pressable
         style={[styles.continueWrapper, styles.headerIconFlexBox]}
-        onPress={() => {}}
+        onPress={() => {navigation.navigate("Payment2")}}
       >
         <Text style={[styles.continue, styles.textTypo]}>Continue</Text>
       </Pressable>
@@ -138,7 +160,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textTypo: {
-    fontFamily: FontFamily.subtitle14pxmedium,
     fontWeight: "500",
     textAlign: "left",
     letterSpacing: 0,
@@ -160,10 +181,8 @@ const styles = StyleSheet.create({
   title: {
     
     marginLeft: 8,
-    fontFamily: FontFamily.subtitle16pxRegular,
     letterSpacing: 0,
     textAlign: "left",
-    fontSize: FontSize.subtitle16pxRegular_size,
   },
   headerIcon: {
     width: 186,
@@ -234,27 +253,23 @@ const styles = StyleSheet.create({
     height: 93,
     width: "328px",
     left: 455,
-    borderRadius: "8px"
     
   },
   product: {
-    fontFamily: FontFamily.subtitle16pxRegular,
-    letterSpacing: 0,
-    textAlign: "left",
-    fontSize: FontSize.subtitle16pxRegular_size,
-    margin: 7,
+    letterSpacing: 1,
+    margin: 8,
   },
   price1: {
-    marginLeft: 177,
+    marginLeft: 238,
     color: Color.colorWhite,
     fontWeight: "500",
-    fontSize: FontSize.subtitle16pxRegular_size,
   },
   productParent: {
+    marginTop: 18,
     flexDirection: "row",
   },
   price2: {
-    marginLeft: 241,
+    marginLeft: 180,
     color: Color.colorWhite,
     fontWeight: "500",
     fontSize: FontSize.subtitle16pxRegular_size,
@@ -262,6 +277,7 @@ const styles = StyleSheet.create({
   taxesParent: {
     marginTop: 8,
     flexDirection: "row",
+
   },
   divider: {
     borderColor: Color.colorMediumpurple,
@@ -289,7 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text2: {
-    marginLeft: 238,
+    marginLeft: 230,
     color: Color.colorWhite,
     fontWeight: "500",
     fontSize: FontSize.subtitle16pxRegular_size,
@@ -309,7 +325,6 @@ const styles = StyleSheet.create({
   continueWrapper: {
     bottom: 65,
     left: 255,
-    borderRadius: Border.br_81xl,
     paddingHorizontal: Padding.p_5xl,
     backgroundColor: Color.colorMediumpurple,
     overflow: "hidden",
@@ -317,19 +332,16 @@ const styles = StyleSheet.create({
   formChild: {
     paddingLeft:10,
     marginLeft: -150,
-    borderRadius: Border.br_8xs,
     backgroundColor: Color.colorGray_200,
     borderColor: Color.colorGray_200,
     borderWidth: 1,
     borderStyle: "solid",
-    top: 0,
+    top: 19,
     height: 50,
   },
   name: {
     top: 45,
     left: 20,
-    fontFamily: FontFamily.latoRegular,
-    fontSize: FontSize.subtitle14pxmedium_size,
     position: "absolute",
     
   },
@@ -355,6 +367,10 @@ const styles = StyleSheet.create({
     width:"100%",
     height:"100%"
     
+  },
+  inputStyle :{
+    color:'#fff' ,
+
   }
 });
 

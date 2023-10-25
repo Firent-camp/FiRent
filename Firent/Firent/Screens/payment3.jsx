@@ -1,8 +1,11 @@
 import React from 'react';
 import { Image,View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Padding, FontFamily, FontSize, Color, Border } from "../globalcss";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Payment3() {
+  const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
              <View style={[styles.topAppBar, styles.topAppBarLayout]}>
@@ -42,7 +45,9 @@ export default function Payment3() {
                 <Text style={styles.descriptionText}>
                     Great purchase. Thank you for your purchase
                 </Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button}  onPress={() => {
+            navigation.navigate("HomeUserconnected");
+          }}>
                     <Text style={styles.buttonText}>Done</Text>
                 </TouchableOpacity>
             </View>
@@ -90,27 +95,23 @@ const styles = StyleSheet.create({
       },
       details: {
         color: Color.colorWhite,
-        fontFamily: FontFamily.subtitle14pxmedium,
         fontWeight: "500",
         fontSize: FontSize.subtitle14pxmedium_size,
       },
       payment: {
         marginLeft: 32,
         color: Color.colorWhite,
-        fontFamily: FontFamily.subtitle14pxmedium,
         fontWeight: "500",
         fontSize: FontSize.subtitle14pxmedium_size,
       },
       title: {
         fontSize: FontSize.subtitle16pxRegular_size,
-        fontFamily: FontFamily.subtitle16pxRegular,
         marginLeft: 8,
         textAlign: "left",
         letterSpacing: 0,
         color: Color.colorWhite,
       },
       detailsTypo: {
-        fontFamily: FontFamily.subtitle14pxmedium,
         fontWeight: "500",
         fontSize: FontSize.subtitle14pxmedium_size,
         textAlign: "left",

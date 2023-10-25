@@ -23,7 +23,6 @@ export default function Signin({ route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { userGetter } = route.params;
-  console.log(userGetter, "userGtter");
 
   const resetPassword = () => {
     sendPasswordResetEmail(FIREBASE_AUTH, email)
@@ -46,10 +45,8 @@ export default function Signin({ route }) {
         email,
         password
       );
-      console.log(response);
 
       onAuthStateChanged(FIREBASE_AUTH, (user) => {
-        console.log("userFromAuth", user);
       });
 
       userGetter(response.user.uid);

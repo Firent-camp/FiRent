@@ -9,16 +9,30 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Svg, Path } from "react-native-svg";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Cart(navigation,route) {
+const storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+    console.log('Data stored successfully:', key, value);
+  } catch (e) {
+    console.error('Error storing data:', e);
+  }
+};
+
+export default function Cart({ navigation, route }) {
+  const { trip } = route.params;
+console.log(trip,'from fav to cart');
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   useEffect(() => {
-    // Set status bar style to light-content (for light elements on a dark background)
     StatusBar.setBarStyle("light-content");
   }, []);
-  const current=route.params.trip.current
-  console.log(current,'cuuu');
-  const [total, setTotal] = useState(current)
+  // const {current}=route.params.trip
+  // const tri = route.params.trip
+  const [total, setTotal] = useState(0)
+  storeData('totalKey', total);
+  // storeData("trip",tri)
+
   const [meal, setMeal] = useState(0);
   const [mealPrice, setMealPrice] = useState(0);
 
@@ -37,12 +51,34 @@ export default function Cart(navigation,route) {
   const [extra, setExtra] = useState(0);
   const [extraPrice, setExtraPrice] = useState(0);
 
-
+  
+  const openPaymentSheet = async () => {
+    // try {
+    //   if (loading) {
+    //     const { error } = await presentPaymentSheet({
+    //       amount: total, 
+    //     });
+    //     if (error) {
+    //       alert(`Error code: ${error.code}`, error.message);
+    //       console.log(error);
+    //     } else {
+    //       alert("Success", "Your order is confirmed!");
+    //     }
+    //   } else {
+    //     alert("Payment sheet is not initialized yet");
+    //   }
+    // } catch (error) {
+    //   console.error("Error in openPaymentSheet:", error);
+    // }
+  };
+  
   return (
     <View style={styles.cart}>
       <View style={styles.group3}>
         <Text style={styles.shoppingcart}>{`Shopping cart`}</Text>
-        <TouchableOpacity style={styles.arrowleft}>
+        <TouchableOpacity style={styles.arrowleft} onPress={() => {
+              navigation.navigate("LocationDetails",{trip});
+            }}> 
           <Svg
             style={styles.vector}
             width="22"
@@ -115,9 +151,14 @@ export default function Cart(navigation,route) {
           <Text style={styles.$210454}>{total} DT</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.frame1}>
-        <Text style={styles.checkout}>{`Checkout`}</Text>
-      </TouchableOpacity>
+      <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Payment1", {  total });
+          }}
+          style={styles.frame1}
+        >
+          <Text style={styles.checkout}>{`Checkout`}</Text>
+        </TouchableOpacity>
 
       <View style={styles.group3498}>
         <View style={styles.rectangle8} />
@@ -136,7 +177,7 @@ export default function Cart(navigation,route) {
           <View style={styles.group6}>
             <Text style={styles.nike}>
               Meals
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize: 15, color: "rgba(104, 109, 205, 1)" }}>
                 20DT
               </Text>
             </Text>
@@ -202,7 +243,7 @@ export default function Cart(navigation,route) {
           <View style={styles._group6}>
             <Text style={styles._nike}>
               Tent
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize: 15, color: "rgba(104, 109, 205, 1)" }}>
                 15DT
               </Text>
             </Text>
@@ -268,7 +309,7 @@ export default function Cart(navigation,route) {
           <View style={styles.__group6}>
             <Text style={styles.__nike}>
               Quad
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize: 15, color: "rgba(104, 109, 205, 1)" }}>
                 30DT
               </Text>
             </Text>
@@ -334,7 +375,7 @@ export default function Cart(navigation,route) {
           <View style={styles.___group6}>
             <Text style={styles.___nike}>
               {`Bike`}
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize: 15, color: "rgba(104, 109, 205, 1)" }}>
                 10DT
               </Text>
             </Text>
@@ -400,7 +441,7 @@ export default function Cart(navigation,route) {
           <View style={styles.____group6}>
             <Text style={styles.____nike}>
               {`Kayak`}
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize: 15, color: "rgba(104, 109, 205, 1)" }}>
                 25DT
               </Text>
             </Text>
@@ -466,7 +507,7 @@ export default function Cart(navigation,route) {
           <View style={styles._____group6}>
             <Text style={styles._____nike}>
               {`Extras`}
-              <Text style={{ fontSize: 9, color: "rgba(104, 109, 205, 1)" }}>
+              <Text style={{ fontSize:17, color: "rgba(104, 109, 205, 1)" }}>
                 35DT
               </Text>
             </Text>
