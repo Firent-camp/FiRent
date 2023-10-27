@@ -26,8 +26,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
 import '../../styles/globals.css'
-import RegisterPage from './pages/register'
-import { useRouter } from 'next/router';
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -58,15 +56,11 @@ const App = props => {
       </Head>
 
       <SettingsProvider>
-        {Router.pathname === '/pages/register' ? (
-          <RegisterPage />
-        ) : (
           <SettingsConsumer>
             {({ settings }) => {
               return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
             }}
           </SettingsConsumer>
-        )}
       </SettingsProvider>
     </CacheProvider>
   )

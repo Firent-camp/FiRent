@@ -5,7 +5,7 @@ import { Svg, Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import ADRESS_API from '../API';
 import axios from 'axios';
-export default function BottomNavigation(details) {
+export default function BottomNavigation(details,locationData ) {
 const [userdetail,setUserDetail]=useState({})
 
     const navigation = useNavigation();
@@ -14,7 +14,7 @@ const [userdetail,setUserDetail]=useState({})
     };
 
     const navigateToScreen2 = () => {
-        navigation.navigate('Trips'); 
+        navigation.navigate('Trips',locationData); 
     };
 
     const navigateToScreen3 = () => {

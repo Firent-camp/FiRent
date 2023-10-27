@@ -16,7 +16,7 @@ import {
   Keyboard,
 } from "react-native";
 import Axios from "axios";
-import ADRESS_API from "../../API";
+import ADDRESS_IP from "../../API";
 import { FIREBASE_AUTH } from "../../FireBase";
 import * as ImagePicker from "expo-image-picker";
 
@@ -73,7 +73,7 @@ export default function ThreadListScreen() {
 
 
   const fetchThreads = async () => {
-    const apiUrl = `http://${ADRESS_API}:5000/threads`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads`;
     try {
       const response = await Axios.get(apiUrl);
       setThreads(response.data);
@@ -99,7 +99,7 @@ export default function ThreadListScreen() {
   };
 
   const fetchCommentsForThread = async (threadId) => {
-    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/comments`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads/${threadId}/comments`;
     try {
       const response = await Axios.get(apiUrl);
       setSelectedThreadId(threadId);
@@ -110,7 +110,7 @@ export default function ThreadListScreen() {
   };
 
   const fetchReactionsForThread = async (threadId) => {
-    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads/${threadId}/reactions`;
     try {
       const response = await Axios.get(apiUrl);
       setSelectedThreadId(threadId);
@@ -160,7 +160,7 @@ export default function ThreadListScreen() {
 
   const postComment = async () => {
     if (!selectedThreadId || !commentText) return;
-    const apiUrl = `http://${ADRESS_API}:5000/threads/${selectedThreadId}/comments`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads/${selectedThreadId}/comments`;
     try {
       await Axios.post(apiUrl, {
         content: commentText,
@@ -177,7 +177,7 @@ export default function ThreadListScreen() {
   const handleReaction = async (threadId, reactionType) => {
     console.log(threadId, "threadId 1");
 
-    const apiUrl = `http://${ADRESS_API}:5000/threads/${threadId}/reactions`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads/${threadId}/reactions`;
     try {
       await Axios.post(apiUrl, { userId: user, threadId: threadId });
       fetchReactionsForThread(threadId);
@@ -187,7 +187,7 @@ export default function ThreadListScreen() {
   };
 
   const postNewThread = async () => {
-    const apiUrl = `http://${ADRESS_API}:5000/threads`;
+    const apiUrl = `http://${ADDRESS_IP}:5000/threads`;
 
     if (!newThreadTitle || !newThreadContent) return;
     try {
@@ -300,7 +300,8 @@ export default function ThreadListScreen() {
       
     >
       <FlatList
-        style={{flex: 1}}
+        style={{flex: 1 , backgroundColor: "rgba(128, 128, 255, 0.87)",
+      }}
         keyboardShouldPersistTaps="always"
         data={threads}
         keyExtractor={(item) => item.id.toString()}
@@ -390,7 +391,6 @@ const ErrorView = ({ error }) => (
 );
 const styles = StyleSheet.create({
   container: { 
-    backgroundColor: "rgba(31, 31, 41, 1)",
   marginTop:20
   },
   centeredView: {
@@ -509,9 +509,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#e1e8ed",
     backgroundColor: "#1f1f29",
-    // borderRadius: 10,
+    borderRadius: 15,
     marginVertical: 5,
-    height:"100%"
+    // height:"100%"
   },
   authorInfoContainer: {
     flexDirection: "row",
