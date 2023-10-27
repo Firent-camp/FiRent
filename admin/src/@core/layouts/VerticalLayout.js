@@ -71,7 +71,6 @@ const VerticalLayout = props => {
         />
         <MainContentWrapper className='layout-content-wrapper'>
           <AppBar toggleNavVisibility={toggleNavVisibility} {...props} />
-
           <ContentWrapper
             className='layout-page-content'
             sx={{

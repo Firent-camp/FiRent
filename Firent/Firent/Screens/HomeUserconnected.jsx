@@ -459,7 +459,7 @@ export default function HomeUserconnected({ route }) {
         </ScrollView>
       </View>
       <View style={styles.nav}>
-        <BottomNavigation details={userDetail} />
+      <BottomNavigation details={userDetail} locationData={locationData} />
       </View>
     </View>
   );
@@ -478,13 +478,15 @@ const styles = StyleSheet.create({
   },
   test: {
     marginTop: 45,
+    left: -30,
+
   },
   image: {
     flexDirection: "row",
     marginTop: -80,
     resizeMode: "cover",
     left: -165,
-    width: 100,
+    width: 120,
     height: 80,
   },
   tripContainer: {
@@ -810,7 +812,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexShrink: 0,
     top: 400,
-    left: 16,
+    left: 14,
     right: 16,
 
     // backgroundColor: "rgba(19, 19, 22, 1)",

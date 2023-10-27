@@ -15,7 +15,6 @@ import { useRouter } from 'next/router';
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
-import RegisterPage from 'src/pages/pages/register'
 const UserLayout = ({ children }) => {
   const router = useRouter();
 
@@ -48,11 +47,8 @@ const UserLayout = ({ children }) => {
           />
         )}
       >
-        {router.pathname === '/pages/register' ? (
-          <RegisterPage />
-        ) : (
+       
           children
-        )}
       </VerticalLayout>
     </div>
   );

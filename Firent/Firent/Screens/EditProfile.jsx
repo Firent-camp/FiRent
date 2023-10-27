@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { Svg, Path, Defs, Pattern, Use, Image, Rect } from "react-native-svg";
-import ADRESS_API from "../API";
+import ADDRESS_IP from "../API";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 export default function EditProfile({ navigation, route }) {
@@ -26,7 +26,7 @@ export default function EditProfile({ navigation, route }) {
     email: details.email,
     image: details.image,
   });
-
+console.log(formData,'fprr');
   useEffect(() => {
     setUserDetails(userDetail);
     setFormData(userDetail);
@@ -38,7 +38,7 @@ export default function EditProfile({ navigation, route }) {
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
-        `http://${ADRESS_API}:5000/users/${firebaseId}`,
+        `http://${ADDRESS_IP}:5000/users/${firebaseId}`,
         formData,
         {
           headers: {
