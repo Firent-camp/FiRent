@@ -21,12 +21,14 @@ import Payment3 from "./Screens/payment3";
 import Userprofilimages from "./Screens/UserProfilImages";
 import UserProfilPosts from "./Screens/UserProfilPosts";
 import ImageGrid from "./Screens/ImageGrid";
-import Test from "./Screens/test";
 import axios from "axios";
 import Trips from "./Screens/Trips";
 import Favorites from "./Screens/Favorites";
+import { View, LogBox } from "react-native"
 
 export default function App() {
+  LogBox.ignoreAllLogs();
+
   const [user, setUser] = useState(null);
   const Stack = createStackNavigator();
   const [userDetail, setUserDetail] = useState(null);

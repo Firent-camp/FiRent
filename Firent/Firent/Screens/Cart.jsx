@@ -22,7 +22,6 @@ const storeData = async (key, value) => {
 
 export default function Cart({ navigation, route }) {
   const { trip } = route.params;
-console.log(trip,'from fav to cart');
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
@@ -31,7 +30,7 @@ console.log(trip,'from fav to cart');
   // const tri = route.params.trip
   const [total, setTotal] = useState(0)
   storeData('totalKey', total);
-  // storeData("trip",tri)
+  storeData("trip",trip)
 
   const [meal, setMeal] = useState(0);
   const [mealPrice, setMealPrice] = useState(0);
@@ -51,7 +50,7 @@ console.log(trip,'from fav to cart');
   const [extra, setExtra] = useState(0);
   const [extraPrice, setExtraPrice] = useState(0);
 
-  
+
   const openPaymentSheet = async () => {
     // try {
     //   if (loading) {

@@ -35,14 +35,18 @@ export default function Favoris({ wishlists }) {
                 stroke="#131316"
               />
             </Svg>
-            <TouchableOpacity onPress={() => navigation.navigate('LocationDetails', { trip: wishlist.trip })}>
-  <Image
-    style={styles.rectangle7}
-    source={{ uri: wishlist.trip.images[0].imageId }}
-  />
-</TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("LocationDetails", { trip: wishlist.trip })
+              }
+            >
+              <Image
+                style={styles.rectangle7}
+                source={{ uri: wishlist.trip.images[0].imageId }}
+              />
+            </TouchableOpacity>
             <Text style={styles.redFishLake}>{wishlist.trip.location}</Text>
-            
+
             <Text style={styles.$40Visit}>
               {wishlist.trip.current}
               <Text

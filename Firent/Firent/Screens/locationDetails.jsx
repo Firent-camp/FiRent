@@ -18,8 +18,7 @@ export default function LocationDetails({ navigation, route }) {
   const [locationData, setLocationData] = useState([]);
   const trip = route.params.trip;
   const user = route.params.user;
-console.log(user);
-console.log(trip.id);
+
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -150,7 +149,7 @@ console.log(trip.id);
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.frame51}
-            onPress={() => addToWishlist(user, trip.id)} // Replace "yourUserId" with the actual user's ID
+            onPress={() => addToWishlist(user, trip.id)} 
           >
             
             <View style={styles.vuesaxOutlineArchiveadd}>

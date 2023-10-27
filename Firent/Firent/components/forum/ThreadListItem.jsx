@@ -312,7 +312,7 @@ export default function ThreadListScreen() {
               onPress={() => setModalVisible(true)}
               style={styles.openModalButton}
             >
-              <Text style={{ color: "white", marginTop: 5 }}>Post Thread</Text>
+              <Text style={{ color: "white", marginTop: 7 }}>Post Thread</Text>
             </TouchableOpacity>
             {/* You can continue adding other components here if needed */}
           </View>
@@ -369,7 +369,7 @@ export default function ThreadListScreen() {
               onPress={() => setModalVisible(!modalVisible)}
               style={styles.closeModalButton}
             >
-              <Text style={{ color: "#4b0082", marginTop: 5 }}>Close</Text>
+              <Text style={{ marginTop: 5 }}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -389,7 +389,10 @@ const ErrorView = ({ error }) => (
   </View>
 );
 const styles = StyleSheet.create({
-  // container: { backgroundColor: "rgba(31, 31, 41, 1)" },
+  container: { 
+    backgroundColor: "rgba(31, 31, 41, 1)",
+  marginTop:20
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -506,8 +509,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#e1e8ed",
     backgroundColor: "#1f1f29",
-    borderRadius: 10,
+    // borderRadius: 10,
     marginVertical: 5,
+    height:"100%"
   },
   authorInfoContainer: {
     flexDirection: "row",
