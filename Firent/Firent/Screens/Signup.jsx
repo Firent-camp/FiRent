@@ -35,7 +35,6 @@ const Signup = ({ navigation }) => {
 
         })
         .then((res) => {
-          console.log(res.data);
           navigation.navigate('Signin');
         })
         .catch((err) => {

@@ -34,7 +34,6 @@ const Login = ({navigation}) => {
 
    const saveUserDataToDatabase = async (userData) => {
     try {
-      console.log(userData, "this is it");
       const response = await axios.post("http://192.168.103.12:5000/users/add",{
         userData
     }
@@ -43,7 +42,6 @@ const Login = ({navigation}) => {
         throw new Error('Network response was not ok');
       }
       
-      console.log(userData,"userData");
       return await response.json();
     } catch (error) {
       console.error("Error saving user data:", error);

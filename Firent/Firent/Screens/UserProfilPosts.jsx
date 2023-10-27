@@ -17,9 +17,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function UserProfilPosts({ route ,navigation}) {
   const userDetail = route.params.userDetail;
-
-  console.log(userDetail.details.userName, "user from app props");
-
+  console.log(userDetail.details.image,'hhh');
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
@@ -104,8 +102,10 @@ export default function UserProfilPosts({ route ,navigation}) {
         </TouchableOpacity>
       </View>
       <View style={styles.message}>
-        <TouchableOpacity style={styles.group3578}>
-          <View style={styles.frame2840} />
+      <TouchableOpacity style={styles.group3578} onPress={() =>
+                  navigation.navigate("Conversation")
+                }>        
+            <View style={styles.frame2840} />
           <Svg
             style={styles.vector}
             width="18"
@@ -119,7 +119,7 @@ export default function UserProfilPosts({ route ,navigation}) {
             />
           </Svg>
 
-          <Text style={styles._message}>{`Message`}</Text>
+          <Text style={styles._message}>Message</Text>
           <Svg
             style={styles._vector}
             width="18"
@@ -135,7 +135,7 @@ export default function UserProfilPosts({ route ,navigation}) {
         </TouchableOpacity>
       </View>
       <Text style={styles.jackofallMasterofDesign}>
-        {`Jack of all, Master of Design`}
+      {userDetail.details.address}
       </Text>
       <ScrollView style={styles.jokarta}>
         <Posts />
@@ -182,12 +182,12 @@ export default function UserProfilPosts({ route ,navigation}) {
           </View>
         </View>
         <View style={styles.group3587}>
-          <Image
-            style={styles.profilpic}
-            source={{
-              uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg",
-            }}
-          />
+        <Image
+  style={styles.profilpic}
+  source={{
+    uri: userDetail.details.image,
+  }}
+/>
           <View style={styles.editprofil}>
             <View style={styles.group3585}>
               <TouchableOpacity style={styles.group3584}>
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexShrink: 0,
     top: 204,
-    left: 103,
+    left: 180,
     width: 260,
     height: 27,
     textAlign: "left",

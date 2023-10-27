@@ -31,13 +31,14 @@ const storeData = async (key, value) => {
 export default function HomeUserconnected({ route }) {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
-  const { user } = route.params;
+  const { user  } = route.params;
+  
   const [users, setUsers] = useState([]);
   const [userDetail, setUserDetail] = useState({});
   const [locationData, setLocationData] = useState([]);
   const [images, setImages] = useState([]);
   const [bestTrips, setbestTrips] = useState([]);
-  // storeData('data', locationData);
+  storeData('user', user);
   const fetchUserData = async () => {
     try {
       const response = await axios.get(

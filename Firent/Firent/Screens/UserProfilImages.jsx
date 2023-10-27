@@ -15,15 +15,14 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function Userprofilimages({ navigation, route }) {
   const userDetail = route.params.userDetail;
-  console.log(userDetail.details.userName, "user from app");
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
 
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
   }, []);
   const hp = () => {
-    navigation.navigate('HomeUserconnected'); 
-};
+    navigation.navigate("HomeUserconnected");
+  };
   return (
     <View style={styles.userprofilimages}>
       <Svg
@@ -102,7 +101,10 @@ export default function Userprofilimages({ navigation, route }) {
         <Text style={styles.images}>{`Images`}</Text>
       </View>
       <View style={styles.message}>
-        <TouchableOpacity style={styles.group3578}>
+        <TouchableOpacity
+          style={styles.group3578}
+          onPress={() => navigation.navigate("Conversation")}
+        >
           <View style={styles.frame2840} />
           <Svg
             style={styles.vector}
@@ -118,6 +120,7 @@ export default function Userprofilimages({ navigation, route }) {
           </Svg>
 
           <Text style={styles._message}>{`Message`}</Text>
+
           <Svg
             style={styles._vector}
             width="18"
@@ -133,14 +136,14 @@ export default function Userprofilimages({ navigation, route }) {
         </TouchableOpacity>
       </View>
       <Text style={styles.jackofallMasterofDesign}>
-        {`Jack of all, Master of Design`}
+        {userDetail.details.address}
       </Text>
       <ScrollView style={styles.jokarta}>
         <ImageGrid />
       </ScrollView>
 
       <View style={styles.group3586}>
-        <TouchableOpacity onPress={hp}> 
+        <TouchableOpacity onPress={hp}>
           <Svg
             style={styles.fleche}
             width="39"
@@ -185,16 +188,13 @@ export default function Userprofilimages({ navigation, route }) {
           <Image
             style={styles.profilpic}
             source={{
-              uri: "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?cs=srgb&dl=pexels-masha-raymers-2726111.jpg&fm=jpg",
+              uri: userDetail.details.image,
             }}
           />
           <View style={styles.editprofil}>
             <View style={styles.group3585}>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("EditProfile", {
-                  })
-                }
+                onPress={() => navigation.navigate("EditProfile", {})}
                 style={styles.group3584}
               >
                 <View style={styles.group3580}>
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexShrink: 0,
     top: 204,
-    left: 103,
+    left: 180,
     width: 260,
     height: 27,
     textAlign: "left",

@@ -26,12 +26,6 @@ const MUITable = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Basic Table' titleTypographyProps={{ variant: 'h6' }} />
-          <TableBasic />
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
           <CardHeader title='Dense Table' titleTypographyProps={{ variant: 'h6' }} />
           <TableDense />
         </Card>

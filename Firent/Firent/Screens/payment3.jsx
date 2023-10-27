@@ -10,18 +10,10 @@ export default function Payment3() {
         <View style={styles.container}>
              <View style={[styles.topAppBar, styles.topAppBarLayout]}>
         <View style={[styles.headerIcon, styles.headerIconFlexBox]}>
-          <Image
-            style={styles.iconLayout}
-            contentFit="cover"
-            source={require("../assets/arrow-left.png")}
-          />
+          
           <Text style={styles.title}>Payment method</Text>
         </View>
-        <Image
-          style={[styles.moreVerticalIcon]}
-          contentFit="cover"
-          source={require("../assets/more-vertical.png")}
-        />
+        
       </View>
       <View style={styles.progressBar}>
         <Image
@@ -106,7 +98,7 @@ const styles = StyleSheet.create({
       },
       title: {
         fontSize: FontSize.subtitle16pxRegular_size,
-        marginLeft: 8,
+        marginLeft: 50,
         textAlign: "left",
         letterSpacing: 0,
         color: Color.colorWhite,
