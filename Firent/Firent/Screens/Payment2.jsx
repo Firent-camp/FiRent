@@ -26,7 +26,6 @@ const Payment2 = () => {
   const [expiringDate, setExpiringDate] = useState("");
   const [cvv, setCvv] = useState("");
 const [total,setTotal]=useState(null)
-console.log(total);
   useEffect(() => {
     const retrieveTotalData = async () => {
       try {
@@ -90,12 +89,9 @@ console.log(total);
         <View style={styles.payment2}>
           <View style={[styles.topAppBar, styles.topAppBarLayout]}>
             <View style={[styles.headerIcon, styles.headerIconFlexBox]}>
-              
-
               <Text style={styles.title}>Payment method</Text>
             </View>
           </View>
-
           <View style={styles.progressBar}>
             <Image
               style={styles.progressIndicatorIcon}

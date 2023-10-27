@@ -7,10 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 export default function OurTrips({ data }) {
   const [trip, setTripData] = useState(data);
   const [firstImages, setFirstImages] = useState([]);
-  console.log(firstImages);
   useEffect(() => {
     setTripData(data);
-
     const firstImagesArray = trip.map((trip) => trip.images[0]);
     setFirstImages(firstImagesArray);
   }, [data]);

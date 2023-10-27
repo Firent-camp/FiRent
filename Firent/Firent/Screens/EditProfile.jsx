@@ -26,7 +26,6 @@ export default function EditProfile({ navigation, route }) {
     email: details.email,
     image: details.image,
   });
-console.log(formData,'fprr');
   useEffect(() => {
     setUserDetails(userDetail);
     setFormData(userDetail);

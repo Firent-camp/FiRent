@@ -175,7 +175,6 @@ export default function ThreadListScreen() {
   };
 
   const handleReaction = async (threadId, reactionType) => {
-    console.log(threadId, "threadId 1");
 
     const apiUrl = `http://${ADDRESS_IP}:5000/threads/${threadId}/reactions`;
     try {

@@ -10,7 +10,7 @@ export default function Posts() {
                 <View style={styles.frame67}>
                     <View style={styles.group3515}>
                         <Text style={styles.sowhoamIInthisworldofvirtualconnectionsitsso}>
-                            {`#So who am I\n`}<Text style={{ "fontSize": 17.470388412475586, "fontWeight": "500", "textAlign": "left", "letterSpacing": 0, "lineHeight": 26.205583572387695, "color": "rgba(255, 255, 255, 1)" }}>{`In this world of virtual connections its so embarassing that palestine is invaded by `}</Text>
+                            {`Those who’ve chosen to call Desert Mountain home have so much in common: a love of nature, a sense of adventure, and a strong moral code. Coming together from near and far in the high Sonoran Desert, our Members have found community in our one-of-a-kind culture`}
                         </Text>
                     </View>
                 </View>
@@ -19,7 +19,7 @@ export default function Posts() {
                 <View style={styles.frame67}>
                     <View style={styles.group3515}>
                         <Text style={styles.sowhoamIInthisworldofvirtualconnectionsitsso}>
-                            {`#So who am I\n`}<Text style={{ "fontSize": 17.470388412475586, "fontWeight": "500", "textAlign": "left", "letterSpacing": 0, "lineHeight": 26.205583572387695, "color": "rgba(255, 255, 255, 1)" }}>{`In this world of virtual connections its so embarassing that palestine is invaded by `}</Text>
+                            {`Work, Travel, Save, Repeat. `}
                         </Text>
                     </View>
                 </View>
@@ -28,7 +28,7 @@ export default function Posts() {
                 <View style={styles.frame67}>
                     <View style={styles.group3515}>
                         <Text style={styles.sowhoamIInthisworldofvirtualconnectionsitsso}>
-                            {`#So who am I\n`}<Text style={{ "fontSize": 17.470388412475586, "fontWeight": "500", "textAlign": "left", "letterSpacing": 0, "lineHeight": 26.205583572387695, "color": "rgba(255, 255, 255, 1)" }}>{`In this world of virtual connections its so embarassing that palestine is invaded by `}</Text>
+                            {`Can we just skip to the part of my life where I travel the world?`}
                         </Text>
                     </View>
                 </View>
@@ -37,7 +37,7 @@ export default function Posts() {
                 <View style={styles.frame67}>
                     <View style={styles.group3515}>
                         <Text style={styles.sowhoamIInthisworldofvirtualconnectionsitsso}>
-                            {`#So who am I\n`}<Text style={{ "fontSize": 17.470388412475586, "fontWeight": "500", "textAlign": "left", "letterSpacing": 0, "lineHeight": 26.205583572387695, "color": "rgba(255, 255, 255, 1)" }}>{`In this world of virtual connections its so embarassing that palestine is invaded by `}</Text>
+                            {`The worst thing about being a tourist is having other tourists recognize you as a tourist.`}
                         </Text>
                     </View>
                 </View>
@@ -46,7 +46,7 @@ export default function Posts() {
                 <View style={styles.frame67}>
                     <View style={styles.group3515}>
                         <Text style={styles.sowhoamIInthisworldofvirtualconnectionsitsso}>
-                            {`#So who am I\n`}<Text style={{ "fontSize": 17.470388412475586, "fontWeight": "500", "textAlign": "left", "letterSpacing": 0, "lineHeight": 26.205583572387695, "color": "rgba(255, 255, 255, 1)" }}>{`In this world of virtual connections its so embarassing that palestine is invaded by `}</Text>
+                            {`We live in a wonderful world that is full of beauty, charm and adventure. There is no end to the adventures we can have if only we seek them with our eyes open.`}
                         </Text>
                     </View>
                 </View>
@@ -60,7 +60,7 @@ export default function Posts() {
 const styles = StyleSheet.create({
     frame3302: {
         flexShrink: 0,
-        height: 89,
+        height: 100,
         width: "100%",
         paddingTop: 13.102791786193848,
         marginBottom: 10,
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         flexShrink: 0,
         left: -0.470458984375,
-        width: 382,
-        height: 53,
+        width: 350,
+        height: 80,
         textAlign: "left",
         color: "rgba(255, 255, 255, 1)",
         fontSize: 17.470388412475586,

@@ -17,7 +17,6 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function UserProfilPosts({ route ,navigation}) {
   const userDetail = route.params.userDetail;
-  console.log(userDetail.details.image,'hhh');
   StatusBar.setBackgroundColor("rgba(31, 31, 41, 1)");
   useEffect(() => {
     StatusBar.setBarStyle("light-content");

@@ -17,7 +17,6 @@ export default function Favorites({ navigation, route }) {
     const fetchWishlists = async () => {
         try {
           const response = await fetch(`http://${ADDRESS_IP}:5000/wishlists/${userCon}`);
-          console.log(response);
           if (response.ok) {
             const data = await response.json();
            setWishlists(data)
